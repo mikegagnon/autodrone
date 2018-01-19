@@ -3,6 +3,8 @@ import Dependencies._
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.2"
 
 libraryDependencies += "org.scala-js" %%% "scala-parser-combinators" % "1.0.2"
+libraryDependencies += "org.querki" %%% "jquery-facade" % "1.2"
+
 
 resolvers += sbt.Resolver.bintrayRepo("denigma", "denigma-releases") //add resolver
 libraryDependencies += "org.denigma" %%% "codemirror-facade" % "5.13.2-0.8" //add dependency
