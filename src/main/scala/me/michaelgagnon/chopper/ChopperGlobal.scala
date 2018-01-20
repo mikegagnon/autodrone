@@ -36,9 +36,9 @@ object ChopperGlobal {
     val image = new Image(queue)
 
     $(".chopper-div").foreach { div: Element =>
-      games(div.id) = new Game(div.id, image)
+      games(div.id) = new Game(new Viz(div.id, image))
     }
-    //Controller.droneGame = Some(new DroneGame(queue))
+
     println("asd")
     true
   }
