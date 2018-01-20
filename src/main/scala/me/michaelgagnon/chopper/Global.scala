@@ -11,6 +11,8 @@ object Global {
 
   val games = mutable.Map[String, Game]()
 
+  var currentGameId = "chopper1"
+
   val manifest = js.Array(
     js.Dictionary("src" -> "img/drone-bw.png", "id" -> "drone"),
     js.Dictionary("src" -> "img/fire-small-sprites.png", "id" -> "fireSprites"),
@@ -40,6 +42,16 @@ object Global {
       games(div.id) = new Game(new Viz(div.id, image), level)
     }
 
+    createjs.Ticker.setFPS(Viz.fps)
+    createjs.Ticker.addEventListener("tick", tickReceive _)
+
+    true
+  }
+
+
+  def tickReceive(e: js.Dynamic): Boolean = {
+    //println("tick")
+    games(currentGameId).tick()
     true
   }
 }

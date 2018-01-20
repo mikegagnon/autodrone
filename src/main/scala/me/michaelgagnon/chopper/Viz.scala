@@ -24,6 +24,10 @@ case class SpriteElement(sprite: createjs.Sprite, gameElement: GameElement) exte
   }
 }
 
+object Viz {
+  val fps = 30.0
+}
+
 class Viz(val id: String, val image: Image) {
 
   val div = $(s"#$id")
