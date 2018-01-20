@@ -2,7 +2,7 @@ package me.michaelgagnon.chopper
 
 import org.querki.jquery._
 
-class Game(val id: String) {
+class Game(val id: String, val image: Image) {
 
   val div = $(s"#$id")
 
