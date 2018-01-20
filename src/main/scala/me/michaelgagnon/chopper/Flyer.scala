@@ -1,11 +1,5 @@
 package me.michaelgagnon.chopper
 
-/*trait FlyerConst {
-  val mass: Double
-  val radius: Double
-  val maxVelocity: Xy
-}*/
-
 object Flyer {
   val outofBoundsY = 200
 
@@ -21,7 +15,10 @@ object Flyer {
   val maxVelocity = Xy(30.0, 30.0)
 }
 
-abstract class Flyer(val mass: Double, val radius: Double, origPosition: Xy) extends GameElement(origPosition) {
+abstract class Flyer(override val origPosition: Xy) extends GameElement(origPosition) {
+
+  val mass: Double
+  val radius: Double
 
   def a = Math.PI * radius * radius / 10000.0
   var inBounds = true
@@ -61,49 +58,6 @@ abstract class Flyer(val mass: Double, val radius: Double, origPosition: Xy) ext
       inBounds = false
     }
 
-    /*
-    Level.elements.filter{
-      case g: Ground => true
-      case _ => false
-    }.foreach { e=>
-  
-      if (Level.intersect(this, e)) {
-        velocity.y = 0
-        velocity.x = 0
-
-        position.x = prevX
-        position.y = prevY
-
-        live = false
-      }
-    }*/
-
-    //println(position.y)
-
-
-      /*if (Level.intersectHorz(this, e)) {
-        //velocity.y = 0
-        velocity.x = 0
-
-        position.x = prevX
-        //position.y = prevY
-        //println("collision")
-      }
-      */
-
-      /*if (Level.intersectVert(this, e)) {
-        velocity.y = 0
-
-        //position.x = prevX
-        position.y = prevY
-        //println("collision")
-      }*/
-
-
-
   }
 
-  /*def updateBitmap(camera: Camera) {
-    vle.setXy(camera.toCanvas(position.x, position.y))    
-  }*/
 }
