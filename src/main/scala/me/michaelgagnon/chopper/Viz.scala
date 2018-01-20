@@ -41,4 +41,8 @@ class Viz(val id: String, val image: Image) {
 
   val camera = new Camera(canvasSize)
 
+  def loadLevel(level: Level) {
+    
+  }
+
 }
