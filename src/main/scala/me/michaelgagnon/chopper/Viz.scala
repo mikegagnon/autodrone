@@ -9,6 +9,8 @@ class Viz(val id: String, val image: Image) {
 
   val canvasId = id + "canvas"
 
+  val stage = new createjs.Stage(canvasId)
+
   val canvas = div.find("canvas")
 
   canvas.attr("id", canvasId)
@@ -16,8 +18,6 @@ class Viz(val id: String, val image: Image) {
   val canvasSize = Xy(
     canvas.attr("width").get.toDouble,
     canvas.attr("height").get.toDouble)
-
-  val stage = new createjs.Stage(canvasId)
 
   val camera = new Camera(canvasSize)
 
