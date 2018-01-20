@@ -2,7 +2,7 @@ package me.michaelgagnon.chopper
 
 import org.querki.jquery._
 
-class Game(id: String) {
+class Game(val id: String) {
 
   val div = $(s"#$id")
 
@@ -13,7 +13,7 @@ class Game(id: String) {
   canvas.attr("id", canvasId)
 
   val canvasSize = Xy(
-    canvas.attr("width").toOption.get.toDouble,
-    canvas.attr("height").toOption.get.toDouble)
+    canvas.attr("width").get.toDouble,
+    canvas.attr("height").get.toDouble)
 
 }
