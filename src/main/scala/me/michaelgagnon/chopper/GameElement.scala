@@ -5,6 +5,14 @@ abstract class GameElement(val origPosition: Xy) {
   val dim: Xy
 }
 
+object DroneElement {
+  val dim = Xy(46.0, 46.0)
+}
+
+case class DroneElement(override val origPosition: Xy) extends GameElement(origPosition) {
+  val dim = DroneElement.dim
+}
+
 object GroundElement {
   val dim = Xy(32.0, 32.0)
 }
