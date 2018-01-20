@@ -18,10 +18,47 @@ object Level1 extends Level {
   val dim = Xy(100, 200)
   val numBackgrounds = 2
   val droneElement = DroneElement(Xy(100.0, -DroneElement.dim.y - GroundElement.dim.y))
+
   val elements = Seq[GameElement](
-    FireElement(Xy(200.0, -FireElement.dim.y - GroundElement.dim.y)),
-    FireElement(Xy(250.0, -FireElement.dim.y - GroundElement.dim.y)),
+    //WaterElement(Xy(250.0, -400),
     FireElement(Xy(300.0, -FireElement.dim.y - GroundElement.dim.y)),
-    GroundElement(Xy(200.0, -GroundElement.dim.y), GroundElement.BottomRight)
+    FireElement(Xy(350.0, -FireElement.dim.y - GroundElement.dim.y)),
+    FireElement(Xy(400.0, -FireElement.dim.y - GroundElement.dim.y))
+  ) ++ 
+  List.range(0, 5).map { i => GroundElement(Xy(i * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopCenter) } ++
+  List(
+    GroundElement(Xy(5 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopRight),
+    GroundElement(Xy(9 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopLeft)
+    ) ++ 
+  List.range(10, 15).map { i => GroundElement(Xy(i * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopCenter) } ++
+  List(
+    GroundElement(Xy(15 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopRight),
+    GroundElement(Xy(20 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.BottomLeft),
+    GroundElement(Xy(20 * GroundElement.dim.x, -GroundElement.dim.y * 2), GroundElement.BottomLeft),
+    GroundElement(Xy(20 * GroundElement.dim.x, -GroundElement.dim.y * 3), GroundElement.BottomLeft),
+    GroundElement(Xy(20 * GroundElement.dim.x, -GroundElement.dim.y * 4), GroundElement.BottomLeft),
+    GroundElement(Xy(20 * GroundElement.dim.x, -GroundElement.dim.y * 5), GroundElement.BottomLeft),
+    GroundElement(Xy(20 * GroundElement.dim.x, -GroundElement.dim.y * 6), GroundElement.TopLeft),
+
+    GroundElement(Xy(21 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.BottomCenter),
+    GroundElement(Xy(21 * GroundElement.dim.x, -GroundElement.dim.y * 2), GroundElement.BottomCenter),
+    GroundElement(Xy(21 * GroundElement.dim.x, -GroundElement.dim.y * 3), GroundElement.BottomCenter),
+    GroundElement(Xy(21 * GroundElement.dim.x, -GroundElement.dim.y * 4), GroundElement.BottomCenter),
+    GroundElement(Xy(21 * GroundElement.dim.x, -GroundElement.dim.y * 5), GroundElement.BottomCenter),
+    GroundElement(Xy(21 * GroundElement.dim.x, -GroundElement.dim.y * 6), GroundElement.TopCenter),
+    
+    GroundElement(Xy(22 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.BottomCenter),
+    GroundElement(Xy(22 * GroundElement.dim.x, -GroundElement.dim.y * 2), GroundElement.BottomCenter),
+    GroundElement(Xy(22 * GroundElement.dim.x, -GroundElement.dim.y * 3), GroundElement.BottomCenter),
+    GroundElement(Xy(22 * GroundElement.dim.x, -GroundElement.dim.y * 4), GroundElement.BottomCenter),
+    GroundElement(Xy(22 * GroundElement.dim.x, -GroundElement.dim.y * 5), GroundElement.BottomCenter),
+    GroundElement(Xy(22 * GroundElement.dim.x, -GroundElement.dim.y * 6), GroundElement.TopCenter),
+
+    GroundElement(Xy(23 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.BottomRight),
+    GroundElement(Xy(23 * GroundElement.dim.x, -GroundElement.dim.y * 2), GroundElement.BottomRight),
+    GroundElement(Xy(23 * GroundElement.dim.x, -GroundElement.dim.y * 3), GroundElement.BottomRight),
+    GroundElement(Xy(23 * GroundElement.dim.x, -GroundElement.dim.y * 4), GroundElement.BottomRight),
+    GroundElement(Xy(23 * GroundElement.dim.x, -GroundElement.dim.y * 5), GroundElement.BottomRight),
+    GroundElement(Xy(23 * GroundElement.dim.x, -GroundElement.dim.y * 6), GroundElement.TopRight)
   )
 }

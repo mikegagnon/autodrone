@@ -10,8 +10,8 @@ class Image(queue: createjs.LoadQueue) {
   val groundTopCenter = queue.getResult("ground-top-center").asInstanceOf[dom.raw.HTMLImageElement]
   val groundTopLeft = queue.getResult("ground-top-left").asInstanceOf[dom.raw.HTMLImageElement]
   val groundTopRight = queue.getResult("ground-top-right").asInstanceOf[dom.raw.HTMLImageElement]
-  val groundBottomCenter= queue.getResult("ground-top-center").asInstanceOf[dom.raw.HTMLImageElement]
-  val groundBottomLeft = queue.getResult("ground-top-left").asInstanceOf[dom.raw.HTMLImageElement]
-  val groundBottomRight = queue.getResult("ground-top-right").asInstanceOf[dom.raw.HTMLImageElement]
+  val groundBottomCenter= queue.getResult("ground-bottom-center").asInstanceOf[dom.raw.HTMLImageElement]
+  val groundBottomLeft = queue.getResult("ground-bottom-left").asInstanceOf[dom.raw.HTMLImageElement]
+  val groundBottomRight = queue.getResult("ground-bottom-right").asInstanceOf[dom.raw.HTMLImageElement]
   val water = queue.getResult("water").asInstanceOf[dom.raw.HTMLImageElement]
 }
