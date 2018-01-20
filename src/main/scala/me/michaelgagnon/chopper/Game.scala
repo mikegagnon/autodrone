@@ -9,7 +9,7 @@ class Game(val viz: Viz, val level: Level) {
   viz.addElementsToStage(vizElements)
 
   def tick() {
-    println("tick2")
+      viz.stage.update()
   }
 
 }

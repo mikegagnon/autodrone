@@ -50,7 +50,6 @@ object Global {
 
 
   def tickReceive(e: js.Dynamic): Boolean = {
-    //println("tick")
     games(currentGameId).tick()
     true
   }

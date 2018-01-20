@@ -21,6 +21,7 @@ object Level1 extends Level {
   val elements = Seq[GameElement](
     FireElement(Xy(200.0, -FireElement.dim.y - GroundElement.dim.y)),
     FireElement(Xy(250.0, -FireElement.dim.y - GroundElement.dim.y)),
-    FireElement(Xy(300.0, -FireElement.dim.y - GroundElement.dim.y))
+    FireElement(Xy(300.0, -FireElement.dim.y - GroundElement.dim.y)),
+    GroundElement(Xy(350.0, - GroundElement.dim.y), GroundElement.TopCenter)
   )
 }

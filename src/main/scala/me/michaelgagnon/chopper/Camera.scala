@@ -18,6 +18,13 @@ class Camera(val canvasSize: Xy) {
   var y: Double = -canvasSize.y
 
   // Convert level coordinate to canvas coordinate
-  def toCanvas(levelCoordinate: Xy) = Xy(levelCoordinate.x - x, levelCoordinate.y - y)
+  //def toCanvas(levelCoordinate: Xy) = Xy(levelCoordinate.x - x, levelCoordinate.y - y)
 
+  def setCanvasXy(v: VizElement) {
+    val levelCoordinate = v.gameElement.currentPosition
+    val canvasCoordinate = Xy(levelCoordinate.x - x, levelCoordinate.y - y)
+    v.setXy(canvasCoordinate)
+    
+    //println(canvasCoordinate)
+  }
 }
