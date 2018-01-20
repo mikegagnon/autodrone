@@ -7,8 +7,6 @@ import scala.collection.mutable
 import scala.scalajs.js
 import com.scalawarrior.scalajs.createjs
 
-
-
 object ChopperGlobal {
 
   val games = mutable.Map[String, Game]()
