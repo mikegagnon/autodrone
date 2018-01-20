@@ -34,6 +34,7 @@ case class SpriteElement(sprite: createjs.Sprite, gameElement: GameElement) exte
 
 object Viz {
   val fps = 30.0
+  val frameRate = 1.0 / fps
 
   val manifest = js.Array(
     js.Dictionary("src" -> "img/drone-bw.png", "id" -> "drone"),

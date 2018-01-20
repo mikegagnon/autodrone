@@ -9,7 +9,7 @@ object DroneElement {
   val dim = Xy(46.0, 46.0)
 }
 
-case class DroneElement(override val origPosition: Xy) extends GameElement(origPosition) {
+case class DroneElement(override val origPosition: Xy) extends Flyer(1.0, 1.0, origPosition) {
   val dim = DroneElement.dim
 }
 
