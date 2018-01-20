@@ -13,6 +13,7 @@ object Global {
 
   var currentGameId = "chopper1"
 
+  // TODO: put in viz?
   val manifest = js.Array(
     js.Dictionary("src" -> "img/drone-bw.png", "id" -> "drone"),
     js.Dictionary("src" -> "img/fire-small-sprites.png", "id" -> "fireSprites"),

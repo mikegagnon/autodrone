@@ -16,7 +16,6 @@ case class BitmapElement(bitmap: createjs.Bitmap, gameElement: GameElement) exte
   def setXy(xy: Xy) = {
     bitmap.x = xy.x
     bitmap.y = xy.y
-    println(bitmap.x, bitmap.y)
   }
   def addToStage(stage: createjs.Stage) {
     stage.addChild(bitmap)
@@ -93,8 +92,6 @@ class Viz(val id: String, val image: Image) {
       val s = SpriteElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
       s.sprite.currentFrame = 0;
       s.sprite.gotoAndPlay("flames")
-      camera.setCanvasXy(s)
-      stage.addChild(s.sprite)
       s
     }
   }
@@ -104,10 +101,17 @@ class Viz(val id: String, val image: Image) {
     vizElements.foreach { v : VizElement =>
       camera.setCanvasXy(v)
       v.addToStage(stage)
-      println(v)
-      stage.update()
+
+      v match {
+        case BitmapElement(bitmap, gameElement) => {
+          println(bitmap.x, bitmap.y)
+        }
+        case _ => ()
+      }
+      //println(v)
     }
 
+    println(stage.children)
     stage.update()
   }
 

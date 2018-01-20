@@ -8,6 +8,9 @@ class Game(val viz: Viz, val level: Level) {
   val vizElements: Seq[VizElement] = viz.getVizElements(level)
   viz.addElementsToStage(vizElements)
 
+  viz.camera.setCanvasXy(droneVizElement)
+  droneVizElement.addToStage(viz.stage)
+
   def tick() {
       viz.stage.update()
   }
