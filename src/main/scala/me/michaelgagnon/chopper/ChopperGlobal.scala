@@ -39,7 +39,6 @@ object ChopperGlobal {
       games(div.id) = new Game(new Viz(div.id, image))
     }
 
-    println("asd")
     true
   }
 }
