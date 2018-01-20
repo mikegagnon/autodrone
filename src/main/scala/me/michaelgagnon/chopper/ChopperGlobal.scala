@@ -36,7 +36,8 @@ object ChopperGlobal {
     val image = new Image(queue)
 
     $(".chopper-div").foreach { div: Element =>
-      games(div.id) = new Game(new Viz(div.id, image))
+      val level = Level.levelMap(div.id)
+      games(div.id) = new Game(new Viz(div.id, image), level)
     }
 
     true
