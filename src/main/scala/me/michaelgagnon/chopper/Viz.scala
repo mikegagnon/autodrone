@@ -82,4 +82,10 @@ class Viz(val id: String, val image: Image) {
     case f: FireElement => Some(SpriteElement(new createjs.Sprite(fireSpriteSheet, "flames"), f))
   }
 
+  def addElementsToStage(vizElements: Seq[VizElement]): Unit =
+    vizElements.foreach {
+      case b: BitmapElement => stage.addChild(b.bitmap)
+      case s: SpriteElement => stage.addChild(s.sprite)
+    }
+
 }
