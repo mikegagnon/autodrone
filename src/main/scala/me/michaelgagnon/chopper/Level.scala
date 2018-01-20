@@ -3,7 +3,7 @@ package me.michaelgagnon.chopper
 object Level {
   val levelMap = Map(
     "chopper1" -> Level1
-    )
+  )
 }
 
 sealed trait Level {
