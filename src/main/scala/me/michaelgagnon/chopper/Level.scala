@@ -1,12 +1,18 @@
 package me.michaelgagnon.chopper
 
+object Level {
+  val levelMap = Map(
+    "chopper1" -> Level1
+    )
+}
+
 sealed trait Level {
   val dim: Xy
   val numBackgrounds: Int
   val elements: Seq[Element]
 }
 
-class Level1 extends Level {
+object Level1 extends Level {
   val dim = Xy(100, 200)
   val numBackgrounds = 2
   val elements = Seq[Element](
