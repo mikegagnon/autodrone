@@ -2,6 +2,7 @@ package me.michaelgagnon.chopper
 
 import com.scalawarrior.scalajs.createjs
 import org.querki.jquery._
+import scala.scalajs.js
 
 sealed abstract class VizElement {
   val gameElement: GameElement
@@ -41,8 +42,40 @@ class Viz(val id: String, val image: Image) {
 
   val camera = new Camera(canvasSize)
 
-  def loadLevel(level: Level) {
-    
+  val fireSpriteSheet = new createjs.SpriteSheet(
+    js.Dictionary(
+      "images" -> js.Array(image.fire),
+      "frames" -> js.Dictionary(
+        "width" -> FireElement.dim.x,
+        "height" -> FireElement.dim.y,
+        "regX" -> 0,
+        "regY" -> 0
+      ),
+      "animations" -> js.Dictionary(
+        "walk" -> js.Array(0, 1, "walk")
+      )
+    )
+  )
+
+  def groundDirectionToImage(ground: GroundElement) =
+    ground.direction match {
+      case GroundElement.TopCenter => image.groundTopCenter
+      case GroundElement.TopLeft => image.groundTopLeft
+      case GroundElement.TopRight => image.groundTopRight
+      case GroundElement.BottomCenter => image.groundBottomCenter
+      case GroundElement.BottomLeft => image.groundBottomLeft
+      case GroundElement.BottomRight => image.groundBottomRight
+    }
+
+  def getDroneVizElement(level: Level) =
+    BitmapElement(new createjs.Bitmap(image.drone), level.droneElement)
+
+  def getVizElements(level: Level) = level.elements.flatMap {
+    case _: DroneElement => None
+    case g: GroundElement => {
+      Some(BitmapElement(new createjs.Bitmap(groundDirectionToImage(g)), g))
+    }
+    case f: FireElement => Some(SpriteElement(new createjs.Sprite(fireSpriteSheet, "flames"), f))
   }
 
 }

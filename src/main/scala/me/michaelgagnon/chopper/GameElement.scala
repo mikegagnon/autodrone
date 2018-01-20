@@ -13,11 +13,20 @@ case class DroneElement(override val origPosition: Xy) extends GameElement(origP
   val dim = DroneElement.dim
 }
 
+sealed trait GroundDirection
+
 object GroundElement {
   val dim = Xy(32.0, 32.0)
+  sealed trait EnumVal
+  case object TopLeft extends EnumVal
+  case object TopCenter extends EnumVal
+  case object TopRight extends EnumVal
+  case object BottomLeft extends EnumVal
+  case object BottomCenter extends EnumVal
+  case object BottomRight extends EnumVal
 }
 
-case class GroundElement(override val origPosition: Xy) extends GameElement(origPosition) {
+case class GroundElement(override val origPosition: Xy, direction: GroundElement.EnumVal) extends GameElement(origPosition) {
   val dim = GroundElement.dim
 }
 
