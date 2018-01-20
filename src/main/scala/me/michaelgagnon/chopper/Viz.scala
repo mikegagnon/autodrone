@@ -1,5 +1,6 @@
 package me.michaelgagnon.chopper
 
+import com.scalawarrior.scalajs.createjs
 import org.querki.jquery._
 
 class Viz(val id: String, val image: Image) {
@@ -15,4 +16,9 @@ class Viz(val id: String, val image: Image) {
   val canvasSize = Xy(
     canvas.attr("width").get.toDouble,
     canvas.attr("height").get.toDouble)
+
+  val stage = new createjs.Stage(canvasId)
+
+  val camera = new Camera(canvasSize)
+
 }
