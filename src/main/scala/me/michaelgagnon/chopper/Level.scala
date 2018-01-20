@@ -2,7 +2,8 @@ package me.michaelgagnon.chopper
 
 object Level {
   val levelMap = Map(
-    "chopper1" -> Level1
+    "chopper1" -> Level1,
+    "chopper2" -> Level1
   )
 }
 
