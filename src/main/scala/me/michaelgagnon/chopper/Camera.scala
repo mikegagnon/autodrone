@@ -1,6 +1,6 @@
 package me.michaelgagnon.chopper
 
-class Camera(val canvasSize: Xy) {
+class Camera(val canvasSize: Xy, val levelWidth: Double) {
 
   // TODO: document
   val xMargin = canvasSize.x / 2.0
@@ -21,5 +21,19 @@ class Camera(val canvasSize: Xy) {
     val levelCoordinate = v.gameElement.currentPosition
     val canvasCoordinate = Xy(levelCoordinate.x - x, levelCoordinate.y - y)
     v.setXy(canvasCoordinate)
+  }
+
+  def positionCamera(droneVizElement: VizElement[DroneElement]) {
+
+    val droneXy = droneVizElement.getXy
+
+    if (droneXy.x > rightBorder) {
+      x += droneXy.x - rightBorder
+    } else if (droneXy.x < leftBorder) {
+      x -= leftBorder - droneXy.x
+    }
+
+    x = Math.max(x, 0)
+    x = Math.min(x, levelWidth - canvasSize.x)
   }
 }

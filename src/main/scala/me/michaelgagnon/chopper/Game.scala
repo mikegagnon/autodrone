@@ -34,7 +34,9 @@ class Game(val viz: Viz, val level: Level) {
       }
 
     droneVizElement.gameElement.updateState(Xy(thrustX, thrustY))
+    viz.camera.positionCamera(droneVizElement)
     viz.updateCanvasCoodrinates(droneVizElement)
+    vizElements.foreach(viz.updateCanvasCoodrinates(_))
     viz.stage.update()
   }
 
