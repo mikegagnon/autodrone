@@ -55,6 +55,7 @@ class Viz(val id: String, val image: Image, val level: Level) {
     )
   )
 
+  // TODO: where to put this code
   val backgrounds = Seq.range(0, level.numBackgrounds).map { i =>
     val bitmap = new createjs.Bitmap(image.background)
     val background = Background(bitmap, i, Xy(image.background.width, image.background.height))
@@ -100,6 +101,10 @@ class Viz(val id: String, val image: Image, val level: Level) {
 
   def updateCanvasCoodrinates(v: VizElement[_ <: GameElement]) {
     camera.setCanvasXy(v)
+  }
+
+  def updateBackground() {
+    backgrounds.foreach(camera.placeBackground(_))
   }
 
 }
