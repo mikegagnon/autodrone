@@ -47,5 +47,5 @@ object Controller {
 }
 
 class Controller() {
-  var paused: Boolean = true
+  var paused = true
 }
