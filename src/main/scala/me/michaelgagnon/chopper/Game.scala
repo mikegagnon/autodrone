@@ -11,6 +11,7 @@ class Game(val viz: Viz, val level: Level) {
   viz.camera.setCanvasXy(droneVizElement)
 
   // TODO: get ground elements, get fire elements, etc.
+  // TODO: maybe store vizElements in viz?
   val vizElements: Seq[VizElement[_ <: GameElement]] = viz.getVizElements(level)
   viz.addElementsToStage(vizElements)
 
