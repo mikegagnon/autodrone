@@ -26,7 +26,7 @@ class Camera(val canvasSize: Xy, val levelDim: Xy) {
 
   def placeBackground(background: Background) {
     background.bitmap.x = background.index * background.dim.x - (x * Background.scalingFactor)
-    background.bitmap.y = 0//-background.dim.y
+    background.bitmap.y = -background.dim.y - y
   }
 
   def positionCamera(droneVizElement: VizElement[DroneElement]) {
