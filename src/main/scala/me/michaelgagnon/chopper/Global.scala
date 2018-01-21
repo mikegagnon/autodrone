@@ -30,7 +30,7 @@ object Global {
     $(".chopper-div").foreach { div: Element =>
       val gameId = div.id
       val level = Level.levelMap(gameId)
-      games(gameId) = new Game(new Viz(gameId, image, level.dim), level)
+      games(gameId) = new Game(new Viz(gameId, image, level), level)
     }
 
     currentGame.controller.paused = false

@@ -22,7 +22,7 @@ object Viz {
   )
 }
 
-class Viz(val id: String, val image: Image, val levelDim: Xy) {
+class Viz(val id: String, val image: Image, val level: Level) {
 
   val div = $(s"#$id")
 
@@ -38,7 +38,7 @@ class Viz(val id: String, val image: Image, val levelDim: Xy) {
     canvas.attr("width").get.toDouble,
     canvas.attr("height").get.toDouble)
 
-  val camera = new Camera(canvasSize, levelDim)
+  val camera = new Camera(canvasSize, level.dim)
 
   val fireSpriteSheet = new createjs.SpriteSheet(
     js.Dictionary(
@@ -54,6 +54,14 @@ class Viz(val id: String, val image: Image, val levelDim: Xy) {
       )
     )
   )
+
+  val backgrounds = Seq.range(0, level.numBackgrounds).map { i =>
+    val bitmap = new createjs.Bitmap(image.background)
+    val background = Background(bitmap, i, Xy(image.background.width, image.background.height))
+    camera.placeBackground(background)
+    stage.addChild(bitmap)
+    background
+  }
 
   def groundDirectionToImage(ground: GroundElement) =
     ground.direction match {

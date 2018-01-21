@@ -24,6 +24,11 @@ class Camera(val canvasSize: Xy, val levelDim: Xy) {
     v.setXy(canvasCoordinate)
   }
 
+  def placeBackground(background: Background) {
+    background.bitmap.x = background.index * background.dim.x
+    background.bitmap.y = 0//-background.dim.y
+  }
+
   def positionCamera(droneVizElement: VizElement[DroneElement]) {
 
     val droneXy = droneVizElement.getXy
