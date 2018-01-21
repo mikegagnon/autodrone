@@ -5,12 +5,14 @@ import org.querki.jquery._
 class Game(val viz: Viz, val level: Level) {
 
   val controller = new Controller()
-  val droneVizElement: BitmapElement[DroneElement] = viz.getDroneVizElement(level)
+
+  val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement(level)
+  droneVizElement.addToStage(viz.stage)
+  viz.camera.setCanvasXy(droneVizElement)
+
+  // TODO: get ground elements, get fire elements, etc.
   val vizElements: Seq[VizElement[_ <: GameElement]] = viz.getVizElements(level)
   viz.addElementsToStage(vizElements)
-
-  viz.camera.setCanvasXy(droneVizElement)
-  droneVizElement.addToStage(viz.stage)
 
   def tick() {
     if (controller.paused) return
@@ -32,8 +34,7 @@ class Game(val viz: Viz, val level: Level) {
       }
 
     droneVizElement.gameElement.updateState(Xy(thrustX, thrustY))
-    println(droneVizElement.gameElement.currentPosition)
-    viz.updateBitmap(droneVizElement)
+    viz.updateCanvasCoodrinates(droneVizElement)
     viz.stage.update()
   }
 

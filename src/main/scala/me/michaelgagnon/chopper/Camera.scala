@@ -1,8 +1,8 @@
 package me.michaelgagnon.chopper
 
-
 class Camera(val canvasSize: Xy) {
 
+  // TODO: document
   val xMargin = canvasSize.x / 2.0
   val yMargin = canvasSize.y / 2.0
   val leftBorder = xMargin

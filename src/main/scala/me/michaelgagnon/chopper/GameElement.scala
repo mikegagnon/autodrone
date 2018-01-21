@@ -9,7 +9,8 @@ object DroneElement {
   val dim = Xy(46.0, 46.0)
 }
 
-case class DroneElement(override val origPosition: Xy) extends Flyer(origPosition) {
+// TODO: mass radius?
+case class DroneElement(override val origPosition: Xy) extends FlyerElement(origPosition) {
   val mass = 1.0
   val radius = 1.0
   val dim = DroneElement.dim

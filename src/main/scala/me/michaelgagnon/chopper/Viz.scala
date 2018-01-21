@@ -4,46 +4,6 @@ import com.scalawarrior.scalajs.createjs
 import org.querki.jquery._
 import scala.scalajs.js
 
-// TODO: bitmap and sprite via type T
-sealed abstract class VizElement[T <: GameElement] {
-  val gameElement: T
-  // Set the canvas coordinates for this VizElement
-  def setXy(xy: Xy): Unit
-  def addToStage(stage: createjs.Stage): Unit
-}
-
-case class BitmapElement[T <: GameElement](bitmap: createjs.Bitmap, gameElement: T) extends VizElement[T] {
-  def setXy(xy: Xy) = {
-    bitmap.x = xy.x
-    bitmap.y = xy.y
-  }
-  def addToStage(stage: createjs.Stage) {
-    stage.addChild(bitmap)
-  }
-}
-
-case class SpriteElement[T <: GameElement](sprite: createjs.Sprite, gameElement: T) extends VizElement[T] {
-  def setXy(xy: Xy) = {
-    sprite.x = xy.x
-    sprite.y = xy.y
-  }
-  def addToStage(stage: createjs.Stage) {
-    stage.addChild(sprite)
-  }
-}
-
-/*
-case class FlyerBitmapElement(bitmap: createjs.Bitmap, gameElement: Flyer) extends VizElement {
-  def setXy(xy: Xy) = {
-    bitmap.x = xy.x
-    bitmap.y = xy.y
-  }
-  def addToStage(stage: createjs.Stage) {
-    stage.addChild(bitmap)
-  }
-}
-*/
-
 object Viz {
   val fps = 30.0
   val frameRate = 1.0 / fps
@@ -105,17 +65,16 @@ class Viz(val id: String, val image: Image) {
       case GroundElement.BottomRight => image.groundBottomRight
     }
 
-  def getDroneVizElement(level: Level): BitmapElement[DroneElement] =
-    BitmapElement(new createjs.Bitmap(image.drone), level.droneElement)
+  def getDroneVizElement(level: Level): BitmapVizElement[DroneElement] =
+    BitmapVizElement(new createjs.Bitmap(image.drone), level.droneElement)
 
   def getVizElements(level: Level) = level.elements.map {
     case _: DroneElement => throw new IllegalArgumentException("DroneElement cannot appear in level.elements")
     case g: GroundElement => {
-      BitmapElement(new createjs.Bitmap(groundDirectionToImage(g)), g)
+      BitmapVizElement(new createjs.Bitmap(groundDirectionToImage(g)), g)
     }
     case f: FireElement => {
-      // TODO: remove addChild etc
-      val s = SpriteElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
+      val s = SpriteVizElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
       s.sprite.currentFrame = 0;
       s.sprite.gotoAndPlay("flames")
       s
@@ -124,15 +83,14 @@ class Viz(val id: String, val image: Image) {
 
   def addElementsToStage(vizElements: Seq[VizElement[_ <: GameElement]]): Unit = {
     vizElements.foreach { v : VizElement[_ <: GameElement] =>
-      camera.setCanvasXy(v)
+      updateCanvasCoodrinates(v)
       v.addToStage(stage)
     }
 
     stage.update()
   }
 
-  def updateBitmap(v: VizElement[_ <: GameElement]) {
-    //vle.setXy(camera.toCanvas(position.x, position.y))    
+  def updateCanvasCoodrinates(v: VizElement[_ <: GameElement]) {
     camera.setCanvasXy(v)
   }
 

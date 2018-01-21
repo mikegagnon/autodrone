@@ -28,8 +28,9 @@ object Global {
     val image = new Image(queue)
 
     $(".chopper-div").foreach { div: Element =>
-      val level = Level.levelMap(div.id)
-      games(div.id) = new Game(new Viz(div.id, image), level)
+      val gameId = div.id
+      val level = Level.levelMap(gameId)
+      games(gameId) = new Game(new Viz(gameId, image), level)
     }
 
     currentGame.controller.paused = false

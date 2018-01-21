@@ -3,6 +3,8 @@ package me.michaelgagnon.chopper
 import org.scalajs.dom
 import scala.collection.mutable
 
+// TODO: cleanup and refactor
+
 object KeyCode {
   val Up = 38
   val Down = 40
