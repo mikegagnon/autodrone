@@ -1,6 +1,7 @@
 package me.michaelgagnon.chopper
 
-class Camera(val canvasSize: Xy, val levelWidth: Double) {
+// TODO: option to disable vertical scrolling
+class Camera(val canvasSize: Xy, val levelDim: Xy) {
 
   // TODO: document
   val xMargin = canvasSize.x / 2.0
@@ -33,7 +34,17 @@ class Camera(val canvasSize: Xy, val levelWidth: Double) {
       x -= leftBorder - droneXy.x
     }
 
+    if (droneXy.y > downBorder) {
+      y += droneXy.y - downBorder
+    } else if (droneXy.y < upBorder) {
+      y -= upBorder - droneXy.y
+    }
+
     x = Math.max(x, 0)
-    x = Math.min(x, levelWidth - canvasSize.x)
+    x = Math.min(x, levelDim.x - canvasSize.x)
+
+    y = Math.min(y, -canvasSize.y)
+    y = Math.max(y, -levelDim.y)
+
   }
 }

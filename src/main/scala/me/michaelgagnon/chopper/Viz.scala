@@ -22,7 +22,7 @@ object Viz {
   )
 }
 
-class Viz(val id: String, val image: Image, val levelWidth: Double) {
+class Viz(val id: String, val image: Image, val levelDim: Xy) {
 
   val div = $(s"#$id")
 
@@ -38,7 +38,7 @@ class Viz(val id: String, val image: Image, val levelWidth: Double) {
     canvas.attr("width").get.toDouble,
     canvas.attr("height").get.toDouble)
 
-  val camera = new Camera(canvasSize, levelWidth)
+  val camera = new Camera(canvasSize, levelDim)
 
   val fireSpriteSheet = new createjs.SpriteSheet(
     js.Dictionary(
