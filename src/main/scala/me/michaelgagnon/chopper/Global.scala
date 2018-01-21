@@ -13,6 +13,8 @@ object Global {
 
   var currentGameId = "chopper1"
 
+  def currentGame = games(currentGameId)
+
   val queue = new createjs.LoadQueue()
 
   def apply() {
@@ -28,6 +30,8 @@ object Global {
       val level = Level.levelMap(div.id)
       games(div.id) = new Game(new Viz(div.id, image), level)
     }
+
+    currentGame.controller.paused = false
 
     createjs.Ticker.setFPS(Viz.fps)
     createjs.Ticker.addEventListener("tick", tickReceive _)

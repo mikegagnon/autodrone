@@ -4,6 +4,7 @@ import org.querki.jquery._
 
 class Game(val viz: Viz, val level: Level) {
 
+  val controller = new Controller()
   val droneVizElement: VizElement = viz.getDroneVizElement(level)
   val vizElements: Seq[VizElement] = viz.getVizElements(level)
   viz.addElementsToStage(vizElements)
@@ -12,7 +13,7 @@ class Game(val viz: Viz, val level: Level) {
   droneVizElement.addToStage(viz.stage)
 
   def tick() {
-      viz.stage.update()
+    viz.stage.update()
   }
 
 }
