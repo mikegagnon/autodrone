@@ -32,9 +32,8 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
   val acceleration = Xy(F.x / mass, FlyerElement.ag + (F.y / mass))
   
   // TODO: air drag
-  def updateState(thrust: Xy): Unit = {
-    var prevX = currentPosition.x
-    var prevY = currentPosition.y
+  def updateState(thrust: Xy, elements: Seq[GameElement]): Unit = {
+    var prev = Xy(currentPosition.x, currentPosition.y)
 
     F.x = -0.5 * FlyerElement.cd * a * FlyerElement.rho * velocity.x * velocity.x * velocity.x / Math.abs(velocity.x)
     F.y = -0.5 * FlyerElement.cd * a * FlyerElement.rho * velocity.y * velocity.y * velocity.y / Math.abs(velocity.y)
@@ -54,12 +53,36 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
     currentPosition.x = currentPosition.x + velocity.x * Viz.frameRate * 100
     currentPosition.y = currentPosition.y + velocity.y * Viz.frameRate * 100
 
+    elements.filter {
+      case g: GroundElement => true
+      case _ => false
+    }.foreach { e=>
+  
+      if (intersect(e)) {
+        velocity.y = 0
+        velocity.x = 0
+
+        currentPosition.x = prev.x
+        currentPosition.y = prev.y
+      }
+    }
+
     if (currentPosition.y > FlyerElement.outofBoundsY) {
       currentlyFlying = false
       inBounds = false
     }
 
 
+  }
+
+  def intersect(element: GameElement): Boolean = {
+    val f = currentPosition
+    val e = element.currentPosition
+
+    f.x < e.x + element.dim.x &&
+    f.x + dim.x > e.x &&
+    f.y < e.y + element.dim.y &&
+    dim.y + f.y > e.y
   }
 
 }

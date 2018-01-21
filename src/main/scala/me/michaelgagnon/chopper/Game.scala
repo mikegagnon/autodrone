@@ -33,23 +33,13 @@ class Game(val viz: Viz, val level: Level) {
         0.0
       }
 
-    droneVizElement.gameElement.updateState(Xy(thrustX, thrustY))
+    droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements)
 
     // TODO: figure out what to hoist into Viz
     viz.camera.positionCamera(droneVizElement)
     viz.updateCanvasCoodrinates(droneVizElement)
     vizElements.foreach(viz.updateCanvasCoodrinates(_))
     viz.stage.update()
-  }
-
-  def intersect(flyer: FlyerElement, element: GameElement): Boolean = {
-    val f = flyer.currentPosition
-    val e = element.currentPosition
-
-    f.x < e.x + element.dim.x &&
-    f.x + flyer.dim.x > e.x &&
-    f.y < e.y + element.dim.y &&
-    flyer.dim.y + f.y > e.y
   }
 
 }
