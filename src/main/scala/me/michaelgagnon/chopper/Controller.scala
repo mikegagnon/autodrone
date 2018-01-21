@@ -21,7 +21,8 @@ object Controller {
     KeyCode.Right -> false,
     KeyCode.Space -> false)
 
-  def apply() {
+  def init() {
+    println("asdf")
     dom.window.onkeydown = Controller.onkeydown _
     dom.window.onkeyup = Controller.onkeyup _
   }

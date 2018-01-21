@@ -31,7 +31,6 @@ abstract class Flyer(override val origPosition: Xy) extends GameElement(origPosi
   
   // TODO: air drag
   def updateState(thrust: Xy): Unit = {
-
     var prevX = currentPosition.x
     var prevY = currentPosition.y
 

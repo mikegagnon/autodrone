@@ -18,6 +18,7 @@ object Global {
   val queue = new createjs.LoadQueue()
 
   def apply() {
+    Controller.init()
     queue.on("complete", loaded _)
     queue.loadManifest(Viz.manifest)
   }

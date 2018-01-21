@@ -121,21 +121,18 @@ class Viz(val id: String, val image: Image) {
   }
 
   def addElementsToStage(vizElements: Seq[VizElement]): Unit = {
-    //println(vizElements)
     vizElements.foreach { v : VizElement =>
       camera.setCanvasXy(v)
       v.addToStage(stage)
 
-      v match {
+      /*v match {
         case BitmapElement(bitmap, gameElement) => {
           println(bitmap.x, bitmap.y)
         }
         case _ => ()
-      }
-      //println(v)
+      }*/
     }
 
-    println(stage.children)
     stage.update()
   }
 
