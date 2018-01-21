@@ -13,7 +13,6 @@ class Game(val viz: Viz, val level: Level) {
   droneVizElement.addToStage(viz.stage)
 
   def tick() {
-
     if (controller.paused) return
 
     val thrustY =
@@ -33,7 +32,8 @@ class Game(val viz: Viz, val level: Level) {
       }
 
     droneVizElement.gameElement.updateState(Xy(thrustX, thrustY))
-
+    println(droneVizElement.gameElement.currentPosition)
+    viz.updateBitmap(droneVizElement)
     viz.stage.update()
   }
 

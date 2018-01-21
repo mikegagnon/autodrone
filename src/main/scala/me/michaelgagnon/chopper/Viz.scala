@@ -131,4 +131,9 @@ class Viz(val id: String, val image: Image) {
     stage.update()
   }
 
+  def updateBitmap(v: VizElement[_ <: GameElement]) {
+    //vle.setXy(camera.toCanvas(position.x, position.y))    
+    camera.setCanvasXy(v)
+  }
+
 }

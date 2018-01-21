@@ -57,6 +57,7 @@ abstract class Flyer(override val origPosition: Xy) extends GameElement(origPosi
       inBounds = false
     }
 
+
   }
 
 }
