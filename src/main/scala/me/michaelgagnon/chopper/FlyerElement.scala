@@ -58,6 +58,10 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
       case _ => false
     }.foreach { e=>
   
+      // TODO: There is a bug here. Imagine the velocity is very high so the flyer wants to move
+      // 100 pixels to right. But there is a groudn element 99 pixels to the right. The incorrect
+      // behavior is the flyer stops moving 99 pixels to the left of the ground element (prev.x,
+      // prev.y) To fix this we would need interpolation or something.
       if (intersect(e)) {
         velocity.y = 0
         velocity.x = 0
