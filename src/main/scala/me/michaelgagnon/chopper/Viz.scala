@@ -32,6 +32,16 @@ case class SpriteElement(sprite: createjs.Sprite, gameElement: GameElement) exte
   }
 }
 
+case class FlyerBitmapElement(bitmap: createjs.Bitmap, gameElement: Flyer) extends VizElement {
+  def setXy(xy: Xy) = {
+    bitmap.x = xy.x
+    bitmap.y = xy.y
+  }
+  def addToStage(stage: createjs.Stage) {
+    stage.addChild(bitmap)
+  }
+}
+
 object Viz {
   val fps = 30.0
   val frameRate = 1.0 / fps
@@ -94,7 +104,7 @@ class Viz(val id: String, val image: Image) {
     }
 
   def getDroneVizElement(level: Level) =
-    BitmapElement(new createjs.Bitmap(image.drone), level.droneElement)
+    FlyerBitmapElement(new createjs.Bitmap(image.drone), level.droneElement)
 
   def getVizElements(level: Level) = level.elements.map {
     case _: DroneElement => throw new IllegalArgumentException("DroneElement cannot appear in level.elements")
