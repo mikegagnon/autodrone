@@ -5,8 +5,8 @@ import org.querki.jquery._
 class Game(val viz: Viz, val level: Level) {
 
   val controller = new Controller()
-  val droneVizElement: FlyerBitmapElement = viz.getDroneVizElement(level)
-  val vizElements: Seq[VizElement] = viz.getVizElements(level)
+  val droneVizElement: BitmapElement[DroneElement] = viz.getDroneVizElement(level)
+  val vizElements: Seq[VizElement[_ <: GameElement]] = viz.getVizElements(level)
   viz.addElementsToStage(vizElements)
 
   viz.camera.setCanvasXy(droneVizElement)
