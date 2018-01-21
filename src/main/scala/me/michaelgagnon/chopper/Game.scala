@@ -42,4 +42,14 @@ class Game(val viz: Viz, val level: Level) {
     viz.stage.update()
   }
 
+  def intersect(flyer: FlyerElement, element: GameElement): Boolean = {
+    val f = flyer.currentPosition
+    val e = element.currentPosition
+
+    f.x < e.x + element.dim.x &&
+    f.x + flyer.dim.x > e.x &&
+    f.y < e.y + element.dim.y &&
+    flyer.dim.y + f.y > e.y
+  }
+
 }
