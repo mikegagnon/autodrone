@@ -8,7 +8,7 @@ import com.scalawarrior.scalajs.createjs
 //    val droneVizElement: BitmapVizElement[DroneElement] = viz.getDroneVizElement(level)
 //    droneVizElement.gameElement.updateState(Xy(thrustX, thrustY))
 //
-// since droneVizElement.gameElement is specific to FlyerElement
+// since droneVizElement.gameElement.updateState is specific to FlyerElement
 //
 sealed abstract class VizElement[T <: GameElement] {
   val gameElement: T
