@@ -1,6 +1,5 @@
 package me.michaelgagnon.chopper
 
-//import org.querki.jquery._
 import scala.collection.mutable
 
 case class Explosion(vizElement: VizElement[ExplosionElement], timestamp: Double)
