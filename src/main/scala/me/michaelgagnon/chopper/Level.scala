@@ -20,7 +20,6 @@ object Level1 extends Level {
   val droneElement = DroneElement(Xy(100.0, -DroneElement.dim.y - GroundElement.dim.y))
 
   val elements = Seq[GameElement](
-    WaterElement(Xy(350.0, -400)),
     FireElement(Xy(300.0, -FireElement.dim.y - GroundElement.dim.y)),
     FireElement(Xy(350.0, -FireElement.dim.y - GroundElement.dim.y)),
     FireElement(Xy(400.0, -FireElement.dim.y - GroundElement.dim.y))

@@ -22,7 +22,7 @@ object Viz {
   )
 }
 
-class Viz(val id: String, val image: Image, val level: Level) {
+class Viz(val level: Level, val id: String, val image: Image) {
 
   val div = $(s"#$id")
 
@@ -74,23 +74,31 @@ class Viz(val id: String, val image: Image, val level: Level) {
       case GroundElement.BottomRight => image.groundBottomRight
     }
 
-  def getDroneVizElement(level: Level): BitmapVizElement[DroneElement] =
-    BitmapVizElement(new createjs.Bitmap(image.drone), level.droneElement)
+  def getDroneVizElement(): BitmapVizElement[DroneElement] = {
+    val droneVizElement = BitmapVizElement(new createjs.Bitmap(image.drone), level.droneElement)
+    droneVizElement.addToStage(stage)
+    droneVizElement
+  }
 
-  def getVizElements(level: Level) = level.elements.map {
-    case _: DroneElement => throw new IllegalArgumentException("DroneElement cannot appear in level.elements")
-    case g: GroundElement => {
-      BitmapVizElement(new createjs.Bitmap(groundDirectionToImage(g)), g)
+  def getVizElements(level: Level) = {
+    val vizElements = level.elements.map {
+      case _: DroneElement => throw new IllegalArgumentException("DroneElement cannot appear in level.elements")
+      case g: GroundElement => {
+        BitmapVizElement(new createjs.Bitmap(groundDirectionToImage(g)), g)
+      }
+      case f: FireElement => {
+        val s = SpriteVizElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
+        s.sprite.currentFrame = 0;
+        s.sprite.gotoAndPlay("flames")
+        s
+      }
+      case w: WaterElement => {
+        BitmapVizElement(new createjs.Bitmap(image.water), w)
+      }
     }
-    case f: FireElement => {
-      val s = SpriteVizElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
-      s.sprite.currentFrame = 0;
-      s.sprite.gotoAndPlay("flames")
-      s
-    }
-    case w: WaterElement => {
-      BitmapVizElement(new createjs.Bitmap(image.water), w)
-    }
+    addElementsToStage(vizElements)
+    vizElements
+
   }
 
   def addElementsToStage(vizElements: Seq[VizElement[_ <: GameElement]]): Unit = {
@@ -110,4 +118,14 @@ class Viz(val id: String, val image: Image, val level: Level) {
     backgrounds.foreach(camera.placeBackground(_))
   }
 
+  def addToStage(v: VizElement[_ <: GameElement]) {
+    camera.setCanvasXy(v)
+    v.addToStage(stage)
+  }
+
+  def newWaterVizElement(waterElement: WaterElement): VizElement[WaterElement] = {
+      val waterVizElement: VizElement[WaterElement] = BitmapVizElement(new createjs.Bitmap(image.water), waterElement)
+      addToStage(waterVizElement)
+      waterVizElement
+  }
 }
