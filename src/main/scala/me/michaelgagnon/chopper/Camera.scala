@@ -1,7 +1,7 @@
 package me.michaelgagnon.chopper
 
 object Camera {
-  val verticalScroll = false
+  val verticalScroll = true
 }
 
 // TODO: option to disable vertical scrolling
@@ -9,7 +9,7 @@ class Camera(val canvasSize: Xy, val levelDim: Xy) {
 
   // TODO: document
   val xMargin = canvasSize.x / 2.0
-  val yMargin = canvasSize.y / 2.0
+  val yMargin = canvasSize.y / 4.0
   val leftBorder = xMargin
   val rightBorder = canvasSize.x - xMargin
   val upBorder = yMargin
