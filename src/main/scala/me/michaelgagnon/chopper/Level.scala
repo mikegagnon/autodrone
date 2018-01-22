@@ -5,10 +5,16 @@ object Level {
     "chopper1" -> Level1,
     "chopper2" -> Level1
   )
+  val margin = 100.0
 }
+
+case class LevelElement(override val origPosition: Xy, dim: Xy) extends GameElement(origPosition)
 
 sealed trait Level {
   val dim: Xy
+  def levelElement = LevelElement(
+    Xy(-Level.margin, -dim.y - Level.margin),
+    Xy(dim.x + 2 * Level.margin, dim.y + 2 * Level.margin))
   val numBackgrounds: Int
   val droneElement: DroneElement
   val fireElements: Seq[FireElement]

@@ -3,8 +3,6 @@ package me.michaelgagnon.chopper
 // TODO: cleanup and refactor
 
 object FlyerElement {
-  val outofBoundsY = 200
-
   // ?
   val cd = 0.47
 
@@ -20,7 +18,7 @@ object FlyerElement {
 object FlyResult {
   sealed trait EnumVal
   case object StillFlying extends EnumVal
-  case object OutofBounds extends EnumVal
+  case object OutOfBounds extends EnumVal
   case object Collision extends EnumVal
 }
 
@@ -38,7 +36,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
   
   // TODO: air drag
   // Returns whether or not there was a collision or out of bounds
-  def updateState(thrust: Xy, elements: Seq[GameElement]): FlyResult.EnumVal = {
+  def updateState(thrust: Xy, elements: Seq[GameElement], level: Level): FlyResult.EnumVal = {
 
     var prev = Xy(currentPosition.x, currentPosition.y)
 
@@ -84,14 +82,16 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
     collision
       .headOption
       .getOrElse {
-        if (currentPosition.y > FlyerElement.outofBoundsY) {
-          FlyResult.OutofBounds
+        //if (currentPosition.y > FlyerElement.outofBoundsY) {
+        if (!intersect(level.levelElement)) {
+          FlyResult.OutOfBounds
         } else {
           FlyResult.StillFlying
         }
       }
   }
 
+  // TODO: move to somewhere else?
   def intersect(element: GameElement): Boolean = {
     val f = currentPosition
     val e = element.currentPosition
