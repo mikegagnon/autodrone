@@ -20,7 +20,8 @@ object Viz {
     js.Dictionary("src" -> "img/ground-bottom-center.png", "id" -> "ground-bottom-center"),
     js.Dictionary("src" -> "img/ground-bottom-left.png", "id" -> "ground-bottom-left"),
     js.Dictionary("src" -> "img/ground-bottom-right.png", "id" -> "ground-bottom-right"),
-    js.Dictionary("src" -> "img/water-small.png", "id" -> "water")
+    js.Dictionary("src" -> "img/water-small.png", "id" -> "water"),
+    js.Dictionary("src" -> "img/youwin.png", "id" -> "youwin")
   )
 }
 
@@ -175,5 +176,12 @@ class Viz(val level: Level, val id: String, val image: Image) {
     waterElements.foreach(updateCanvasCoodrinates(_))
     updateBackground()
     stage.update()
+  }
+
+  def youwin() {
+    val b = new createjs.Bitmap(image.youwin)
+    b.x = 20
+    b.y = 20
+    stage.addChild(b)
   }
 }

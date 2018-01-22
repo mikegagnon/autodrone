@@ -4,6 +4,11 @@ import scala.collection.mutable
 
 case class Explosion(vizElement: VizElement[ExplosionElement], timestamp: Double)
 
+// Every tick, resting is updated such that
+// numTicks is the number of ticks that the drone has been resting at position with no thrust
+// Used to help determine victory condition
+class Resting(var position: Xy, var numTicks: Int)
+
 class Game(val level: Level, val gameId: String, val image: Image) {
 
   val viz = new Viz(level, gameId, image)
@@ -22,6 +27,9 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   def waterAvailableForDrop() = System.currentTimeMillis() - lastWaterTimestamp > WaterElement.interDelay
 
+  val resting = new Resting(Xy(-100.0, -100.0), 0)
+
+  var victory = false
 
   def tick() {
     if (controller.paused) return
@@ -29,7 +37,16 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
     explosion match {
-      case None => ()
+      case None => {
+        val drone = droneVizElement.gameElement.currentPosition
+        if (drone.x == resting.position.x && drone.y == resting.position.y) {
+          resting.numTicks += 1
+        } else {
+          resting.position.x = drone.x
+          resting.position.y = drone.y
+          resting.numTicks = 0
+        }
+      }
       case Some(Explosion(vizElement, t)) =>
         if (System.currentTimeMillis() - t > Viz.explosionDuration) {
           // The explosion is over
@@ -69,7 +86,11 @@ class Game(val level: Level, val gameId: String, val image: Image) {
         0.0
       }
 
-    val droneResult = if (explosion.isEmpty) {
+    if (thrustX != 0.0 || thrustY != 0.0) {
+      resting.numTicks = 0
+    }
+
+    val droneResult = if (explosion.isEmpty && !victory) {
       droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level)
     } else {
       FlyResult.StillFlying
@@ -79,7 +100,16 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
     waterVizElements = processWaterElements()
 
+    checkVictory()
+
     viz.update(droneVizElement, fireVizElements, groundVizElements, waterVizElements)
+  }
+
+  def checkVictory() {
+    if (resting.numTicks >= 10 && !fireVizElements.exists(_.gameElement.currentPosition.x >= 0.0)) {
+      victory = true
+      viz.youwin()
+    }
   }
 
   def resetLevel() = {
