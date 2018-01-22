@@ -125,6 +125,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     droneVizElement.gameElement.velocity.x = 0.0
     droneVizElement.gameElement.velocity.y = 0.0
 
+    viz.reset()
   }
 
   def processDroneResult(droneResult: FlyResult.EnumVal) =

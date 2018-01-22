@@ -74,6 +74,10 @@ class Viz(val level: Level, val id: String, val image: Image) {
     )
   )
 
+  val youWinBitmap = new createjs.Bitmap(image.youwin)
+  youWinBitmap.x = 20
+  youWinBitmap.y = 20
+
   // TODO: where to put this code
   val backgrounds = Seq.range(0, level.numBackgrounds).map { i =>
     val bitmap = new createjs.Bitmap(image.background)
@@ -179,9 +183,10 @@ class Viz(val level: Level, val id: String, val image: Image) {
   }
 
   def youwin() {
-    val b = new createjs.Bitmap(image.youwin)
-    b.x = 20
-    b.y = 20
-    stage.addChild(b)
+    stage.addChild(youWinBitmap)
+  }
+
+  def reset() {
+    stage.removeChild(youWinBitmap)
   }
 }
