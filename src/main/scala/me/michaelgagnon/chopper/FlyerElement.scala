@@ -36,7 +36,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
   
   // TODO: air drag
   // Returns whether or not there was a collision or out of bounds
-  def updateState(thrust: Xy, groundElements: Seq[GroundElement], level: Level): FlyResult.EnumVal = {
+  def updateState(thrust: Xy, level: Level): FlyResult.EnumVal = {
 
     var prev = Xy(currentPosition.x, currentPosition.y)
 
@@ -58,7 +58,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
     currentPosition.x = currentPosition.x + velocity.x * Viz.frameRate * 100
     currentPosition.y = currentPosition.y + velocity.y * Viz.frameRate * 100
 
-    val collision = groundElements.flatMap { e=>
+    val collision = level.groundElements.flatMap { e=>
   
       // TODO: There is a bug here. Imagine the velocity is very high so the flyer wants to move
       // 100 pixels to right. But there is a groudn element 99 pixels to the right. The incorrect
