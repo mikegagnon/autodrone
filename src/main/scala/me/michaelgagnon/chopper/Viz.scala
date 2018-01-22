@@ -106,8 +106,6 @@ class Viz(val level: Level, val id: String, val image: Image) {
       updateCanvasCoodrinates(v)
       v.addToStage(stage)
     }
-
-    stage.update()
   }
 
   def updateCanvasCoodrinates(v: VizElement[_ <: GameElement]) {
