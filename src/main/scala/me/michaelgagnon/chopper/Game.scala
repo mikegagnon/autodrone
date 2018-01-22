@@ -31,10 +31,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     explosion match {
       case None => ()
       case Some(Explosion(vizElement, t)) =>
-        if (System.currentTimeMillis() - t < Viz.explosionDuration) {
-          viz.update()
-          return
-        } else {
+        if (System.currentTimeMillis() - t > Viz.explosionDuration) {
           // The explosion is over
           explosion = None
           viz.removeVizElement(vizElement)
@@ -43,7 +40,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     }
 
     // TODO: refactor
-    if (Controller.keyPressed(KeyCode.Space) && waterAvailableForDrop()) {
+    if (explosion.isEmpty && Controller.keyPressed(KeyCode.Space) && waterAvailableForDrop()) {
       lastWaterTimestamp = System.currentTimeMillis()
       val dv = droneVizElement.gameElement.velocity
       val dcp = droneVizElement.gameElement.currentPosition
@@ -72,9 +69,12 @@ class Game(val level: Level, val gameId: String, val image: Image) {
         0.0
       }
 
-    // TODO: detect crashes and oob
-    // REFACTOR
-    val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level)
+    val droneResult = if (explosion.isEmpty) {
+      droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level)
+    } else {
+      FlyResult.StillFlying
+    }
+
     processDroneResult(droneResult)
 
     waterVizElements = processWaterElements()
