@@ -11,7 +11,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement()
   val fireVizElements: Seq[VizElement[FireElement]] = viz.getFireElements(level)
   val groundVizElements: Seq[VizElement[GroundElement]] = viz.getGroundElements(level)
-  val waterVizElements = mutable.ListBuffer[VizElement[WaterElement]]()
+  var waterVizElements = List[VizElement[WaterElement]]()
 
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
@@ -29,7 +29,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       // TODO: abstraction violations
       val waterElement = WaterElement(Xy(dcp.x, dcp.y))
       val waterVizElement = viz.newWaterVizElement(waterElement)
-      waterVizElements.append(waterVizElement)
+      waterVizElements = waterVizElement :: waterVizElements
     }
 
     val thrustY =
@@ -52,10 +52,12 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     // REFACTOR
     val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements)
 
-    waterVizElements.foreach{ w =>
+    waterVizElements = waterVizElements.filter { w =>
       val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements)
-      if (result == FlyResult.Collision) {
-        
+      if (result != FlyResult.Collision) {
+        true
+      } else {
+      
           fireVizElements.foreach { f: VizElement[FireElement] =>
             val wx = w.gameElement.currentPosition.x
             val wy = w.gameElement.currentPosition.y
@@ -71,7 +73,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
             }
           }
 
-
+          viz.removeWaterVizElement(w)
+          false
       }
     }
 

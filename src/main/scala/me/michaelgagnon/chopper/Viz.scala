@@ -150,6 +150,10 @@ class Viz(val level: Level, val id: String, val image: Image) {
       waterVizElement
   }
 
+  def removeWaterVizElement(waterVizElement: VizElement[WaterElement]) = {
+    waterVizElement.removeFromStage(stage)
+  }
+
   def update(
       droneVizElement: VizElement[DroneElement],
       fireVizElements: Seq[VizElement[FireElement]],

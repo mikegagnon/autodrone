@@ -19,6 +19,7 @@ sealed abstract class VizElement[T <: GameElement] {
   def setXy(xy: Xy): Unit
   def getXy: Xy
   def addToStage(stage: createjs.Stage): Unit
+  def removeFromStage(stage: createjs.Stage): Unit
 }
 
 case class BitmapVizElement[T <: GameElement](bitmap: createjs.Bitmap, gameElement: T) extends VizElement[T] {
@@ -30,6 +31,9 @@ case class BitmapVizElement[T <: GameElement](bitmap: createjs.Bitmap, gameEleme
   def addToStage(stage: createjs.Stage) {
     stage.addChild(bitmap)
   }
+  def removeFromStage(stage: createjs.Stage) {
+    stage.removeChild(bitmap)
+  }
 }
 
 case class SpriteVizElement[T <: GameElement](sprite: createjs.Sprite, gameElement: T) extends VizElement[T] {
@@ -40,5 +44,8 @@ case class SpriteVizElement[T <: GameElement](sprite: createjs.Sprite, gameEleme
   def getXy = Xy(sprite.x, sprite.y)
   def addToStage(stage: createjs.Stage) {
     stage.addChild(sprite)
+  }
+  def removeFromStage(stage: createjs.Stage) {
+    stage.removeChild(sprite)
   }
 }
