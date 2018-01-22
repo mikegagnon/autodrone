@@ -56,19 +56,21 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements)
       if (result == FlyResult.Collision) {
         
-        /*val fireElements = vizElements.filter {
-          case SpriteVizElement(sprite, FireElement(orig)) => 
-        }*/
+          fireVizElements.foreach { f: VizElement[FireElement] =>
+            val wx = w.gameElement.currentPosition.x
+            val wy = w.gameElement.currentPosition.y
+            val fx = f.gameElement.currentPosition.x
+            val fyTop = f.gameElement.currentPosition.y + FireElement.coreHeight
+            val fyBottom = f.gameElement.currentPosition.y + FireElement.dim.y
 
-        /*vizElements
-          .foreach {
-              case SpriteVizElement(_, FireElement(orig)) => {
-
-              }
-              case _=> false
-            
+            // If the water hit the fire
+            if (Math.abs(wx - fx) < FireElement.dim.x / 2.0 && wy > fyTop && wy < fyBottom) {
+              // Move the water out of bounds
+              f.gameElement.currentPosition.x = -10000.0
+              f.gameElement.currentPosition.y = -10000.0
+            }
           }
-        */
+
 
       }
     }

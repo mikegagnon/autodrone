@@ -46,6 +46,9 @@ case class GroundElement(override val origPosition: Xy, direction: GroundElement
 
 object FireElement {
   val dim = Xy(50.0, 100.0)
+  // For a water to terminate a fire, the water's y coordinate must be within coreHeight
+  // from the base of the fire
+  val coreHeight = 30.0
 }
 
 case class FireElement(override val origPosition: Xy) extends GameElement(origPosition) {
