@@ -16,6 +16,16 @@ case class DroneElement(override val origPosition: Xy) extends FlyerElement(orig
   val dim = DroneElement.dim
 }
 
+object WaterElement {
+  val dim = Xy(50.0, 50.0)
+}
+
+case class WaterElement(override val origPosition: Xy) extends FlyerElement(origPosition) {
+  val mass = 1.0
+  val radius = 1.0
+  val dim = WaterElement.dim
+}
+
 sealed trait GroundDirection
 
 object GroundElement {

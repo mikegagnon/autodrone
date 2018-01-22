@@ -88,6 +88,9 @@ class Viz(val id: String, val image: Image, val level: Level) {
       s.sprite.gotoAndPlay("flames")
       s
     }
+    case w: WaterElement => {
+      BitmapVizElement(new createjs.Bitmap(image.water), w)
+    }
   }
 
   def addElementsToStage(vizElements: Seq[VizElement[_ <: GameElement]]): Unit = {
