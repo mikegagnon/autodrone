@@ -31,6 +31,7 @@ case class WaterElement(override val origPosition: Xy) extends FlyerElement(orig
 
 object ExplosionElement {
   val dim = Xy(100, 100.0)
+  val duration = 200.0
 }
 
 case class ExplosionElement(override val origPosition: Xy) extends GameElement(origPosition) {

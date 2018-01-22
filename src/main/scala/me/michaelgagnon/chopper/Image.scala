@@ -7,6 +7,7 @@ class Image(queue: createjs.LoadQueue) {
   val background = queue.getResult("background").asInstanceOf[dom.raw.HTMLImageElement]
   val drone = queue.getResult("drone").asInstanceOf[dom.raw.HTMLImageElement]
   val fire = queue.getResult("fireSprites").asInstanceOf[dom.raw.HTMLImageElement]
+  val explosion = queue.getResult("explosionSprites").asInstanceOf[dom.raw.HTMLImageElement]
   val groundTopCenter = queue.getResult("ground-top-center").asInstanceOf[dom.raw.HTMLImageElement]
   val groundTopLeft = queue.getResult("ground-top-left").asInstanceOf[dom.raw.HTMLImageElement]
   val groundTopRight = queue.getResult("ground-top-right").asInstanceOf[dom.raw.HTMLImageElement]

@@ -26,7 +26,6 @@ object Level1 extends Level {
   val numBackgrounds = 3
   val droneElement = DroneElement(Xy(100.0, -DroneElement.dim.y - GroundElement.dim.y))
 
-
   val fireElements = Seq[FireElement](
     FireElement(Xy(300.0, -FireElement.dim.y - GroundElement.dim.y)),
     FireElement(Xy(350.0, -FireElement.dim.y - GroundElement.dim.y)),

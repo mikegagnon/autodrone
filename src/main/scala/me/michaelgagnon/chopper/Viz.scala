@@ -11,6 +11,7 @@ object Viz {
   val manifest = js.Array(
     js.Dictionary("src" -> "img/drone-bw.png", "id" -> "drone"),
     js.Dictionary("src" -> "img/fire-small-sprites.png", "id" -> "fireSprites"),
+    js.Dictionary("src" -> "img/explosion.png", "id" -> "explosionSprites"),
     js.Dictionary("src" -> "img/background-dark.png", "id" -> "background"),
     js.Dictionary("src" -> "img/ground-top-center.png", "id" -> "ground-top-center"),
     js.Dictionary("src" -> "img/ground-top-left.png", "id" -> "ground-top-left"),
@@ -55,6 +56,22 @@ class Viz(val level: Level, val id: String, val image: Image) {
     )
   )
 
+  val explosionSpriteSheet = new createjs.SpriteSheet(
+    js.Dictionary(
+      "images" -> js.Array(image.explosion),
+      "frames" -> js.Dictionary(
+        "width" -> ExplosionElement.dim.x,
+        "height" -> ExplosionElement.dim.y,
+        "regX" -> 0,
+        "regY" -> 0
+      ),
+      "animations" -> js.Dictionary(
+        "nothing" -> js.Array(0),
+        "explode" -> js.Array(0, 81, "nothing", 5)
+      )
+    )
+  )
+
   // TODO: where to put this code
   val backgrounds = Seq.range(0, level.numBackgrounds).map { i =>
     val bitmap = new createjs.Bitmap(image.background)
@@ -83,13 +100,23 @@ class Viz(val level: Level, val id: String, val image: Image) {
   def getFireElements(level: Level) = {
     val fireVizElements = level.fireElements.map { f: FireElement => {
         val s = SpriteVizElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
-        s.sprite.currentFrame = 0;
+        s.sprite.currentFrame = 0
         s.sprite.gotoAndPlay("flames")
         s
       }
     }
     addElementsToStage(fireVizElements)
     fireVizElements
+  }
+
+  def newExplosionElement(position: Xy) = {
+    val explosionElement = ExplosionElement(position)
+    val explosionVizElement = SpriteVizElement(new createjs.Sprite(explosionSpriteSheet, "flames"), explosionElement)
+    explosionVizElement.sprite.currentFrame = 0
+    explosionVizElement.sprite.gotoAndPlay("explode")
+    updateCanvasCoodrinates(explosionVizElement)
+    explosionVizElement.addToStage(stage)
+    explosionVizElement
   }
 
   def getGroundElements(level: Level) = {
@@ -100,29 +127,6 @@ class Viz(val level: Level, val id: String, val image: Image) {
     addElementsToStage(groundVizElements)
     groundVizElements
   }
-
-/*
-  def getVizElements(level: Level) = {
-    val vizElements = level.elements.map {
-      case _: DroneElement => throw new IllegalArgumentException("DroneElement cannot appear in level.elements")
-      case g: GroundElement => {
-        BitmapVizElement(new createjs.Bitmap(groundDirectionToImage(g)), g)
-      }
-      case f: FireElement => {
-        val s = SpriteVizElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
-        s.sprite.currentFrame = 0;
-        s.sprite.gotoAndPlay("flames")
-        s
-      }
-      case w: WaterElement => {
-        BitmapVizElement(new createjs.Bitmap(image.water), w)
-      }
-    }
-    addElementsToStage(vizElements)
-    vizElements
-
-  }
-  */
 
   def addElementsToStage(vizElements: Seq[VizElement[_ <: GameElement]]): Unit = {
     vizElements.foreach { v : VizElement[_ <: GameElement] =>
