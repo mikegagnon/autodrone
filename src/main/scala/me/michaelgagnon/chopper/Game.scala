@@ -19,7 +19,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   val vizElements: Seq[VizElement[_ <: GameElement]] = viz.getVizElements(level)
 
   // TODO: document
-  val waterElements = mutable.ListBuffer[VizElement[WaterElement]]()
+  val waterVizElements = mutable.ListBuffer[VizElement[WaterElement]]()
 
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
@@ -37,9 +37,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       // TODO: abstraction violations
       val waterElement = WaterElement(Xy(dcp.x, dcp.y))
       val waterVizElement = viz.newWaterVizElement(waterElement)
-      waterElements.append(waterVizElement)
+      waterVizElements.append(waterVizElement)
     }
-
 
     val thrustY =
       if (Controller.keyPressed(KeyCode.Up)) {
@@ -58,9 +57,9 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       }
 
     droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements)
-    waterElements.foreach(_.gameElement.updateState(Xy(0.0, 0.0), level.elements))
+    waterVizElements.foreach(_.gameElement.updateState(Xy(0.0, 0.0), level.elements))
 
-    viz.update(droneVizElement, vizElements, waterElements)
+    viz.update(droneVizElement, vizElements, waterVizElements)
   }
 
 }
