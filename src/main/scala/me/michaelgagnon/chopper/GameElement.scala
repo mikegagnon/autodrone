@@ -18,6 +18,7 @@ case class DroneElement(override val origPosition: Xy) extends FlyerElement(orig
 
 object WaterElement {
   val dim = Xy(50.0, 50.0)
+  val interDelay = 500
 }
 
 case class WaterElement(override val origPosition: Xy) extends FlyerElement(origPosition) {

@@ -1,5 +1,8 @@
 package me.michaelgagnon.chopper
 
+// TODO: rm
+import com.scalawarrior.scalajs.createjs
+
 import org.querki.jquery._
 import scala.collection.mutable
 
@@ -21,8 +24,25 @@ class Game(val viz: Viz, val level: Level) {
       case _ => None
     }
 
+  var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
+
   def tick() {
     if (controller.paused) return
+
+    // TODO: refactor
+    if (Controller.keyPressed(KeyCode.Space) && System.currentTimeMillis() - lastWaterTimestamp > WaterElement.interDelay) {
+      lastWaterTimestamp = System.currentTimeMillis()
+      val dv = droneVizElement.gameElement.velocity
+      val dcp = droneVizElement.gameElement.currentPosition
+      // TODO: abstraction violations
+      val waterElement = WaterElement(Xy(dcp.x, dcp.y))
+      val waterViz = BitmapVizElement(new createjs.Bitmap(viz.image.water), waterElement)
+      waterElements.append(waterViz)
+      //viz.stage.addChild(newWater.ble.bitmap)
+      viz.camera.setCanvasXy(waterViz)
+      waterViz.addToStage(viz.stage)
+    }
+
 
     val thrustY =
       if (Controller.keyPressed(KeyCode.Up)) {
@@ -46,6 +66,7 @@ class Game(val viz: Viz, val level: Level) {
     viz.camera.positionCamera(droneVizElement)
     viz.updateCanvasCoodrinates(droneVizElement)
     vizElements.foreach(viz.updateCanvasCoodrinates(_))
+    waterElements.foreach(viz.updateCanvasCoodrinates(_))
     viz.updateBackground()
     viz.stage.update()
   }
