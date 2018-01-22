@@ -8,10 +8,10 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   val viz = new Viz(level, gameId, image)
   val controller = new Controller()
 
-  val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement()
   val fireVizElements: Seq[VizElement[FireElement]] = viz.getFireElements(level)
   val groundVizElements: Seq[VizElement[GroundElement]] = viz.getGroundElements(level)
   var waterVizElements = List[VizElement[WaterElement]]()
+  val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement()
 
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
