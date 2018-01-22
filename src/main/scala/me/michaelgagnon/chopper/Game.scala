@@ -1,12 +1,8 @@
 package me.michaelgagnon.chopper
 
-// TODO: rm
-import com.scalawarrior.scalajs.createjs
-
 import org.querki.jquery._
 import scala.collection.mutable
 
-//class Game(val viz: Viz, val level: Level) {
 class Game(val level: Level, val gameId: String, val image: Image) {
 
   val viz = new Viz(level, gameId, image)
