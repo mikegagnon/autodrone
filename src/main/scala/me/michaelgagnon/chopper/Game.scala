@@ -55,6 +55,23 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     // REFACTOR
     val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements)
 
+    if (droneResult == FlyResult.OutOfBounds) {
+      waterVizElements.foreach(viz.removeWaterVizElement(_))
+      waterVizElements = Nil
+      fireVizElements.foreach { f =>
+        f.gameElement.currentPosition.x = f.gameElement.origPosition.x
+        f.gameElement.currentPosition.y = f.gameElement.origPosition.y
+      }
+
+      droneVizElement.gameElement.currentPosition.x = droneVizElement.gameElement.origPosition.x
+      droneVizElement.gameElement.currentPosition.y = droneVizElement.gameElement.origPosition.y
+      droneVizElement.gameElement.velocity.x = 0.0
+      droneVizElement.gameElement.velocity.y = 0.0
+
+
+
+    }
+
     waterVizElements = waterVizElements.filter { w =>
       val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements)
       if (result != FlyResult.Collision) {

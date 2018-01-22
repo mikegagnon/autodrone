@@ -20,7 +20,7 @@ object FlyerElement {
 object FlyResult {
   sealed trait EnumVal
   case object StillFlying extends EnumVal
-  case object OutofBounds extends EnumVal
+  case object OutOfBounds extends EnumVal
   case object Collision extends EnumVal
 }
 
@@ -85,7 +85,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
       .headOption
       .getOrElse {
         if (currentPosition.y > FlyerElement.outofBoundsY) {
-          FlyResult.OutofBounds
+          FlyResult.OutOfBounds
         } else {
           FlyResult.StillFlying
         }
