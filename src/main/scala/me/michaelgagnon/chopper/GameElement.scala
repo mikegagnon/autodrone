@@ -18,6 +18,7 @@ case class DroneElement(override val origPosition: Xy) extends FlyerElement(orig
 
 object WaterElement {
   val dim = Xy(50.0, 50.0)
+  // TODO: rm
   val interDelay = 500
 }
 
@@ -25,6 +26,15 @@ case class WaterElement(override val origPosition: Xy) extends FlyerElement(orig
   val mass = 1.0
   val radius = 1.0
   val dim = WaterElement.dim
+}
+
+
+object ExplosionElement {
+  val dim = Xy(100, 100.0)
+}
+
+case class ExplosionElement(override val origPosition: Xy) extends GameElement(origPosition) {
+  val dim = ExplosionElement.dim
 }
 
 sealed trait GroundDirection
