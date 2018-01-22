@@ -31,6 +31,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   var victory = false
 
+  viz.drawScale()
+
   def tick() {
     if (controller.paused) return
 

@@ -189,4 +189,29 @@ class Viz(val level: Level, val id: String, val image: Image) {
   def reset() {
     stage.removeChild(youWinBitmap)
   }
+
+  def drawScale() {
+
+    val heightInMeters = Math.floor(canvasSize.y / Level.pixelsPerMeter).toInt
+
+    for(m <- 1 to heightInMeters) {
+      val y = canvasSize.y - m * Level.pixelsPerMeter
+
+      val line = new createjs.Shape()
+      line.graphics.setStrokeStyle(1).beginStroke("#000")
+      line.graphics.moveTo(0, y)
+      line.graphics.lineTo(15, y)
+      line.graphics.endStroke()
+      stage.addChild(line)
+
+       var text = new createjs.Text(m.toString, "15px Arial", "#000")
+       text.x = 20
+       text.y = y + 5
+       text.textBaseline = "alphabetic"
+       stage.addChild(text)
+    }
+
+
+    stage.update()
+  }
 }

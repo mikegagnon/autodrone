@@ -6,6 +6,8 @@ object Level {
     "chopper2" -> Level1
   )
   val margin = 100.0
+
+  val pixelsPerMeter = 30.0
 }
 
 case class LevelElement(override val origPosition: Xy, dim: Xy) extends GameElement(origPosition)
