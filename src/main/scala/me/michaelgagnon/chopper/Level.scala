@@ -11,7 +11,8 @@ sealed trait Level {
   val dim: Xy
   val numBackgrounds: Int
   val droneElement: DroneElement
-  val elements: Seq[GameElement]
+  val fireElements: Seq[FireElement]
+  val groundElements: Seq[GroundElement]
 }
 
 object Level1 extends Level {
@@ -19,11 +20,14 @@ object Level1 extends Level {
   val numBackgrounds = 3
   val droneElement = DroneElement(Xy(100.0, -DroneElement.dim.y - GroundElement.dim.y))
 
-  val elements = Seq[GameElement](
+
+  val fireElements = Seq[FireElement](
     FireElement(Xy(300.0, -FireElement.dim.y - GroundElement.dim.y)),
     FireElement(Xy(350.0, -FireElement.dim.y - GroundElement.dim.y)),
     FireElement(Xy(400.0, -FireElement.dim.y - GroundElement.dim.y))
-  ) ++ 
+  )
+
+  val groundElements =
   List.range(0, 5).map { i => GroundElement(Xy(i * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopCenter) } ++
   List(
     GroundElement(Xy(5 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopRight),

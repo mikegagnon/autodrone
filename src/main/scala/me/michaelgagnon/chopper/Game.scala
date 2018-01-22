@@ -9,12 +9,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   val controller = new Controller()
 
   val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement()
-
-  // TODO: get ground elements, get fire elements, etc.
-  // TODO: maybe store vizElements in viz?
-  val vizElements: Seq[VizElement[_ <: GameElement]] = viz.getVizElements(level)
-
-  // TODO: document
+  val fireVizElements: Seq[VizElement[FireElement]] = viz.getFireElements(level)
+  val groundVizElements: Seq[VizElement[GroundElement]] = viz.getGroundElements(level)
   val waterVizElements = mutable.ListBuffer[VizElement[WaterElement]]()
 
   // TODO: document
@@ -53,10 +49,11 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       }
 
     // TODO: detect crashes and oob
-    val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements)
+    // REFACTOR
+    val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements)
 
     waterVizElements.foreach{ w =>
-      val result = w.gameElement.updateState(Xy(0.0, 0.0), level.elements)
+      val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements)
       if (result == FlyResult.Collision) {
         
         /*val fireElements = vizElements.filter {
@@ -76,7 +73,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       }
     }
 
-    viz.update(droneVizElement, vizElements, waterVizElements)
+    viz.update(droneVizElement, fireVizElements, groundVizElements, waterVizElements)
   }
 
 }

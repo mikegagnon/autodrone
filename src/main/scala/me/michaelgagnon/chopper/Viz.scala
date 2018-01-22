@@ -80,6 +80,28 @@ class Viz(val level: Level, val id: String, val image: Image) {
     droneVizElement
   }
 
+  def getFireElements(level: Level) = {
+    val fireVizElements = level.fireElements.map { f: FireElement => {
+        val s = SpriteVizElement(new createjs.Sprite(fireSpriteSheet, "flames"), f)
+        s.sprite.currentFrame = 0;
+        s.sprite.gotoAndPlay("flames")
+        s
+      }
+    }
+    addElementsToStage(fireVizElements)
+    fireVizElements
+  }
+
+  def getGroundElements(level: Level) = {
+    val groundVizElements = level.groundElements.map { g: GroundElement => {
+        BitmapVizElement(new createjs.Bitmap(groundDirectionToImage(g)), g)
+      }
+    }
+    addElementsToStage(groundVizElements)
+    groundVizElements
+  }
+
+/*
   def getVizElements(level: Level) = {
     val vizElements = level.elements.map {
       case _: DroneElement => throw new IllegalArgumentException("DroneElement cannot appear in level.elements")
@@ -100,6 +122,7 @@ class Viz(val level: Level, val id: String, val image: Image) {
     vizElements
 
   }
+  */
 
   def addElementsToStage(vizElements: Seq[VizElement[_ <: GameElement]]): Unit = {
     vizElements.foreach { v : VizElement[_ <: GameElement] =>
@@ -129,11 +152,13 @@ class Viz(val level: Level, val id: String, val image: Image) {
 
   def update(
       droneVizElement: VizElement[DroneElement],
-      vizElements: Seq[VizElement[_ <: GameElement]],
+      fireVizElements: Seq[VizElement[FireElement]],
+      groundVizElements: Seq[VizElement[GroundElement]],
       waterElements: Seq[VizElement[WaterElement]]) {
     camera.positionCamera(droneVizElement)
     updateCanvasCoodrinates(droneVizElement)
-    vizElements.foreach(updateCanvasCoodrinates(_))
+    fireVizElements.foreach(updateCanvasCoodrinates(_))
+    groundVizElements.foreach(updateCanvasCoodrinates(_))
     waterElements.foreach(updateCanvasCoodrinates(_))
     updateBackground()
     stage.update()
