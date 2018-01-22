@@ -3,6 +3,8 @@ package me.michaelgagnon.chopper
 import org.querki.jquery._
 import scala.collection.mutable
 
+case class Explosion(vizElement: VizElement[ExplosionElement], timestamp: Double)
+
 class Game(val level: Level, val gameId: String, val image: Image) {
 
   val viz = new Viz(level, gameId, image)
@@ -15,7 +17,9 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
-  var explosionTimestamp: Option[Double] = None
+  //var explosionTimestamp: Option[Double] = None
+
+  var explosion: Option[Explosion] = None
 
   def waterAvailableForDrop() = System.currentTimeMillis() - lastWaterTimestamp > WaterElement.interDelay
 
@@ -23,15 +27,17 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   def tick() {
     if (controller.paused) return
 
-    explosionTimestamp match {
+    explosion match {
       case None => ()
-      case Some(t) => if (System.currentTimeMillis() - t < Viz.explosionDuration) {
-        viz.stage.update()
-        return
-      } else {
-        explosionTimestamp = None
-        resetLevel()
-      }
+      case Some(Explosion(vizElement, t)) =>
+        if (System.currentTimeMillis() - t < Viz.explosionDuration) {
+          viz.stage.update()
+          return
+        } else {
+          explosion = None
+          vizElement.removeFromStage(viz.stage)
+          resetLevel()
+        }
     }
 
     // TODO: refactor
@@ -73,10 +79,9 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       case FlyResult.Collision(velocity) => {
         val maxVelocity = Math.max(Math.abs(velocity.x), Math.abs(velocity.y))
         if (maxVelocity > DroneElement.fastestSafeVelocity) {
-          val explosion = viz.newExplosionElement(Xy(droneVizElement.gameElement.currentPosition.x, droneVizElement.gameElement.currentPosition.y))
-          explosionTimestamp = Some(System.currentTimeMillis())
+          val vizElement = viz.newExplosionElement(Xy(droneVizElement.gameElement.currentPosition.x, droneVizElement.gameElement.currentPosition.y))
+          explosion = Some(Explosion(vizElement, System.currentTimeMillis()))
           droneVizElement.gameElement.currentPosition.x = -10000.0
-          droneVizElement.gameElement.currentPosition.y = -10000.0
 
         }
       }
@@ -119,7 +124,6 @@ class Game(val level: Level, val gameId: String, val image: Image) {
             if (Math.abs(wx - fx) < FireElement.dim.x / 2.0 && wy > fyTop && wy < fyBottom) {
               // Move the water out of bounds
               f.gameElement.currentPosition.x = -10000.0
-              f.gameElement.currentPosition.y = -10000.0
             }
           }
 
