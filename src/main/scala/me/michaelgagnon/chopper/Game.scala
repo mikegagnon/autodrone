@@ -53,7 +53,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
     // TODO: detect crashes and oob
     // REFACTOR
-    val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements)
+    val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements, level)
 
     if (droneResult == FlyResult.OutOfBounds) {
       waterVizElements.foreach(viz.removeWaterVizElement(_))
@@ -73,7 +73,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     }
 
     waterVizElements = waterVizElements.filter { w =>
-      val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements)
+      val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements, level)
       if (result != FlyResult.Collision) {
         true
       } else {
