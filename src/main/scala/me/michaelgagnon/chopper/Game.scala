@@ -15,11 +15,24 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
+  var explosionTimestamp: Option[Double] = None
 
   def waterAvailableForDrop() = System.currentTimeMillis() - lastWaterTimestamp > WaterElement.interDelay
 
+
   def tick() {
     if (controller.paused) return
+
+    explosionTimestamp match {
+      case None => ()
+      case Some(t) => if (System.currentTimeMillis() - t < Viz.explosionDuration) {
+        viz.stage.update()
+        return
+      } else {
+        explosionTimestamp = None
+        resetLevel()
+      }
+    }
 
     // TODO: refactor
     if (Controller.keyPressed(KeyCode.Space) && waterAvailableForDrop()) {
@@ -59,9 +72,12 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       case FlyResult.OutOfBounds => resetLevel()
       case FlyResult.Collision(velocity) => {
         val maxVelocity = Math.max(Math.abs(velocity.x), Math.abs(velocity.y))
-        println(maxVelocity)
         if (maxVelocity > DroneElement.fastestSafeVelocity) {
           val explosion = viz.newExplosionElement(Xy(droneVizElement.gameElement.currentPosition.x, droneVizElement.gameElement.currentPosition.y))
+          explosionTimestamp = Some(System.currentTimeMillis())
+          droneVizElement.gameElement.currentPosition.x = -10000.0
+          droneVizElement.gameElement.currentPosition.y = -10000.0
+
         }
       }
       case _ => ()
