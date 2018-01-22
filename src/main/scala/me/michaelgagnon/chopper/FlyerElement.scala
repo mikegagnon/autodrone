@@ -58,6 +58,10 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
     currentPosition.x = currentPosition.x + velocity.x * Viz.frameRate * 100
     currentPosition.y = currentPosition.y + velocity.y * Viz.frameRate * 100
 
+    if (!intersect(level.levelElement)) {
+      return FlyResult.OutOfBounds
+    }
+
     val collision = level.groundElements.flatMap { e=>
   
       // TODO: There is a bug here. Imagine the velocity is very high so the flyer wants to move
@@ -79,14 +83,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
 
     collision
       .headOption
-      .getOrElse {
-        //if (currentPosition.y > FlyerElement.outofBoundsY) {
-        if (!intersect(level.levelElement)) {
-          FlyResult.OutOfBounds
-        } else {
-          FlyResult.StillFlying
-        }
-      }
+      .getOrElse(FlyResult.StillFlying)
   }
 
   // TODO: move to somewhere else?
