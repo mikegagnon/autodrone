@@ -155,8 +155,12 @@ class Viz(val level: Level, val id: String, val image: Image) {
       waterVizElement
   }
 
-  def removeWaterVizElement(waterVizElement: VizElement[WaterElement]) = {
-    waterVizElement.removeFromStage(stage)
+  def removeVizElement(vizElement: VizElement[_ <: GameElement]) = {
+    vizElement.removeFromStage(stage)
+  }
+
+  def update() {
+    stage.update()
   }
 
   def update(

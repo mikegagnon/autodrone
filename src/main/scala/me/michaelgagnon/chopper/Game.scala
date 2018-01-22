@@ -1,6 +1,6 @@
 package me.michaelgagnon.chopper
 
-import org.querki.jquery._
+//import org.querki.jquery._
 import scala.collection.mutable
 
 case class Explosion(vizElement: VizElement[ExplosionElement], timestamp: Double)
@@ -17,8 +17,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
-  //var explosionTimestamp: Option[Double] = None
 
+  // When an explosion occurs, then explosion is set to Some(Explosion)
   var explosion: Option[Explosion] = None
 
   def waterAvailableForDrop() = System.currentTimeMillis() - lastWaterTimestamp > WaterElement.interDelay
@@ -27,15 +27,18 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   def tick() {
     if (controller.paused) return
 
+    // This is low level viz stuff, but this seems the simplest place to put the code.
+    // During more proper MVC separation would seem to unnecessarily obfuscate the code
     explosion match {
       case None => ()
       case Some(Explosion(vizElement, t)) =>
         if (System.currentTimeMillis() - t < Viz.explosionDuration) {
-          viz.stage.update()
+          viz.update()
           return
         } else {
+          // The explosion is over
           explosion = None
-          vizElement.removeFromStage(viz.stage)
+          viz.removeVizElement(vizElement)
           resetLevel()
         }
     }
@@ -73,7 +76,29 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     // TODO: detect crashes and oob
     // REFACTOR
     val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements, level)
+    processDroneResult(droneResult)
 
+    waterVizElements = processWaterElements()
+
+    viz.update(droneVizElement, fireVizElements, groundVizElements, waterVizElements)
+  }
+
+  def resetLevel() = {
+    waterVizElements.foreach(viz.removeVizElement(_))
+    waterVizElements = Nil
+    fireVizElements.foreach { f =>
+      f.gameElement.currentPosition.x = f.gameElement.origPosition.x
+      f.gameElement.currentPosition.y = f.gameElement.origPosition.y
+    }
+
+    droneVizElement.gameElement.currentPosition.x = droneVizElement.gameElement.origPosition.x
+    droneVizElement.gameElement.currentPosition.y = droneVizElement.gameElement.origPosition.y
+    droneVizElement.gameElement.velocity.x = 0.0
+    droneVizElement.gameElement.velocity.y = 0.0
+
+  }
+
+  def processDroneResult(droneResult: FlyResult.EnumVal) =
     droneResult match {
       case FlyResult.OutOfBounds => resetLevel()
       case FlyResult.Collision(velocity) => {
@@ -87,26 +112,6 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       }
       case _ => ()
     }
-
-    waterVizElements = processWaterElements()
-
-    viz.update(droneVizElement, fireVizElements, groundVizElements, waterVizElements)
-  }
-
-  def resetLevel() = {
-    waterVizElements.foreach(viz.removeWaterVizElement(_))
-    waterVizElements = Nil
-    fireVizElements.foreach { f =>
-      f.gameElement.currentPosition.x = f.gameElement.origPosition.x
-      f.gameElement.currentPosition.y = f.gameElement.origPosition.y
-    }
-
-    droneVizElement.gameElement.currentPosition.x = droneVizElement.gameElement.origPosition.x
-    droneVizElement.gameElement.currentPosition.y = droneVizElement.gameElement.origPosition.y
-    droneVizElement.gameElement.velocity.x = 0.0
-    droneVizElement.gameElement.velocity.y = 0.0
-
-  }
 
   def processWaterElements() = waterVizElements.filter { w =>
       val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements, level)
@@ -127,7 +132,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
             }
           }
 
-          viz.removeWaterVizElement(w)
+          viz.removeVizElement(w)
           false
         }
         case _ => true
