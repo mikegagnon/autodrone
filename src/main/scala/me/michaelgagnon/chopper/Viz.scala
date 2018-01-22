@@ -126,4 +126,16 @@ class Viz(val level: Level, val id: String, val image: Image) {
       addToStage(waterVizElement)
       waterVizElement
   }
+
+  def update(
+      droneVizElement: VizElement[DroneElement],
+      vizElements: Seq[VizElement[_ <: GameElement]],
+      waterElements: Seq[VizElement[WaterElement]]) {
+    camera.positionCamera(droneVizElement)
+    updateCanvasCoodrinates(droneVizElement)
+    vizElements.foreach(updateCanvasCoodrinates(_))
+    waterElements.foreach(updateCanvasCoodrinates(_))
+    updateBackground()
+    stage.update()
+  }
 }

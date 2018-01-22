@@ -38,7 +38,6 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       val waterElement = WaterElement(Xy(dcp.x, dcp.y))
       val waterVizElement = viz.newWaterVizElement(waterElement)
       waterElements.append(waterVizElement)
-      //viz.addToStage(waterViz)
     }
 
 
@@ -60,13 +59,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
     droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements)
     waterElements.foreach(_.gameElement.updateState(Xy(0.0, 0.0), level.elements))
-    // TODO: figure out what to hoist into Viz
-    viz.camera.positionCamera(droneVizElement)
-    viz.updateCanvasCoodrinates(droneVizElement)
-    vizElements.foreach(viz.updateCanvasCoodrinates(_))
-    waterElements.foreach(viz.updateCanvasCoodrinates(_))
-    viz.updateBackground()
-    viz.stage.update()
+
+    viz.update(droneVizElement, vizElements, waterElements)
   }
 
 }
