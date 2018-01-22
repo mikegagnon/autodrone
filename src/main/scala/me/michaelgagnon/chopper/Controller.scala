@@ -24,7 +24,6 @@ object Controller {
     KeyCode.Space -> false)
 
   def init() {
-    println("asdf")
     dom.window.onkeydown = Controller.onkeydown _
     dom.window.onkeyup = Controller.onkeyup _
   }
