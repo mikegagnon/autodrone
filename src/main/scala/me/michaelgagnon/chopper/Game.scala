@@ -55,7 +55,12 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     // REFACTOR
     val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements)
 
-    waterVizElements = waterVizElements.filter { w =>
+    waterVizElements = processWaterElements()
+
+    viz.update(droneVizElement, fireVizElements, groundVizElements, waterVizElements)
+  }
+
+  def processWaterElements() = waterVizElements.filter { w =>
       val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements)
       if (result != FlyResult.Collision) {
         true
@@ -80,8 +85,5 @@ class Game(val level: Level, val gameId: String, val image: Image) {
           false
       }
     }
-
-    viz.update(droneVizElement, fireVizElements, groundVizElements, waterVizElements)
-  }
 
 }
