@@ -52,8 +52,29 @@ class Game(val level: Level, val gameId: String, val image: Image) {
         0.0
       }
 
-    println(droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements))
-    waterVizElements.foreach(_.gameElement.updateState(Xy(0.0, 0.0), level.elements))
+    // TODO: detect crashes and oob
+    val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements)
+
+    waterVizElements.foreach{ w =>
+      val result = w.gameElement.updateState(Xy(0.0, 0.0), level.elements)
+      if (result == FlyResult.Collision) {
+        
+        /*val fireElements = vizElements.filter {
+          case SpriteVizElement(sprite, FireElement(orig)) => 
+        }*/
+
+        /*vizElements
+          .foreach {
+              case SpriteVizElement(_, FireElement(orig)) => {
+
+              }
+              case _=> false
+            
+          }
+        */
+
+      }
+    }
 
     viz.update(droneVizElement, vizElements, waterVizElements)
   }
