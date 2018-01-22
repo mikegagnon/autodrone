@@ -19,7 +19,7 @@ object FlyResult {
   sealed trait EnumVal
   case object StillFlying extends EnumVal
   case object OutOfBounds extends EnumVal
-  case class Collision(velocity: Xy) extends EnumVal
+  case class GroundCollision(velocity: Xy) extends EnumVal
 }
 
 abstract class FlyerElement(override val origPosition: Xy) extends GameElement(origPosition) {
@@ -71,7 +71,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
 
         currentPosition.x = prev.x
         currentPosition.y = prev.y
-        Some(FlyResult.Collision(prevVelocity))
+        Some(FlyResult.GroundCollision(prevVelocity))
       } else {
         None
       }
