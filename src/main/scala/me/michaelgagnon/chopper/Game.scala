@@ -28,6 +28,9 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       val dcp = droneVizElement.gameElement.currentPosition
       // TODO: abstraction violations
       val waterElement = WaterElement(Xy(dcp.x, dcp.y))
+      waterElement.velocity.x = dv.x 
+      waterElement.velocity.y = dv.y
+
       val waterVizElement = viz.newWaterVizElement(waterElement)
       waterVizElements = waterVizElement :: waterVizElements
     }
