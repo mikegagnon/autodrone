@@ -17,14 +17,19 @@ object FlyerElement {
   val maxVelocity = Xy(30.0, 30.0)
 }
 
+object FlyResult {
+  sealed trait EnumVal
+  case object StillFlying extends EnumVal
+  case object OutofBounds extends EnumVal
+  case object Collision extends EnumVal
+}
+
 abstract class FlyerElement(override val origPosition: Xy) extends GameElement(origPosition) {
 
   val mass: Double
   val radius: Double
 
   def a = Math.PI * radius * radius / 10000.0
-  var inBounds = true
-  var currentlyFlying = false
   val velocity = Xy(0.0, 0.0)
   val F = Xy(0.0, 0.0)
 
@@ -32,7 +37,9 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
   val acceleration = Xy(F.x / mass, FlyerElement.ag + (F.y / mass))
   
   // TODO: air drag
-  def updateState(thrust: Xy, elements: Seq[GameElement]): Unit = {
+  // Returns whether or not there was a collision or out of bounds
+  def updateState(thrust: Xy, elements: Seq[GameElement]): FlyResult.EnumVal = {
+
     var prev = Xy(currentPosition.x, currentPosition.y)
 
     F.x = -0.5 * FlyerElement.cd * a * FlyerElement.rho * velocity.x * velocity.x * velocity.x / Math.abs(velocity.x)
@@ -53,10 +60,10 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
     currentPosition.x = currentPosition.x + velocity.x * Viz.frameRate * 100
     currentPosition.y = currentPosition.y + velocity.y * Viz.frameRate * 100
 
-    elements.filter {
+    val collision = elements.filter {
       case g: GroundElement => true
       case _ => false
-    }.foreach { e=>
+    }.flatMap { e=>
   
       // TODO: There is a bug here. Imagine the velocity is very high so the flyer wants to move
       // 100 pixels to right. But there is a groudn element 99 pixels to the right. The incorrect
@@ -68,15 +75,21 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
 
         currentPosition.x = prev.x
         currentPosition.y = prev.y
+        Some(FlyResult.Collision)
+      } else {
+        None
       }
     }
 
-    if (currentPosition.y > FlyerElement.outofBoundsY) {
-      currentlyFlying = false
-      inBounds = false
-    }
-
-
+    collision
+      .headOption
+      .getOrElse {
+        if (currentPosition.y > FlyerElement.outofBoundsY) {
+          FlyResult.OutofBounds
+        } else {
+          FlyResult.StillFlying
+        }
+      }
   }
 
   def intersect(element: GameElement): Boolean = {

@@ -52,7 +52,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
         0.0
       }
 
-    droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements)
+    println(droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements))
     waterVizElements.foreach(_.gameElement.updateState(Xy(0.0, 0.0), level.elements))
 
     viz.update(droneVizElement, vizElements, waterVizElements)
