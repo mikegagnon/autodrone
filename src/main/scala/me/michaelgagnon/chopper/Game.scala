@@ -100,17 +100,21 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   def processDroneResult(droneResult: FlyResult.EnumVal) =
     droneResult match {
       case FlyResult.OutOfBounds => resetLevel()
+      case FlyResult.FireCollision => newExplosion()
       case FlyResult.GroundCollision(velocity) => {
         val maxVelocity = Math.max(Math.abs(velocity.x), Math.abs(velocity.y))
         if (maxVelocity > DroneElement.fastestSafeVelocity) {
-          val vizElement = viz.newExplosionElement(Xy(droneVizElement.gameElement.currentPosition.x, droneVizElement.gameElement.currentPosition.y))
-          explosion = Some(Explosion(vizElement, System.currentTimeMillis()))
-          droneVizElement.gameElement.currentPosition.x = -10000.0
-
+          newExplosion()
         }
       }
-      case _ => ()
+      case FlyResult.StillFlying => ()
     }
+
+  def newExplosion() {
+    val vizElement = viz.newExplosionElement(Xy(droneVizElement.gameElement.currentPosition.x, droneVizElement.gameElement.currentPosition.y))
+    explosion = Some(Explosion(vizElement, System.currentTimeMillis()))
+    droneVizElement.gameElement.currentPosition.x = -10000.0
+  }
 
   def processWaterElements() = waterVizElements.filter { w =>
       val result = w.gameElement.updateState(Xy(0.0, 0.0), level)

@@ -19,6 +19,7 @@ object FlyResult {
   sealed trait EnumVal
   case object StillFlying extends EnumVal
   case object OutOfBounds extends EnumVal
+  case object FireCollision extends EnumVal
   case class GroundCollision(velocity: Xy) extends EnumVal
 }
 
@@ -62,7 +63,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
       return FlyResult.OutOfBounds
     }
 
-    val collision = level.groundElements.flatMap { e=>
+    level.groundElements.foreach { e =>
   
       // TODO: There is a bug here. Imagine the velocity is very high so the flyer wants to move
       // 100 pixels to right. But there is a groudn element 99 pixels to the right. The incorrect
@@ -75,15 +76,17 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
 
         currentPosition.x = prev.x
         currentPosition.y = prev.y
-        Some(FlyResult.GroundCollision(prevVelocity))
-      } else {
-        None
+        return FlyResult.GroundCollision(prevVelocity)
       }
     }
 
-    collision
-      .headOption
-      .getOrElse(FlyResult.StillFlying)
+    level.fireElements.foreach { e =>
+      if (intersect(e)) {
+        return FlyResult.FireCollision
+      }
+    }
+
+    return FlyResult.StillFlying
   }
 
   // TODO: move to somewhere else?
