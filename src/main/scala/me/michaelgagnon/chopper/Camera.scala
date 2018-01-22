@@ -13,7 +13,7 @@ class Camera(val canvasSize: Xy, val levelDim: Xy) {
   val leftBorder = xMargin
   val rightBorder = canvasSize.x - xMargin
   val upBorder = yMargin
-  val downBorder = canvasSize.y - yMargin
+  val downBorder = yMargin
 
   // TODO: document
   val yMinimum = -500
