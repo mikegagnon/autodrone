@@ -1,6 +1,7 @@
 package me.michaelgagnon.chopper
 
 import org.querki.jquery._
+import scala.collection.mutable
 
 class Game(val viz: Viz, val level: Level) {
 
@@ -14,6 +15,11 @@ class Game(val viz: Viz, val level: Level) {
   // TODO: maybe store vizElements in viz?
   val vizElements: Seq[VizElement[_ <: GameElement]] = viz.getVizElements(level)
   viz.addElementsToStage(vizElements)
+
+  val waterElements: mutable.ListBuffer[VizElement[WaterElement]] = mutable.ListBuffer(vizElements: _*).flatMap {
+      case BitmapVizElement(bitmap, water: WaterElement) => Some(BitmapVizElement(bitmap, water))
+      case _ => None
+    }
 
   def tick() {
     if (controller.paused) return
@@ -35,7 +41,7 @@ class Game(val viz: Viz, val level: Level) {
       }
 
     droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.elements)
-
+    waterElements.foreach(_.gameElement.updateState(Xy(0.0, 0.0), level.elements))
     // TODO: figure out what to hoist into Viz
     viz.camera.positionCamera(droneVizElement)
     viz.updateCanvasCoodrinates(droneVizElement)
