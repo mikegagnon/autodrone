@@ -7,6 +7,7 @@ abstract class GameElement(val origPosition: Xy) {
 
 object DroneElement {
   val dim = Xy(46.0, 46.0)
+  val fastestSafeVelocity = 5.0
 }
 
 // TODO: mass radius?

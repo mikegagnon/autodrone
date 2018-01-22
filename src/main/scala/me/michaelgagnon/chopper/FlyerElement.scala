@@ -19,7 +19,7 @@ object FlyResult {
   sealed trait EnumVal
   case object StillFlying extends EnumVal
   case object OutOfBounds extends EnumVal
-  case object Collision extends EnumVal
+  case class Collision(velocity: Xy) extends EnumVal
 }
 
 abstract class FlyerElement(override val origPosition: Xy) extends GameElement(origPosition) {
@@ -68,12 +68,13 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
       // behavior is the flyer stops moving 99 pixels to the left of the ground element (prev.x,
       // prev.y) To fix this we would need interpolation or something.
       if (intersect(e)) {
+        val prevVelocity = Xy(velocity.x, velocity.y)
         velocity.y = 0
         velocity.x = 0
 
         currentPosition.x = prev.x
         currentPosition.y = prev.y
-        Some(FlyResult.Collision)
+        Some(FlyResult.Collision(prevVelocity))
       } else {
         None
       }

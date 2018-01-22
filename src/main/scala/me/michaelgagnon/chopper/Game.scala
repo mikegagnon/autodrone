@@ -13,8 +13,6 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   var waterVizElements = List[VizElement[WaterElement]]()
   val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement()
 
-  val explosion = viz.newExplosionElement(Xy(200, -200))
-
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
 
@@ -57,8 +55,16 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     // REFACTOR
     val droneResult = droneVizElement.gameElement.updateState(Xy(thrustX, thrustY), level.groundElements, level)
 
-    if (droneResult == FlyResult.OutOfBounds) {
-      resetLevel()
+    droneResult match {
+      case FlyResult.OutOfBounds => resetLevel()
+      case FlyResult.Collision(velocity) => {
+        val maxVelocity = Math.max(Math.abs(velocity.x), Math.abs(velocity.y))
+        println(maxVelocity)
+        if (maxVelocity > DroneElement.fastestSafeVelocity) {
+          val explosion = viz.newExplosionElement(Xy(droneVizElement.gameElement.currentPosition.x, droneVizElement.gameElement.currentPosition.y))
+        }
+      }
+      case _ => ()
     }
 
     waterVizElements = processWaterElements()
@@ -84,10 +90,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   def processWaterElements() = waterVizElements.filter { w =>
       val result = w.gameElement.updateState(Xy(0.0, 0.0), level.groundElements, level)
 
-      if (result != FlyResult.Collision) {
-        true
-      } else {
-      
+      result match {
+        case FlyResult.Collision(_) => {
           fireVizElements.foreach { f: VizElement[FireElement] =>
             val wx = w.gameElement.currentPosition.x
             val wy = w.gameElement.currentPosition.y
@@ -105,7 +109,9 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
           viz.removeWaterVizElement(w)
           false
+        }
+        case _ => true
       }
-    }
+  }
 
 }
