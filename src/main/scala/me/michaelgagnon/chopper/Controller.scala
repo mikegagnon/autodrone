@@ -124,8 +124,13 @@ class Controller(val gameId: String) {
       Global.currentGameId = Some(gameId)
       playPauseButton.textContent = "Pause"
       paused = false
+      assert(Global.currentEditor.nonEmpty)
+      Global.currentEditor.get.setOption("readOnly","nocursor")
+
     } else {
       assert(Global.currentGame.nonEmpty)
+      assert(Global.currentEditor.nonEmpty)
+      Global.currentEditor.get.setOption("readOnly", false)
       Global.currentGameId = None
       playPauseButton.textContent = "Play"
       paused = true

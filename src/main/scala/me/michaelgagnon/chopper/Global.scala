@@ -44,6 +44,8 @@ object Global {
     }
 
     currentGame.foreach(_.controller.paused = false)
+    currentEditor.foreach(_.setOption("readOnly","nocursor"))
+
 
     createjs.Ticker.setFPS(Viz.fps)
     createjs.Ticker.addEventListener("tick", tickReceive _)
