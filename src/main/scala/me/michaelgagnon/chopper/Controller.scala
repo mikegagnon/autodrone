@@ -6,6 +6,13 @@ import org.scalajs.dom.html.Button
 import scala.collection.mutable
 import scala.scalajs.js.annotation._
 
+// TODO:
+import org.denigma.codemirror.{CodeMirror, EditorConfiguration, Editor}
+import org.scalajs.dom
+import org.scalajs.dom.raw.HTMLTextAreaElement
+
+import scala.scalajs.js
+
 // TODO: cleanup and refactor
 
 object KeyCode {
@@ -30,6 +37,29 @@ object Controller {
   def init() {
     dom.window.onkeydown = Controller.onkeydown _
     dom.window.onkeyup = Controller.onkeyup _
+  }
+
+  def initEditor(gameId: String): Editor = {
+    val params = js.Dynamic.literal(
+      mode = "javascript",
+      theme = "eclipse",
+      lineNumbers = true
+    ).asInstanceOf[EditorConfiguration]
+
+    val text =
+"""if (altitude < 6 meters) then { thrustUp = 3 thrust }
+if (altitude > 6 meters) then { thrustUp = 0 thrust }
+"""
+
+    dom.document.getElementById(gameId + "-editor") match {
+      case el:HTMLTextAreaElement => {
+        val m = CodeMirror.fromTextArea(el,params)
+        m.getDoc().setValue(text)
+        m
+      }
+      case _=> throw new IllegalArgumentException("cannot find text area for the code")
+    }
+
   }
 
   def onkeydown(e: dom.KeyboardEvent) {

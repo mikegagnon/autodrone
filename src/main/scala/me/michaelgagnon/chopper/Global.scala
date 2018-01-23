@@ -7,13 +7,22 @@ import scala.collection.mutable
 import scala.scalajs.js
 import com.scalawarrior.scalajs.createjs
 
+// TODO:
+import org.denigma.codemirror
+
+
 object Global {
 
   val games = mutable.Map[String, Game]()
 
+  // TODO: unify games editors into single class or something?
+  val editors = mutable.Map[String, codemirror.Editor]()
+
   var currentGameId: Option[String] = Some("chopper1")
 
   def currentGame: Option[Game] = currentGameId.map(games(_))
+
+  def currentEditor: Option[codemirror.Editor] = currentGameId.map(editors(_))
 
   val queue = new createjs.LoadQueue()
 
@@ -31,6 +40,7 @@ object Global {
       val gameId = div.id
       val level = Level.levelMap(gameId)
       games(gameId) = new Game(level, gameId, image)
+      editors(gameId) = Controller.initEditor(gameId)
     }
 
     currentGame.foreach(_.controller.paused = false)

@@ -6,8 +6,8 @@ libraryDependencies += "org.scala-js" %%% "scala-parser-combinators" % "1.0.2"
 libraryDependencies += "org.querki" %%% "jquery-facade" % "1.2"
 
 
-resolvers += sbt.Resolver.bintrayRepo("denigma", "denigma-releases") //add resolver
-libraryDependencies += "org.denigma" %%% "codemirror-facade" % "5.13.2-0.8" //add dependency
+resolvers += sbt.Resolver.bintrayRepo("denigma", "denigma-releases")
+libraryDependencies += "org.denigma" %%% "codemirror-facade" % "5.13.2-0.8"
 
 enablePlugins(ScalaJSPlugin)
 

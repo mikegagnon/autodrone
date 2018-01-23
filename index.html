@@ -24,16 +24,11 @@
       <div>
         <button id="chopper1-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper1')">Pause</button>
       </div>
-    
-      <script>
-      var cm = CodeMirror(document.getElementById("chopper1"), {
-        value: "if (altitude < 6 meters) then { thrustUp = 3 thrust }\nif (altitude > 6 meters) then { thrustUp = 0 thrust }",
-        mode:  "javascript",
-        theme: "eclipse",
-        lineNumbers: true
-      });
 
-      </script>
+      <div>
+        <textarea id="chopper1-editor"></textarea>
+      </div>
+    
     </div>
 
 
@@ -43,6 +38,11 @@
       <div>
         <button id="chopper2-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper2')">Play</button>
       </div>
+
+      <div>
+        <textarea id="chopper2-editor"></textarea>
+      </div>
+    
     </div>
 
     <div id="chopper3" class="chopper-div">
@@ -51,6 +51,11 @@
       <div>
         <button id="chopper3-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper3')">Play</button>
       </div>
+
+      <div>
+        <textarea id="chopper3-editor"></textarea>
+      </div>
+    
     </div>
 
 
