@@ -1,5 +1,7 @@
 package me.michaelgagnon.chopper
 
+import com.scalawarrior.scalajs.createjs
+
 object Camera {
   val verticalScroll = true
 }
@@ -26,6 +28,10 @@ class Camera(val canvasSize: Xy, val levelDim: Xy) {
     val levelCoordinate = v.gameElement.currentPosition
     val canvasCoordinate = Xy(levelCoordinate.x - x, levelCoordinate.y - y)
     v.setXy(canvasCoordinate)
+  }
+
+  def setContainerY(scaleContainer: createjs.Container) {
+    scaleContainer.y = Math.abs(canvasSize.y + y)
   }
 
   def placeBackground(background: Background) {

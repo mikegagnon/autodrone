@@ -13,6 +13,7 @@ object Level {
 case class LevelElement(override val origPosition: Xy, dim: Xy) extends GameElement(origPosition)
 
 sealed trait Level {
+  val drawScale: Boolean
   val dim: Xy
   def levelElement = LevelElement(
     Xy(-Level.margin, -dim.y - Level.margin),
@@ -24,6 +25,7 @@ sealed trait Level {
 }
 
 object Level1 extends Level {
+  val drawScale = true
   val dim = Xy(2000, 600)
   val numBackgrounds = 3
   val droneElement = DroneElement(Xy(100.0, -DroneElement.dim.y - GroundElement.dim.y))

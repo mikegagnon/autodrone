@@ -35,6 +35,8 @@ class Viz(val level: Level, val id: String, val image: Image) {
 
   canvas.attr("id", canvasId)
 
+  val scaleContainer = new createjs.Container()
+
   val stage = new createjs.Stage(canvasId)
 
   val canvasSize = Xy(
@@ -85,6 +87,10 @@ class Viz(val level: Level, val id: String, val image: Image) {
     camera.placeBackground(background)
     stage.addChild(bitmap)
     background
+  }
+
+  if (level.drawScale) {
+    drawScale()
   }
 
   def groundDirectionToImage(ground: GroundElement) =
@@ -179,6 +185,7 @@ class Viz(val level: Level, val id: String, val image: Image) {
     groundVizElements.foreach(updateCanvasCoodrinates(_))
     waterElements.foreach(updateCanvasCoodrinates(_))
     updateBackground()
+    camera.setContainerY(scaleContainer)
     stage.update()
   }
 
@@ -192,8 +199,8 @@ class Viz(val level: Level, val id: String, val image: Image) {
 
   def drawScale() {
 
-    val heightInMeters = Math.floor(canvasSize.y / Level.pixelsPerMeter).toInt
-
+    val heightInMeters = Math.floor(level.dim.y / Level.pixelsPerMeter).toInt
+    
     for(m <- 1 to heightInMeters) {
       val y = canvasSize.y - m * Level.pixelsPerMeter
 
@@ -202,15 +209,16 @@ class Viz(val level: Level, val id: String, val image: Image) {
       line.graphics.moveTo(0, y)
       line.graphics.lineTo(15, y)
       line.graphics.endStroke()
-      stage.addChild(line)
+      scaleContainer.addChild(line)
 
-       var text = new createjs.Text(m.toString, "15px Arial", "#000")
-       text.x = 20
-       text.y = y + 5
-       text.textBaseline = "alphabetic"
-       stage.addChild(text)
+      var text = new createjs.Text(m.toString, "15px Arial", "#000")
+      text.x = 20
+      text.y = y + 5
+      text.textBaseline = "alphabetic"
+      scaleContainer.addChild(text)
     }
 
+    stage.addChild(scaleContainer)
 
     stage.update()
   }
