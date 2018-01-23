@@ -26,7 +26,7 @@ sealed trait Level {
 
 object Level1 extends Level {
   val drawScale = true
-  val dim = Xy(2000, 600)
+  val dim = Xy(2000, 3000)
   val numBackgrounds = 3
   val droneElement = DroneElement(Xy(100.0, -DroneElement.dim.y - GroundElement.dim.y))
 
