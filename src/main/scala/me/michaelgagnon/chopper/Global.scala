@@ -13,7 +13,7 @@ object Global {
 
   var currentGameId: Option[String] = Some("chopper1")
 
-  def currentGame: Option[Game] = currentGameId.map(games(_)) //games(currentGameId)
+  def currentGame: Option[Game] = currentGameId.map(games(_))
 
   val queue = new createjs.LoadQueue()
 
@@ -35,10 +35,6 @@ object Global {
 
     currentGame.foreach(_.controller.paused = false)
 
-    //currentGame.controller.clickPLay
-
-    //paused = false
-
     createjs.Ticker.setFPS(Viz.fps)
     createjs.Ticker.addEventListener("tick", tickReceive _)
 
@@ -47,7 +43,6 @@ object Global {
 
 
   def tickReceive(e: js.Dynamic): Boolean = {
-    //games(currentGameId).tick()
     currentGame.foreach(_.tick())
     true
   }
