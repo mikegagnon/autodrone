@@ -12,14 +12,14 @@
     <script type="text/javascript" src="./js/bootstrap.js"></script>
     <script type="text/javascript" src="./js/preloadjs-0.6.2.min.js"></script>
     <script type="text/javascript" src="js/codemirror.js"></script>
-    <script type="text/javascript" src="js/javascript.js"></script>
+    <script type="text/javascript" src="js/bk-lang.js"></script>
     <script type="text/javascript" src="./js/easeljs-0.8.2.min.js"></script>
 
   </head>
   <body>
 
     <div id="chopper1" class="chopper-div">
-      <canvas width="1000" height="100" class="chopper-canvas"></canvas> 
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
 
       <div>
         <button id="chopper1-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper1')">Pause</button>
@@ -29,7 +29,8 @@
       var cm = CodeMirror(document.getElementById("chopper1"), {
         value: "if (altitude < 6 meters) then (thrustUp = 3 meters/second^2)\nif (altitude > 6 meters) then (thrustUp = 0 meters/second^2)",
         mode:  "javascript",
-        theme: "eclipse"
+        theme: "eclipse",
+        lineNumbers: true
       });
 
       </script>
