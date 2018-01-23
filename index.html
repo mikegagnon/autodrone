@@ -5,12 +5,14 @@
     <title>Chopper</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="css/eclipse.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="./js/tether.min.js"></script>    
     <script type="text/javascript" src="./js/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="./js/bootstrap.js"></script>
     <script type="text/javascript" src="./js/preloadjs-0.6.2.min.js"></script>
     <script type="text/javascript" src="js/codemirror.js"></script>
+    <script type="text/javascript" src="js/javascript.js"></script>
     <script type="text/javascript" src="./js/easeljs-0.8.2.min.js"></script>
 
   </head>
@@ -22,6 +24,15 @@
       <div>
         <button id="chopper1-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper1')">Pause</button>
       </div>
+    
+      <script>
+      var cm = CodeMirror(document.getElementById("chopper1"), {
+        value: "if (altitude < 6 meters) then (thrustUp = 3 meters/second^2)\nif (altitude > 6 meters) then (thrustUp = 0 meters/second^2)",
+        mode:  "javascript",
+        theme: "eclipse"
+      });
+
+      </script>
     </div>
 
 
