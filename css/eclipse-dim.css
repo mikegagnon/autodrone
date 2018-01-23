@@ -1,0 +1,23 @@
+.cm-s-eclipse-dim span.cm-meta { color: rgba(255, 23, 23, 0.3); }
+.cm-s-eclipse-dim span.cm-keyword { line-height: 1em; font-weight: bold; color: rgba(127, 0, 85, 0.3); }
+.cm-s-eclipse-dim span.cm-atom { color: rgba(34, 17, 153, 0.3); }
+.cm-s-eclipse-dim span.cm-number { color: rgba(17, 102, 68, 0.3); }
+.cm-s-eclipse-dim span.cm-def { color: rgba(0, 0, 255, 0.3); }
+.cm-s-eclipse-dim span.cm-variable { color: rgba(0, 0, 0, 0.3); }
+.cm-s-eclipse-dim span.cm-variable-2 { color: rgba(0, 0, 192, 0.3); }
+.cm-s-eclipse-dim span.cm-variable-3, .cm-s-eclipse span.cm-type { color: rgba(0, 0, 192, 0.3); }
+.cm-s-eclipse-dim span.cm-property { color: rgba(0, 0, 0, 0.3); }
+.cm-s-eclipse-dim span.cm-operator { color: rgba(0, 0, 0, 0.3); }
+.cm-s-eclipse-dim span.cm-comment { color: rgba(63, 127, 95, 0.3); }
+.cm-s-eclipse-dim span.cm-string { color: rgba(42, 0, 255, 0.3); }
+.cm-s-eclipse-dim span.cm-string-2 { color: rgba(255, 85, 0, 0.3); }
+.cm-s-eclipse-dim span.cm-qualifier { color: rgba(85, 85, 85, 0.3); }
+.cm-s-eclipse-dim span.cm-builtin { color: rgba(51, 0, 170, 0.3); }
+.cm-s-eclipse-dim span.cm-bracket { color: rgba(204, 204, 119, 0.3); }
+.cm-s-eclipse-dim span.cm-tag { color: rgba(17, 119, 0, 0.3); }
+.cm-s-eclipse-dim span.cm-attribute { color: rgba(0, 0, 204, 0.3); }
+.cm-s-eclipse-dim span.cm-link { color: rgba(34, 17, 153, 0.3); }
+.cm-s-eclipse-dim span.cm-error { color: rgba(255, 0, 0, 0.3); }
+
+.cm-s-eclipse-dim .CodeMirror-activeline-background { background: rgba(232, 242, 255, 0.3); }
+.cm-s-eclipse-dim .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }

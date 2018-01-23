@@ -44,7 +44,10 @@ object Global {
     }
 
     currentGame.foreach(_.controller.paused = false)
-    currentEditor.foreach(_.setOption("readOnly","nocursor"))
+    currentEditor.foreach { e =>
+      e.setOption("readOnly","nocursor")
+      e.setOption("theme", Controller.editorThemeDim)
+    }
 
 
     createjs.Ticker.setFPS(Viz.fps)

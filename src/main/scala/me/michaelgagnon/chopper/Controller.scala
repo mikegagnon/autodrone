@@ -27,6 +27,9 @@ object KeyCode {
 @JSExportTopLevel("Controller")
 object Controller {
  
+  val editorTheme = "eclipse"
+  val editorThemeDim = "eclipse-dim"
+
   val keyPressed = mutable.Map[Int, Boolean](
     KeyCode.Up -> false,
     KeyCode.Down -> false,
@@ -42,7 +45,7 @@ object Controller {
   def initEditor(gameId: String): Editor = {
     val params = js.Dynamic.literal(
       mode = "javascript",
-      theme = "eclipse",
+      theme = editorTheme,
       lineNumbers = true
     ).asInstanceOf[EditorConfiguration]
 
@@ -126,11 +129,13 @@ class Controller(val gameId: String) {
       paused = false
       assert(Global.currentEditor.nonEmpty)
       Global.currentEditor.get.setOption("readOnly","nocursor")
+      Global.currentEditor.get.setOption("theme", Controller.editorThemeDim)
 
     } else {
       assert(Global.currentGame.nonEmpty)
       assert(Global.currentEditor.nonEmpty)
       Global.currentEditor.get.setOption("readOnly", false)
+      Global.currentEditor.get.setOption("theme", Controller.editorTheme)
       Global.currentGameId = None
       playPauseButton.textContent = "Play"
       paused = true
