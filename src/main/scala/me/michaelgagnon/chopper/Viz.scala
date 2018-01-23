@@ -211,7 +211,7 @@ class Viz(val level: Level, val id: String, val image: Image) {
       line.graphics.endStroke()
       scaleContainer.addChild(line)
 
-      var text = new createjs.Text(m.toString, "15px Arial", "#000")
+      var text = new createjs.Text(m.toString + "m", "15px Arial", "#000")
       text.x = 20
       text.y = y + 5
       text.textBaseline = "alphabetic"
