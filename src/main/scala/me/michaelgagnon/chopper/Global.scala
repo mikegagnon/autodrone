@@ -11,9 +11,9 @@ object Global {
 
   val games = mutable.Map[String, Game]()
 
-  var currentGameId = "chopper1"
+  var currentGameId: Option[String] = Some("chopper1")
 
-  def currentGame = games(currentGameId)
+  def currentGame: Option[Game] = currentGameId.map(games(_)) //games(currentGameId)
 
   val queue = new createjs.LoadQueue()
 
@@ -33,7 +33,11 @@ object Global {
       games(gameId) = new Game(level, gameId, image)
     }
 
-    currentGame.controller.paused = false
+    currentGame.foreach(_.controller.paused = false)
+
+    //currentGame.controller.clickPLay
+
+    //paused = false
 
     createjs.Ticker.setFPS(Viz.fps)
     createjs.Ticker.addEventListener("tick", tickReceive _)
@@ -43,7 +47,8 @@ object Global {
 
 
   def tickReceive(e: js.Dynamic): Boolean = {
-    games(currentGameId).tick()
+    //games(currentGameId).tick()
+    currentGame.foreach(_.tick())
     true
   }
 }

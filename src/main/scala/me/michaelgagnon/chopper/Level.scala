@@ -3,7 +3,8 @@ package me.michaelgagnon.chopper
 object Level {
   val levelMap = Map(
     "chopper1" -> Level1,
-    "chopper2" -> Level1
+    "chopper2" -> Level1,
+    "chopper3" -> Level1
   )
   val margin = 100.0
 

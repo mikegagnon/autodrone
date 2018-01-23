@@ -12,7 +12,7 @@ class Resting(var position: Xy, var numTicks: Int)
 class Game(val level: Level, val gameId: String, val image: Image) {
 
   val viz = new Viz(level, gameId, image)
-  val controller = new Controller()
+  val controller = new Controller(gameId)
 
   val fireVizElements: Seq[VizElement[FireElement]] = viz.getFireElements(level)
   val groundVizElements: Seq[VizElement[GroundElement]] = viz.getGroundElements(level)

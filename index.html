@@ -17,14 +17,31 @@
   <body>
 
     <div id="chopper1" class="chopper-div">
-      <!-- <canvas width="1415" height="813" class="chopper-canvas"></canvas> -->
-      <canvas width="1415" height="500" class="chopper-canvas"></canvas> 
+      <canvas width="1000" height="100" class="chopper-canvas"></canvas> 
+
+      <div>
+        <button id="chopper1-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper1')">Pause</button>
+      </div>
     </div>
 
-    <!--<div id="chopper2" class="chopper-div">
-      <canvas width="500" height="200" class="chopper-canvas"></canvas>
+
+    <div id="chopper2" class="chopper-div">
+      <canvas width="1000" height="100" class="chopper-canvas"></canvas> 
+
+      <div>
+        <button id="chopper2-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper2')">Play</button>
+      </div>
     </div>
-    -->
+
+    <div id="chopper3" class="chopper-div">
+      <canvas width="1000" height="100" class="chopper-canvas"></canvas> 
+
+      <div>
+        <button id="chopper3-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper3')">Play</button>
+      </div>
+    </div>
+
+
     <script type="text/javascript" src="./target/scala-2.11/chopper-fastopt.js"></script>
 
   </body>

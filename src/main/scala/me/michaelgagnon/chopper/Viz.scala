@@ -33,6 +33,7 @@ class Viz(val level: Level, val id: String, val image: Image) {
 
   val canvas = div.find("canvas")
 
+  // TODO: read canvas id instead of write canvasid
   canvas.attr("id", canvasId)
 
   val scaleContainer = new createjs.Container()
