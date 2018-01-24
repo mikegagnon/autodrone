@@ -209,7 +209,7 @@ factor→LPAREN exp RPAREN;
 
   def ifClause2 : Parser[Expression] =
     term ~ opt(OR ~ term) ^^ {
-      case a ~ b => Expression(a, None)
+      case a ~ b => Expression(a, b.map(_._2))
     }
   
 
