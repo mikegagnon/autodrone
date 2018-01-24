@@ -174,13 +174,23 @@ object ChopperParser extends Parsers {
 */
 
 
-  def program: Parser[ChopperAst] = phrase(block)
+  def program: Parser[Statements] = phrase(block)
   
-  def block: Parser[ChopperAst] = rep1(statement) ^^ { case itList => Statements(itList) }
+  def block: Parser[Statements] = rep1(statement) ^^ { case itList => Statements(itList) }
 
+  def ifClause : Parser[IfThen] =
+    IF ~ OPENPAREN /*~ expr*/ ~ CLOSEPAREN ~ THEN ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
+      case if_ ~ op ~ cp ~ then_ ~ oc ~ b ~ cc => IfThen(b)
+
+    }
+  /*def elseIfClause : Parser[ChopperAst] = "else" ~ "then" ~ ifClause
+  def elseClause : Parser[ChopperAst] = "else" ~ "then" ~ "{" ~ block ~ "}"
+  def ifElse : Parser[ChopperAst] = ifClause ~ opt(rep1(elseIfClause)) ~ opt(elseClause)
+  */
+  case class IfThen(thenBlock: Statements) extends ChopperAst
 
   def statement: Parser[ChopperAst] = {
-    assignment
+    assignment //| ifElse
   }
 
   case class Assignment(variable: IDENTIFIER, value: DOUBLELITERAL) extends ChopperAst
