@@ -179,23 +179,23 @@ object ChopperParser extends Parsers {
 
   def program: Parser[Statements] = phrase(block)
   
-  def block: Parser[Statements] = rep1(statement) ^^ { case itList => Statements(itList) }
+  def block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
 
   def ifClause : Parser[IfClause] =
-    IF ~ OPENPAREN /*~ expr*/ ~ CLOSEPAREN ~ THEN ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
+    IF ~ OPENPAREN /*~ expr*/ ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
       case if_ ~ op ~ cp ~ then_ ~ oc ~ b ~ cc => IfClause(b)
     }
   
   def elseIfClause : Parser[ElseIfClause] =
-    ELSE ~ THEN ~ ifClause ^^ {
-      case else_ ~ then_ ~ ic => ElseIfClause(ic)
+    ELSE ~ ifClause ^^ {
+      case else_ ~ ic => ElseIfClause(ic)
     }
   
-  def elseClause : Parser[ElseClause] = ELSE ~ THEN ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
+  def elseClause : Parser[ElseClause] = ELSE ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
       case else_ ~ then_ ~ oc ~ b ~ cc => ElseClause(b)
     }
   
-  def ifElse : Parser[ChopperAst] = ifClause ~ opt(rep1(elseIfClause)) ~ opt(elseClause) ^^ {
+  def ifElse : Parser[IfElseIfElse] = ifClause ~ opt(rep1(elseIfClause)) ~ opt(elseClause) ^^ {
       case ic ~ eic ~ ec => IfElseIfElse(ic, eic, ec)
     }
   
@@ -206,7 +206,7 @@ object ChopperParser extends Parsers {
     elseClause: Option[ElseClause]) extends ChopperAst
 
   def statement: Parser[ChopperAst] = {
-    assignment //| ifElse
+    assignment | ifElse
   }
 
   case class Assignment(variable: IDENTIFIER, value: DOUBLELITERAL) extends ChopperAst
