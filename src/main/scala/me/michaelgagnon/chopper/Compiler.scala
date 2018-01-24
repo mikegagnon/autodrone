@@ -14,6 +14,9 @@ sealed trait Token
 object IF extends Token
 object THEN extends Token
 object ELSE extends Token
+object AND extends Token
+object OR extends Token
+object NOT extends Token
 object OPENPAREN extends Token
 object CLOSEPAREN extends Token
 object OPENCURLY extends Token
@@ -58,6 +61,9 @@ object Lexer extends RegexParsers {
   def _if               = "if"    ^^ (_ => IF)
   def _then             = "then"  ^^ (_ => THEN)
   def _else             = "else"  ^^ (_ => ELSE)
+  def _and              = "and"   ^^ (_ => AND)
+  def _or               = "or"    ^^ (_ => OR)
+  def _not              = "not"   ^^ (_ => NOT)
   def openParen         = "("     ^^ (_ => OPENPAREN)
   def closeParen        = ")"     ^^ (_ => CLOSEPAREN)
   def openCurly         = "{"     ^^ (_ => OPENCURLY)
@@ -74,6 +80,9 @@ object Lexer extends RegexParsers {
       _if |
       _then |
       _else |
+      _and |
+      _or |
+      _not |
       openParen |
       closeParen |
       openCurly |
@@ -181,8 +190,36 @@ object ChopperParser extends Parsers {
   
   def block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
 
+/*
+exp→term {OR term};exp→term {OR term};
+term→factor {AND factor};term→factor {AND factor};
+factor→id;factor→id;
+factor→NOT factor;factor→NOT factor;
+factor→LPAREN exp RPAREN;
+*/
+
+  /*
+  def expr: Parser[Expression] =
+    //term  ~ opt(OR ~ term) ^^ {
+    term OR term ^^ {
+      //case term1 => Expression(term1, None)
+      case term1 ~ _ ~ term2 => Expression(term1, Some(term2))
+    }
+  */
+
+  def ifClause2 : Parser[Expression] =
+    term ~ OR ~ term ^^ {
+      case a ~ b ~ c => Expression(a, Some(c))
+    }
+  
+
+  def term: Parser[Term] = OPENPAREN ^^ { case _ => Term() }
+
+  case class Expression(term1: Term, term2: Option[Term]) extends ChopperAst
+  case class Term() extends ChopperAst
+
   def ifClause : Parser[IfClause] =
-    IF ~ OPENPAREN /*~ expr*/ ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
+    IF ~ OPENPAREN ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
       case if_ ~ op ~ cp ~ then_ ~ oc ~ b ~ cc => IfClause(b)
     }
   
@@ -199,6 +236,8 @@ object ChopperParser extends Parsers {
       case ic ~ eic ~ ec => IfElseIfElse(ic, eic, ec)
     }
   
+
+  //case class Expression()
   case class IfClause(thenBlock: Statements) extends ChopperAst
   case class ElseIfClause(ifClause: IfClause) extends ChopperAst
   case class ElseClause(thenBlock: Statements) extends ChopperAst
