@@ -147,7 +147,7 @@ object ChopperParser extends Parsers {
       case a ~ b => Term(a, b.map(_._2))
     }
 
-  def factor: Parser[Factor] = condition | booleanConst | notFactor | /*parenFactor |*/ factorIdentifier
+  def factor: Parser[Factor] = condition | booleanConst | notFactor | parenFactor | factorIdentifier
 
   def factorIdentifier: Parser[FactorIdentifier] = 
     identifier ^^ { case id => FactorIdentifier(id) }
