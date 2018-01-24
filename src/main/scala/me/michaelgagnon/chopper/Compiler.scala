@@ -13,6 +13,7 @@ case object THRUST extends MeasurementUnitType
 sealed trait Token
 object IF extends Token
 object THEN extends Token
+object ELSE extends Token
 object OPENPAREN extends Token
 object CLOSEPAREN extends Token
 object OPENCURLY extends Token
@@ -56,6 +57,7 @@ object Lexer extends RegexParsers {
 
   def _if               = "if"    ^^ (_ => IF)
   def _then             = "then"  ^^ (_ => THEN)
+  def _else             = "else"  ^^ (_ => ELSE)
   def openParen         = "("     ^^ (_ => OPENPAREN)
   def closeParen        = ")"     ^^ (_ => CLOSEPAREN)
   def openCurly         = "{"     ^^ (_ => OPENCURLY)
@@ -71,6 +73,7 @@ object Lexer extends RegexParsers {
     phrase(rep1(
       _if |
       _then |
+      _else |
       openParen |
       closeParen |
       openCurly |
@@ -178,16 +181,29 @@ object ChopperParser extends Parsers {
   
   def block: Parser[Statements] = rep1(statement) ^^ { case itList => Statements(itList) }
 
-  def ifClause : Parser[IfThen] =
+  def ifClause : Parser[IfClause] =
     IF ~ OPENPAREN /*~ expr*/ ~ CLOSEPAREN ~ THEN ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
-      case if_ ~ op ~ cp ~ then_ ~ oc ~ b ~ cc => IfThen(b)
-
+      case if_ ~ op ~ cp ~ then_ ~ oc ~ b ~ cc => IfClause(b)
     }
-  /*def elseIfClause : Parser[ChopperAst] = "else" ~ "then" ~ ifClause
-  def elseClause : Parser[ChopperAst] = "else" ~ "then" ~ "{" ~ block ~ "}"
-  def ifElse : Parser[ChopperAst] = ifClause ~ opt(rep1(elseIfClause)) ~ opt(elseClause)
-  */
-  case class IfThen(thenBlock: Statements) extends ChopperAst
+  
+  def elseIfClause : Parser[ElseIfClause] =
+    ELSE ~ THEN ~ ifClause ^^ {
+      case else_ ~ then_ ~ ic => ElseIfClause(ic)
+    }
+  
+  def elseClause : Parser[ElseClause] = ELSE ~ THEN ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
+      case else_ ~ then_ ~ oc ~ b ~ cc => ElseClause(b)
+    }
+  
+  def ifElse : Parser[ChopperAst] = ifClause ~ opt(rep1(elseIfClause)) ~ opt(elseClause) ^^ {
+      case ic ~ eic ~ ec => IfElseIfElse(ic, eic, ec)
+    }
+  
+  case class IfClause(thenBlock: Statements) extends ChopperAst
+  case class ElseIfClause(ifClause: IfClause) extends ChopperAst
+  case class ElseClause(thenBlock: Statements) extends ChopperAst
+  case class IfElseIfElse(ifClause: IfClause, elseIfClauses: Option[List[ElseIfClause]],
+    elseClause: Option[ElseClause]) extends ChopperAst
 
   def statement: Parser[ChopperAst] = {
     assignment //| ifElse
