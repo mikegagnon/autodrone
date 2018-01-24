@@ -17,6 +17,8 @@ object ELSE extends Token
 object AND extends Token
 object OR extends Token
 object NOT extends Token
+object TRUE extends Token
+object FALSE extends Token
 object OPENPAREN extends Token
 object CLOSEPAREN extends Token
 object OPENCURLY extends Token
@@ -64,6 +66,8 @@ object Lexer extends RegexParsers {
   def _and              = "and"   ^^ (_ => AND)
   def _or               = "or"    ^^ (_ => OR)
   def _not              = "not"   ^^ (_ => NOT)
+  def _true             = "true"   ^^ (_ => TRUE)
+  def _false            = "false"   ^^ (_ => FALSE)
   def openParen         = "("     ^^ (_ => OPENPAREN)
   def closeParen        = ")"     ^^ (_ => CLOSEPAREN)
   def openCurly         = "{"     ^^ (_ => OPENCURLY)
@@ -83,6 +87,8 @@ object Lexer extends RegexParsers {
       _and |
       _or |
       _not |
+      _true |
+      _false |
       openParen |
       closeParen |
       openCurly |
@@ -192,31 +198,40 @@ object ChopperParser extends Parsers {
 
 /*
 exp→term {OR term};exp→term {OR term};
-term→factor {AND factor};term→factor {AND factor};
+term→factor {AND factor};
 factor→id;factor→id;
 factor→NOT factor;factor→NOT factor;
 factor→LPAREN exp RPAREN;
 */
 
-  /*
-  def expr: Parser[Expression] =
-    //term  ~ opt(OR ~ term) ^^ {
-    term OR term ^^ {
-      //case term1 => Expression(term1, None)
-      case term1 ~ _ ~ term2 => Expression(term1, Some(term2))
-    }
-  */
-
-  def ifClause2 : Parser[Expression] =
+  def expr : Parser[Expression] =
     term ~ opt(OR ~ term) ^^ {
       case a ~ b => Expression(a, b.map(_._2))
     }
   
+  def term: Parser[Term] = 
+    factor ~ opt(AND ~ factor) ^^ {
+      case a ~ b => Term(a, b.map(_._2))
+    }
 
-  def term: Parser[Term] = OPENPAREN ^^ { case _ => Term() }
+  def factor: Parser[Factor] = {
+    (boolean | (NOT ~ factor)) ^^ {
+      case b => null
+    }
+  }
+
+  def boolean: Parser[BooleanConst] = {
+    (TRUE | FALSE) ^^ {
+      case TRUE => BooleanConst(true)
+      case FALSE => BooleanConst(false)
+      case _ => throw new IllegalArgumentException()
+    }
+  }
 
   case class Expression(term1: Term, term2: Option[Term]) extends ChopperAst
-  case class Term() extends ChopperAst
+  case class Term(factor1: Factor, factor2: Option[Factor]) extends ChopperAst
+  case class Factor() extends ChopperAst
+  case class BooleanConst(value: Boolean) extends ChopperAst
 
   def ifClause : Parser[IfClause] =
     IF ~ OPENPAREN ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
