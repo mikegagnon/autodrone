@@ -196,14 +196,6 @@ object ChopperParser extends Parsers {
   
   def block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
 
-/*
-exp→term {OR term};exp→term {OR term};
-term→factor {AND factor};
-factor→id;factor→id;
-factor→NOT factor;factor→NOT factor;
-factor→LPAREN exp RPAREN;
-*/
-
   def expr : Parser[Expression] =
     term ~ opt(OR ~ term) ^^ {
       case a ~ b => Expression(a, b.map(_._2))
@@ -214,13 +206,21 @@ factor→LPAREN exp RPAREN;
       case a ~ b => Term(a, b.map(_._2))
     }
 
-  def factor: Parser[Factor] = {
-    (boolean | (NOT ~ factor)) ^^ {
-      case b => null
+  def factor: Parser[Factor] = booleanConst | notFactor | parenFactor
+
+  def parenFactor: Parser[ParenFactor] = {
+    OPENPAREN ~ expr ~ CLOSEPAREN ^^ {
+      case op ~ e ~ cp => ParenFactor(e)
     }
   }
 
-  def boolean: Parser[BooleanConst] = {
+  def notFactor: Parser[FactorNot] = {
+    NOT ~ factor ^^ {
+      case not ~ f => FactorNot(f)
+    }
+  }
+
+  def booleanConst: Parser[BooleanConst] = {
     (TRUE | FALSE) ^^ {
       case TRUE => BooleanConst(true)
       case FALSE => BooleanConst(false)
@@ -230,8 +230,15 @@ factor→LPAREN exp RPAREN;
 
   case class Expression(term1: Term, term2: Option[Term]) extends ChopperAst
   case class Term(factor1: Factor, factor2: Option[Factor]) extends ChopperAst
-  case class Factor() extends ChopperAst
-  case class BooleanConst(value: Boolean) extends ChopperAst
+  trait Factor extends ChopperAst
+  //case class Factor
+  //case class FactorBoolean(b: Boolean_) extends Factor
+
+  case class ParenFactor(e: Expression) extends Factor
+  case class FactorNot(f: Factor) extends Factor
+
+  //trait Boolean_ extends ChopperAst
+  case class BooleanConst(value: Boolean) extends Factor
 
   def ifClause : Parser[IfClause] =
     IF ~ OPENPAREN ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
