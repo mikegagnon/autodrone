@@ -132,69 +132,8 @@ object ChopperParser extends Parsers {
     override def rest: Reader[Token] = new TokenReader(tokens.tail)
   }
 
-
-/*
-  sealed trait Condition {
-    val factName: IDENTIFIER
-    val value: DOUBLELITERAL
-  }
-  // TODO ?
-  case class LessThan(factName: IDENTIFIER, value: DOUBLELITERAL) extends Condition
-  case class LessThanEquals(factName: IDENTIFIER, value: DOUBLELITERAL) extends Condition
-  case class GreaterThan(factName: IDENTIFIER, value: DOUBLELITERAL) extends Condition
-
-  case class Statements(statements: List[ChopperAst]) extends ChopperAst
-
-  // TODO ?
-  // toodo: thenBlock : Assignment
-  case class IfThen(predicate: Condition, thenBlock: Assignment) extends ChopperAst
-  // value?
-  case class Assignment(variable: IDENTIFIER, value: DOUBLELITERAL)
-
-  // TODO: name
-  private def identifier: Parser[IDENTIFIER] = {
-    accept("identifier", { case id @ IDENTIFIER(name) => id })
-  }
-
-  private def double: Parser[DOUBLELITERAL] = {
-    accept("double literal", { case lit @ DOUBLELITERAL(name) => lit })
-  }
-
-  def measurementUnit: Parser[MEASUREMENTUNIT] = {
-    accept("measurement unit", { case mu @ MEASUREMENTUNIT(name) => mu })
-  }
-
-  def condition: Parser[Condition] = {
-    val lt = (identifier ~ LESSTHAN ~ double ~ measurementUnit)    ^^ { case id ~ lt ~ d ~ mu => LessThan(id, d) }
-    val gt = (identifier ~ GREATERTHAN ~ double ~ measurementUnit) ^^ { case id ~ lt ~ d ~ mu => GreaterThan(id, d) }
-    lt | gt
-  }
-
-  def assignment: Parser[Assignment] = {
-    identifier ~ ASSIGN ~ double ~ measurementUnit ^^ {
-      case id ~ assign ~ d ~mu => Assignment(id, d)
-    }
-  }
-
-  def program: Parser[ChopperAst] = {
-    phrase(block)
-  }
-
-  def block: Parser[ChopperAst] = {
-    rep1(ifThen) ^^ { case itList => Statements(itList) }
-  }
-
-  def ifThen: Parser[ChopperAst] = {
-    IF ~ OPENPAREN ~ condition ~ CLOSEPAREN ~
-    THEN ~ OPENPAREN ~ assignment ~ CLOSEPAREN ^^ {
-      case _if ~ op1 ~ c ~ cp1 ~ _then ~ op2 ~ a ~ cp2 => IfThen(c, a)
-    }
-  }
-
-*/
-
-
   def program: Parser[Statements] = phrase(block)
+  //def program: Parser[Assignment] = assignment
   
   def block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
 
@@ -208,7 +147,7 @@ object ChopperParser extends Parsers {
       case a ~ b => Term(a, b.map(_._2))
     }
 
-  def factor: Parser[Factor] = booleanConst | notFactor | parenFactor | factorIdentifier | condition
+  def factor: Parser[Factor] = condition | booleanConst | notFactor | /*parenFactor |*/ factorIdentifier
 
   def factorIdentifier: Parser[FactorIdentifier] = 
     identifier ^^ { case id => FactorIdentifier(id) }
