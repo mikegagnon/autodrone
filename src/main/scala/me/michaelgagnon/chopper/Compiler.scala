@@ -7,20 +7,25 @@ import scala.scalajs.js.Dynamic.global
 /* Tokens *****************************************************************************************/
 
 sealed trait MeasurementUnitType
-case object METER extends MeasurementUnitType
-case object METERSEC2 extends MeasurementUnitType
+case object METERS extends MeasurementUnitType
+case object THRUST extends MeasurementUnitType
 
 sealed trait Token
 object IF extends Token
 object THEN extends Token
 object OPENPAREN extends Token
 object CLOSEPAREN extends Token
+object OPENCURLY extends Token
+object CLOSECURLY extends Token
 object LESSTHAN extends Token
+object LESSTHANEQUALS extends Token
 object GREATERTHAN extends Token
+object GREATERTHANEQUALS extends Token
+object EQUALS extends Token
 object ASSIGN extends Token
 case class MEASUREMENTUNIT(unit: MeasurementUnitType) extends Token
 case class IDENTIFIER(id: String) extends Token
-case class DOUBLE(value: Double) extends Token
+case class DOUBLELITERAL(value: Double) extends Token
 
 /* Lexer ******************************************************************************************/
 
@@ -32,9 +37,10 @@ object Lexer extends RegexParsers {
   override val whiteSpace = "[ \t\r\f\n]+".r
 
   def measurementUnit: Parser[MEASUREMENTUNIT] = {
-    "meters/second\\^2|meters".r ^^ {
-      case "meters/second^2" => MEASUREMENTUNIT(METERSEC2)
-      case "meters" => MEASUREMENTUNIT(METER)
+    "meters|meter|thrust".r ^^ {
+      case "meters" => MEASUREMENTUNIT(METERS)
+      case "meter" => MEASUREMENTUNIT(METERS)
+      case "thrust" => MEASUREMENTUNIT(THRUST)
     }
   }
 
@@ -42,19 +48,23 @@ object Lexer extends RegexParsers {
     "[a-zA-Z_][a-zA-Z0-9_]*".r ^^ { str => IDENTIFIER(str) }
   }
 
-  def double: Parser[DOUBLE] = {
+  def double: Parser[DOUBLELITERAL] = {
     """[-+]?[0-9]*\.?[0-9]""".r ^^ { str =>
-      DOUBLE(str.toDouble)
+      DOUBLELITERAL(str.toDouble)
     }
   }
 
-  def _if           = "if"    ^^ (_ => IF)
-  def _then         = "then"  ^^ (_ => THEN)
-  def openParen     = "("     ^^ (_ => OPENPAREN)
-  def closeParen    = ")"     ^^ (_ => CLOSEPAREN)
-  def lessThan      = "<"     ^^ (_ => LESSTHAN)
-  def greaterThan   = ">"     ^^ (_ => GREATERTHAN)
-  def assign        = "="     ^^ (_ => ASSIGN)
+  def _if               = "if"    ^^ (_ => IF)
+  def _then             = "then"  ^^ (_ => THEN)
+  def openParen         = "("     ^^ (_ => OPENPAREN)
+  def closeParen        = ")"     ^^ (_ => CLOSEPAREN)
+  def openCurly         = "{"     ^^ (_ => OPENCURLY)
+  def closeCurly        = "}"     ^^ (_ => CLOSECURLY)
+  def lessThan          = "<"     ^^ (_ => LESSTHAN)
+  def lessThanEquals    = "<="    ^^ (_ => LESSTHANEQUALS)
+  def greaterThan       = ">"     ^^ (_ => GREATERTHAN)
+  def greaterThanEquals = ">="    ^^ (_ => GREATERTHANEQUALS)
+  def assign            = "="     ^^ (_ => ASSIGN)
 
   // TODO: what about rawTokens => rawTokens
   def tokens: Parser[List[Token]] = {
@@ -63,8 +73,12 @@ object Lexer extends RegexParsers {
       _then |
       openParen |
       closeParen |
+      openCurly |
+      closeCurly |
       lessThan |
+      lessThanEquals |
       greaterThan |
+      greaterThanEquals |
       assign |
       measurementUnit |
       double |
@@ -98,13 +112,16 @@ object ChopperParser extends Parsers {
     override def rest: Reader[Token] = new TokenReader(tokens.tail)
   }
 
+
+/*
   sealed trait Condition {
     val factName: IDENTIFIER
-    val value: DOUBLE
+    val value: DOUBLELITERAL
   }
   // TODO ?
-  case class LessThan(factName: IDENTIFIER, value: DOUBLE) extends Condition
-  case class GreaterThan(factName: IDENTIFIER, value: DOUBLE) extends Condition
+  case class LessThan(factName: IDENTIFIER, value: DOUBLELITERAL) extends Condition
+  case class LessThanEquals(factName: IDENTIFIER, value: DOUBLELITERAL) extends Condition
+  case class GreaterThan(factName: IDENTIFIER, value: DOUBLELITERAL) extends Condition
 
   case class Statements(statements: List[ChopperAst]) extends ChopperAst
 
@@ -112,15 +129,15 @@ object ChopperParser extends Parsers {
   // toodo: thenBlock : Assignment
   case class IfThen(predicate: Condition, thenBlock: Assignment) extends ChopperAst
   // value?
-  case class Assignment(variable: IDENTIFIER, value: DOUBLE)
+  case class Assignment(variable: IDENTIFIER, value: DOUBLELITERAL)
 
   // TODO: name
   private def identifier: Parser[IDENTIFIER] = {
     accept("identifier", { case id @ IDENTIFIER(name) => id })
   }
 
-  private def double: Parser[DOUBLE] = {
-    accept("double literal", { case lit @ DOUBLE(name) => lit })
+  private def double: Parser[DOUBLELITERAL] = {
+    accept("double literal", { case lit @ DOUBLELITERAL(name) => lit })
   }
 
   def measurementUnit: Parser[MEASUREMENTUNIT] = {
@@ -154,6 +171,40 @@ object ChopperParser extends Parsers {
     }
   }
 
+*/
+
+
+  def program: Parser[ChopperAst] = phrase(block)
+  
+  def block: Parser[ChopperAst] = rep1(statement) ^^ { case itList => Statements(itList) }
+
+
+  def statement: Parser[ChopperAst] = {
+    assignment
+  }
+
+  case class Assignment(variable: IDENTIFIER, value: DOUBLELITERAL) extends ChopperAst
+  def assignment: Parser[Assignment] = {
+    identifier ~ ASSIGN ~ double ~ measurementUnit ^^ {
+      case id ~ assign ~ d ~ mu => Assignment(id, d)
+    }
+  }
+
+  private def identifier: Parser[IDENTIFIER] = {
+    accept("identifier", { case id @ IDENTIFIER(name) => id })
+  }
+
+  private def double: Parser[DOUBLELITERAL] = {
+    accept("double literal", { case lit @ DOUBLELITERAL(name) => lit })
+  }
+
+  def measurementUnit: Parser[MEASUREMENTUNIT] = {
+    accept("measurement unit", { case mu @ MEASUREMENTUNIT(name) => mu })
+  }
+
+  case class Statements(statements: List[ChopperAst]) extends ChopperAst
+
+  //def statements
   def apply(tokens: Seq[Token]): Either[ChopperParserError, ChopperAst] = {
     val reader = new TokenReader(tokens)
     program(reader) match {

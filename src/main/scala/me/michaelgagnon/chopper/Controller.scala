@@ -130,6 +130,7 @@ class Controller(val gameId: String) {
       assert(Global.currentEditor.nonEmpty)
       Global.currentEditor.get.setOption("readOnly","nocursor")
       Global.currentEditor.get.setOption("theme", Controller.editorThemeDim)
+      println(Compiler(Global.currentEditor.get.getDoc().getValue()))
 
     } else {
       assert(Global.currentGame.nonEmpty)
