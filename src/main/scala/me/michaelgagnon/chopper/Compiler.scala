@@ -10,6 +10,8 @@ sealed trait MeasurementUnitType
 case object METERS extends MeasurementUnitType
 case object THRUST extends MeasurementUnitType
 
+sealed trait ComparisonOperator
+
 sealed trait Token
 object IF extends Token
 object THEN extends Token
@@ -23,11 +25,11 @@ object OPENPAREN extends Token
 object CLOSEPAREN extends Token
 object OPENCURLY extends Token
 object CLOSECURLY extends Token
-object LESSTHAN extends Token
-object LESSTHANEQUALS extends Token
-object GREATERTHAN extends Token
-object GREATERTHANEQUALS extends Token
-object EQUALS extends Token
+object LESSTHAN extends Token with ComparisonOperator
+object LESSTHANEQUALS extends Token with ComparisonOperator
+object GREATERTHAN extends Token with ComparisonOperator
+object GREATERTHANEQUALS extends Token with ComparisonOperator
+object EQUALS extends Token with ComparisonOperator
 object ASSIGN extends Token
 case class MEASUREMENTUNIT(unit: MeasurementUnitType) extends Token
 case class IDENTIFIER(id: String) extends Token
@@ -206,7 +208,11 @@ object ChopperParser extends Parsers {
       case a ~ b => Term(a, b.map(_._2))
     }
 
-  def factor: Parser[Factor] = booleanConst | notFactor | parenFactor
+  def factor: Parser[Factor] = booleanConst | notFactor | parenFactor | factorIdentifier | condition
+
+  def factorIdentifier: Parser[FactorIdentifier] = 
+    identifier ^^ { case id => FactorIdentifier(id) }
+
 
   def parenFactor: Parser[ParenFactor] = {
     OPENPAREN ~ expr ~ CLOSEPAREN ^^ {
@@ -228,21 +234,44 @@ object ChopperParser extends Parsers {
     }
   }
 
+  def condition: Parser[Condition] = {
+    expr ~ comparisonOperator ~ expr ^^ {
+      case e1 ~ op ~ e2 => Condition(e1, op, e2)
+    }
+  }
+
+  def comparisonOperator: Parser[ComparisonOperator] = {
+    (LESSTHAN | LESSTHANEQUALS | GREATERTHAN | GREATERTHANEQUALS | EQUALS) ^^ {
+      case o: ComparisonOperator => o
+      case _ => throw new IllegalArgumentException("This shouldn't happen")
+    }
+  }
+
+  /*
+if (true) {
+    x = 1 meter
+    y = 2 meters
+} else if (false and true) {
+  z = 3 meters
+} else if (true or true) {
+  x = 1 meter
+} else {
+  z = 2 meters
+}
+  */
+
   case class Expression(term1: Term, term2: Option[Term]) extends ChopperAst
   case class Term(factor1: Factor, factor2: Option[Factor]) extends ChopperAst
-  trait Factor extends ChopperAst
-  //case class Factor
-  //case class FactorBoolean(b: Boolean_) extends Factor
-
+  sealed trait Factor extends ChopperAst
+  case class FactorIdentifier(id: IDENTIFIER) extends Factor
   case class ParenFactor(e: Expression) extends Factor
   case class FactorNot(f: Factor) extends Factor
-
-  //trait Boolean_ extends ChopperAst
   case class BooleanConst(value: Boolean) extends Factor
+  case class Condition(le: Expression, op: ComparisonOperator, re: Expression) extends Factor
 
   def ifClause : Parser[IfClause] =
-    IF ~ OPENPAREN ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
-      case if_ ~ op ~ cp ~ then_ ~ oc ~ b ~ cc => IfClause(b)
+    IF ~ OPENPAREN ~ expr ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
+      case if_ ~ op ~ e ~ cp ~ then_ ~ oc ~ b ~ cc => IfClause(e, b)
     }
   
   def elseIfClause : Parser[ElseIfClause] =
@@ -260,7 +289,7 @@ object ChopperParser extends Parsers {
   
 
   //case class Expression()
-  case class IfClause(thenBlock: Statements) extends ChopperAst
+  case class IfClause(expression: Expression, thenBlock: Statements) extends ChopperAst
   case class ElseIfClause(ifClause: IfClause) extends ChopperAst
   case class ElseClause(thenBlock: Statements) extends ChopperAst
   case class IfElseIfElse(ifClause: IfClause, elseIfClauses: Option[List[ElseIfClause]],
