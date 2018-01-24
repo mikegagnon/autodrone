@@ -11,6 +11,7 @@ case object METERS extends MeasurementUnitType
 case object THRUST extends MeasurementUnitType
 
 sealed trait ComparisonOperator
+sealed trait Value
 
 sealed trait Token
 object IF extends Token
@@ -32,8 +33,8 @@ object GREATERTHANEQUALS extends Token with ComparisonOperator
 object EQUALS extends Token with ComparisonOperator
 object ASSIGN extends Token
 case class MEASUREMENTUNIT(unit: MeasurementUnitType) extends Token
-case class IDENTIFIER(id: String) extends Token
-case class DOUBLELITERAL(value: Double) extends Token
+case class IDENTIFIER(id: String) extends Token with Value
+case class DOUBLELITERAL(value: Double) extends Token with Value
 
 /* Lexer ******************************************************************************************/
 
@@ -132,40 +133,34 @@ object ChopperParser extends Parsers {
     override def rest: Reader[Token] = new TokenReader(tokens.tail)
   }
 
-  def program: Parser[Statements] = phrase(block)
+  lazy val  program: Parser[Statements] = phrase(block)
   //def program: Parser[Assignment] = assignment
   
-  def block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
+  lazy val  block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
 
-  def expr : Parser[Expression] =
-    term ~ opt(OR ~ term) ^^ {
-      case a ~ b => Expression(a, b.map(_._2))
+
+  lazy val expr : Parser[Expression] =
+    opt(term ~ OR) ~ term  ^^ {
+      case a ~ b => Expression(b, a.map(_._1))
     }
   
-  def term: Parser[Term] = 
-    factor ~ opt(AND ~ factor) ^^ {
-      case a ~ b => Term(a, b.map(_._2))
+  lazy val  term: Parser[Term] = 
+    opt(factor ~ AND) ~ factor ^^ {
+      case a ~ b => Term(b, a.map(_._1))
     }
 
-  def factor: Parser[Factor] = condition | booleanConst | notFactor | parenFactor | factorIdentifier
+  lazy val  factor: Parser[Factor] = booleanConst | notFactor | factorIdentifier | condition
 
-  def factorIdentifier: Parser[FactorIdentifier] = 
+  lazy val  factorIdentifier: Parser[FactorIdentifier] = 
     identifier ^^ { case id => FactorIdentifier(id) }
 
-
-  def parenFactor: Parser[ParenFactor] = {
-    OPENPAREN ~ expr ~ CLOSEPAREN ^^ {
-      case op ~ e ~ cp => ParenFactor(e)
-    }
-  }
-
-  def notFactor: Parser[FactorNot] = {
+  lazy val  notFactor: Parser[FactorNot] = {
     NOT ~ factor ^^ {
       case not ~ f => FactorNot(f)
     }
   }
 
-  def booleanConst: Parser[BooleanConst] = {
+  lazy val  booleanConst: Parser[BooleanConst] = {
     (TRUE | FALSE) ^^ {
       case TRUE => BooleanConst(true)
       case FALSE => BooleanConst(false)
@@ -173,13 +168,23 @@ object ChopperParser extends Parsers {
     }
   }
 
-  def condition: Parser[Condition] = {
-    expr ~ comparisonOperator ~ expr ^^ {
-      case e1 ~ op ~ e2 => Condition(e1, op, e2)
+
+
+  lazy val  condition: Parser[Condition] = {
+    value ~ comparisonOperator ~ value ^^ {
+      case v1 ~ op ~ v2 => Condition(v1, op, v2)
     }
   }
 
-  def comparisonOperator: Parser[ComparisonOperator] = {
+  lazy val value: Parser[Value] = identifier | doubleWithUnit
+
+  lazy val doubleWithUnit: Parser[DOUBLELITERAL] = double ~ measurementUnit ^^ {
+    case d ~ m => d
+  }
+
+
+
+  lazy val  comparisonOperator: Parser[ComparisonOperator] = {
     (LESSTHAN | LESSTHANEQUALS | GREATERTHAN | GREATERTHANEQUALS | EQUALS) ^^ {
       case o: ComparisonOperator => o
       case _ => throw new IllegalArgumentException("This shouldn't happen")
@@ -203,26 +208,26 @@ if (true) {
   case class Term(factor1: Factor, factor2: Option[Factor]) extends ChopperAst
   sealed trait Factor extends ChopperAst
   case class FactorIdentifier(id: IDENTIFIER) extends Factor
-  case class ParenFactor(e: Expression) extends Factor
   case class FactorNot(f: Factor) extends Factor
   case class BooleanConst(value: Boolean) extends Factor
-  case class Condition(le: Expression, op: ComparisonOperator, re: Expression) extends Factor
+  case class Condition(lv: Value, op: ComparisonOperator, rv: Value) extends Factor
 
-  def ifClause : Parser[IfClause] =
+
+  lazy val  ifClause : Parser[IfClause] =
     IF ~ OPENPAREN ~ expr ~ CLOSEPAREN ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
       case if_ ~ op ~ e ~ cp ~ then_ ~ oc ~ b ~ cc => IfClause(e, b)
     }
   
-  def elseIfClause : Parser[ElseIfClause] =
+  lazy val  elseIfClause : Parser[ElseIfClause] =
     ELSE ~ ifClause ^^ {
       case else_ ~ ic => ElseIfClause(ic)
     }
   
-  def elseClause : Parser[ElseClause] = ELSE ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
+  lazy val  elseClause : Parser[ElseClause] = ELSE ~ opt(THEN) ~ OPENCURLY ~ block ~ CLOSECURLY ^^ {
       case else_ ~ then_ ~ oc ~ b ~ cc => ElseClause(b)
     }
   
-  def ifElse : Parser[IfElseIfElse] = ifClause ~ opt(rep1(elseIfClause)) ~ opt(elseClause) ^^ {
+  lazy val  ifElse : Parser[IfElseIfElse] = ifClause ~ opt(rep1(elseIfClause)) ~ opt(elseClause) ^^ {
       case ic ~ eic ~ ec => IfElseIfElse(ic, eic, ec)
     }
   
@@ -234,26 +239,26 @@ if (true) {
   case class IfElseIfElse(ifClause: IfClause, elseIfClauses: Option[List[ElseIfClause]],
     elseClause: Option[ElseClause]) extends ChopperAst
 
-  def statement: Parser[ChopperAst] = {
+  lazy val  statement: Parser[ChopperAst] = {
     assignment | ifElse
   }
 
   case class Assignment(variable: IDENTIFIER, value: DOUBLELITERAL) extends ChopperAst
-  def assignment: Parser[Assignment] = {
+  lazy val  assignment: Parser[Assignment] = {
     identifier ~ ASSIGN ~ double ~ measurementUnit ^^ {
       case id ~ assign ~ d ~ mu => Assignment(id, d)
     }
   }
 
-  private def identifier: Parser[IDENTIFIER] = {
+  lazy val  identifier: Parser[IDENTIFIER] = {
     accept("identifier", { case id @ IDENTIFIER(name) => id })
   }
 
-  private def double: Parser[DOUBLELITERAL] = {
+  lazy val  double: Parser[DOUBLELITERAL] = {
     accept("double literal", { case lit @ DOUBLELITERAL(name) => lit })
   }
 
-  def measurementUnit: Parser[MEASUREMENTUNIT] = {
+  lazy val  measurementUnit: Parser[MEASUREMENTUNIT] = {
     accept("measurement unit", { case mu @ MEASUREMENTUNIT(name) => mu })
   }
 
