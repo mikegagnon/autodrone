@@ -1,5 +1,7 @@
 package me.michaelgagnon.chopper
 
+// TODO: cleanup
+
 import scala.util.parsing.combinator._
 import scala.util.parsing.input._
 import scala.scalajs.js.Dynamic.global
@@ -34,7 +36,7 @@ object EQUALS extends Token with ComparisonOperator
 object ASSIGN extends Token
 case class MEASUREMENTUNIT(unit: MeasurementUnitType) extends Token
 case class IDENTIFIER(id: String) extends Token with Value
-case class DOUBLELITERAL(value: Double) extends Token with Value
+case class DOUBLELITERAL(value: Double) extends Token //with Value
 
 /* Lexer ******************************************************************************************/
 
@@ -134,7 +136,6 @@ object ChopperParser extends Parsers {
   }
 
   lazy val  program: Parser[Statements] = phrase(block)
-  //def program: Parser[Assignment] = assignment
   
   lazy val  block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
 
@@ -176,10 +177,10 @@ object ChopperParser extends Parsers {
     }
   }
 
-  lazy val value: Parser[Value] = identifier | doubleWithUnit
+  lazy val value: Parser[Value] = identifier | doubleWithType
 
-  lazy val doubleWithUnit: Parser[DOUBLELITERAL] = double ~ measurementUnit ^^ {
-    case d ~ m => d
+  lazy val doubleWithType: Parser[DoubleWithType] = double ~ measurementUnit ^^ {
+    case d ~ m => DoubleWithType(d.value, m)
   }
 
 
@@ -204,6 +205,7 @@ if (true) {
 }
   */
 
+  case class DoubleWithType(value: Double, measurementUnit: MEASUREMENTUNIT) extends Value
   case class Expression(term1: Term, term2: Option[Term]) extends ChopperAst
   case class Term(factor1: Factor, factor2: Option[Factor]) extends ChopperAst
   sealed trait Factor extends ChopperAst
@@ -243,10 +245,11 @@ if (true) {
     assignment | ifElse
   }
 
-  case class Assignment(variable: IDENTIFIER, value: DOUBLELITERAL) extends ChopperAst
+  case class Assignment(variable: IDENTIFIER, value: Value) extends ChopperAst
+
   lazy val  assignment: Parser[Assignment] = {
-    identifier ~ ASSIGN ~ double ~ measurementUnit ^^ {
-      case id ~ assign ~ d ~ mu => Assignment(id, d)
+    identifier ~ ASSIGN ~ value ^^ {
+      case id ~ assign ~ v => Assignment(id, v)
     }
   }
 
@@ -285,10 +288,10 @@ object Compiler {
     } yield ast
   }
 
-  def compile() {
+  /*def compile() {
     val text: String = global.cm.getValue().asInstanceOf[String]
     //println(text)
-  }
+  }*/
 
 }
 
