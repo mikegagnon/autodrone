@@ -14,6 +14,7 @@ class State {
 
 class Interpreter(val state: State) {
 
+  /** Execute Assignment **************************************************************************/
 
   def updateVariableFromIdentifier(destVariable: Variable, id: String) =
     state.variables.get(id) match {
@@ -60,14 +61,100 @@ class Interpreter(val state: State) {
       case None => newVariable(id, value)
     }
 
+  /** Execute IfElseIfElse ************************************************************************/
+  
+  def evaluateFactorNot(f: Factor) = !evaluateFactor(f)
+
+  def evaluateIdentifier(id: String): Variable =
+    state.variables.get(id) match {
+      case Some(variable) => variable
+      case None => throw new InterpreterCrash(s"Variable $id is not defined")
+    }
+
+  def evaluateValue(value: Value): Variable = 
+    value match {
+      case IDENTIFIER(id) => evaluateIdentifier(id)
+      case DoubleWithType(v, measurementUnit) => Variable(v.toString, measurementUnit.unit, v)
+    }
+
+  def evaluateCondition(lv: Value, op: ComparisonOperator, rv: Value) = {
+    val lVar = evaluateValue(lv)
+    val rVar = evaluateValue(rv)
+    if (lVar.typ != rVar.typ) {
+      throw new InterpreterCrash(s"You cannot compare ${lVar.id} and ${rVar.id} because their types do not match")
+    }
+    op match {
+      case LESSTHAN => lVar.value < rVar.value
+      case LESSTHANEQUALS => lVar.value <= rVar.value
+      case GREATERTHAN => lVar.value > rVar.value
+      case GREATERTHANEQUALS => lVar.value >= rVar.value
+      case EQUALS => lVar.value == rVar.value
+    }
+  }
+
+  def evaluateFactor(factor: Factor): Boolean =
+    factor match {
+      //case FactorIdentifier(identifier) => evaluateIdentifier(identifier.id)
+      case FactorNot(f) => evaluateFactorNot(f)
+      case BooleanConst(v) => v
+      case Condition(lv, op, rv) => evaluateCondition(lv, op, rv)
+    }
+
+  def evaluateTerm(term: Term): Boolean = 
+    term match {
+      case Term(factor1, Some(factor2)) => evaluateFactor(factor1) && evaluateFactor(factor2)
+      case Term(factor1, None) => evaluateFactor(factor1)
+    }
+
+  def evaluateExpression(expression: Expression): Boolean =
+    expression match {
+      case Expression(term1, Some(term2)) => evaluateTerm(term1) || evaluateTerm(term2)
+      case Expression(term1, None) => evaluateTerm(term1)
+    }
+
+  // Returns result of if expression
+  def executeIfClause(expression: Expression, thenBlock: Statements): Boolean = {
+    if (evaluateExpression(expression)) {
+      thenBlock.statements.foreach(executeStatement(_))
+      true
+    } else {
+      false
+    }
+  }
+
+  def executeElseIfCaluses(elseIfCaluses: List[ElseIfClause]): Boolean = {
+    val trueClause: Option[ElseIfClause] = elseIfCaluses.find {
+      case ElseIfClause(IfClause(expression, thenBlock)) => executeIfClause(expression, thenBlock)
+    }
+
+    return trueClause.nonEmpty
+  }
+
+  def executeIfElseIfElse(ifClause: IfClause, elseIfClauses: Option[List[ElseIfClause]],
+    elseClause: Option[ElseClause]): Unit = {
+     if (!executeIfClause(ifClause.expression, ifClause.thenBlock)) {
+        elseIfClauses match {
+          case Some(elseIfClauses) => if (!executeElseIfCaluses(elseIfClauses)) {
+            elseClause match {
+              case Some(ec) => ec.thenBlock.statements.foreach(executeStatement(_))
+              case None => ()
+            }
+          }
+          case None => ()
+        }
+     }
+  }
+
+  /** executeStatement ****************************************************************************/
+
   def executeStatement(statement: ChopperAst) =
     statement match {
       case Assignment(id, value) => executeAssignment(id, value)
-      case IfElseIfElse(ifClause, elseIfClauses, elseClause) => ()
+      case IfElseIfElse(ifClause, elseIfClauses, elseClause) => executeIfElseIfElse(ifClause, elseIfClauses, elseClause)
       case _ => assert(false)
     }
 
-  def run( program: ChopperAst) =
+  def run(program: ChopperAst) =
     program match {
       case Statements(statements) => statements.foreach(executeStatement(_))
       case _ => throw new IllegalArgumentException("this shouldn't happen")

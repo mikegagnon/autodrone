@@ -140,6 +140,7 @@ object ChopperParser extends Parsers {
   lazy val  block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
 
 
+  // DOES this screw up short circuit evaluation?
   lazy val expr : Parser[Expression] =
     opt(term ~ OR) ~ term  ^^ {
       case a ~ b => Expression(b, a.map(_._1))
@@ -150,10 +151,10 @@ object ChopperParser extends Parsers {
       case a ~ b => Term(b, a.map(_._1))
     }
 
-  lazy val  factor: Parser[Factor] = booleanConst | notFactor | factorIdentifier | condition
+  lazy val  factor: Parser[Factor] = booleanConst | notFactor /*| factorIdentifier*/ | condition
 
-  lazy val  factorIdentifier: Parser[FactorIdentifier] = 
-    identifier ^^ { case id => FactorIdentifier(id) }
+  /*lazy val  factorIdentifier: Parser[FactorIdentifier] = 
+    identifier ^^ { case id => FactorIdentifier(id) }*/
 
   lazy val  notFactor: Parser[FactorNot] = {
     NOT ~ factor ^^ {
@@ -209,7 +210,7 @@ if (true) {
   case class Expression(term1: Term, term2: Option[Term]) extends ChopperAst
   case class Term(factor1: Factor, factor2: Option[Factor]) extends ChopperAst
   sealed trait Factor extends ChopperAst
-  case class FactorIdentifier(id: IDENTIFIER) extends Factor
+  //case class FactorIdentifier(id: IDENTIFIER) extends Factor
   case class FactorNot(f: Factor) extends Factor
   case class BooleanConst(value: Boolean) extends Factor
   case class Condition(lv: Value, op: ComparisonOperator, rv: Value) extends Factor
@@ -233,8 +234,6 @@ if (true) {
       case ic ~ eic ~ ec => IfElseIfElse(ic, eic, ec)
     }
   
-
-  //case class Expression()
   case class IfClause(expression: Expression, thenBlock: Statements) extends ChopperAst
   case class ElseIfClause(ifClause: IfClause) extends ChopperAst
   case class ElseClause(thenBlock: Statements) extends ChopperAst

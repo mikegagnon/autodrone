@@ -5,6 +5,7 @@ libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.2"
 libraryDependencies += "org.scala-js" %%% "scala-parser-combinators" % "1.0.2"
 libraryDependencies += "org.querki" %%% "jquery-facade" % "1.2"
 
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
 
 resolvers += sbt.Resolver.bintrayRepo("denigma", "denigma-releases")
 libraryDependencies += "org.denigma" %%% "codemirror-facade" % "5.13.2-0.8"
@@ -25,3 +26,5 @@ lazy val root = (project in file(".")).
 scalaJSUseMainModuleInitializer := true
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature")
+
+jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
