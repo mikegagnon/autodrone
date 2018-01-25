@@ -140,7 +140,10 @@ class Interpreter() { //val state: State) {
               case None => ()
             }
           }
-          case None => ()
+          case None => elseClause match {
+            case Some(ec) => ec.thenBlock.statements.foreach(executeStatement(_))
+            case None => ()
+          }
         }
      }
   }
