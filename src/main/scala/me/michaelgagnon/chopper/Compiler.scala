@@ -81,6 +81,7 @@ object Lexer extends RegexParsers {
   def lessThanEquals    = "<="    ^^ (_ => LESSTHANEQUALS)
   def greaterThan       = ">"     ^^ (_ => GREATERTHAN)
   def greaterThanEquals = ">="    ^^ (_ => GREATERTHANEQUALS)
+  def equals            = "=="    ^^ (_ => EQUALS)
   def assign            = "="     ^^ (_ => ASSIGN)
 
   // TODO: what about rawTokens => rawTokens
@@ -102,8 +103,9 @@ object Lexer extends RegexParsers {
       lessThanEquals |
       greaterThan |
       greaterThanEquals |
-      assign |
       measurementUnit |
+      equals |
+      assign |
       identifier |
       double)) ^^ { rawTokens => rawTokens }
   }
@@ -162,6 +164,7 @@ object ChopperParser extends Parsers {
   }
 
   lazy val  booleanConst: Parser[BooleanConst] = {
+    println("asdf")
     (TRUE | FALSE) ^^ {
       case TRUE => BooleanConst(true)
       case FALSE => BooleanConst(false)
@@ -240,7 +243,7 @@ if (true) {
     elseClause: Option[ElseClause]) extends ChopperAst
 
   lazy val  statement: Parser[ChopperAst] = {
-    assignment //| ifElse
+    assignment | ifElse
   }
 
   case class Assignment(variable: IDENTIFIER, value: Value) extends ChopperAst
