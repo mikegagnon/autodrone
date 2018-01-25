@@ -13,6 +13,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   val viz = new Viz(level, gameId, image)
   val controller = new Controller(gameId)
+  val interpreter = new Interpreter() //new State(mutable.HashMap("altitude", Variable("altitude", METERS, 0.0))))
 
   val fireVizElements: Seq[VizElement[FireElement]] = viz.getFireElements(level)
   val groundVizElements: Seq[VizElement[GroundElement]] = viz.getGroundElements(level)
@@ -31,8 +32,20 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   var victory = false
 
+  def runProgram() {
+    interpreter.state.variables("altitude") = Variable("altitude", METERS, 1.0)
+    val text = Global.currentEditor.get.getDoc().getValue()
+    val program = Compiler(text) match {
+      case Left(error) => println(error)
+      case Right(p) => interpreter.run(p)
+    }
+    println(interpreter.state.variables)
+  }
+
   def tick() {
     if (controller.paused) return
+
+    runProgram()
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code

@@ -104,8 +104,8 @@ object Lexer extends RegexParsers {
       greaterThanEquals |
       assign |
       measurementUnit |
-      double |
-      identifier)) ^^ { rawTokens => rawTokens }
+      identifier |
+      double)) ^^ { rawTokens => rawTokens }
   }
 
 
@@ -138,7 +138,6 @@ object ChopperParser extends Parsers {
   lazy val  program: Parser[Statements] = phrase(block)
   
   lazy val  block: Parser[Statements] = rep(statement) ^^ { case itList => Statements(itList) }
-
 
   // DOES this screw up short circuit evaluation?
   lazy val expr : Parser[Expression] =
@@ -241,7 +240,7 @@ if (true) {
     elseClause: Option[ElseClause]) extends ChopperAst
 
   lazy val  statement: Parser[ChopperAst] = {
-    assignment | ifElse
+    assignment //| ifElse
   }
 
   case class Assignment(variable: IDENTIFIER, value: Value) extends ChopperAst

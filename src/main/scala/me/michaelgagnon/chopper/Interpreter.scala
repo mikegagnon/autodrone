@@ -8,11 +8,11 @@ case class Variable(id: String, typ: MeasurementUnitType, var value: Double)
 
 case class InterpreterCrash(private val message: String) extends Exception(message) 
 
-class State {
-  val variables = new mutable.HashMap[String, Variable]()
-}
+class State(val variables: mutable.HashMap[String, Variable])
 
-class Interpreter(val state: State) {
+class Interpreter() { //val state: State) {
+
+  val state = new State(mutable.HashMap[String, Variable]())
 
   /** Execute Assignment **************************************************************************/
 
@@ -46,7 +46,7 @@ class Interpreter(val state: State) {
   def newVariableFromIdentifier(destId: String, srcId: String) =
     state.variables.get(srcId) match {
       case Some(Variable(_, measurementUnit, v)) => state.variables(destId) = Variable(destId, measurementUnit, v)
-      case None => throw new InterpreterCrash(s"Cannot assign ${srcId} to ${destId} because ${destId} is not defined")
+      case None => throw new InterpreterCrash(s"Cannot assign ${srcId} to ${destId} because ${srcId} is not defined")
     }
 
   def newVariable(destId: IDENTIFIER, value: Value) =
