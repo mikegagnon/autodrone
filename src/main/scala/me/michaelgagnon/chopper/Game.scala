@@ -62,6 +62,14 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 } else {
   up = 9.75 meters
 }
+
+
+
+if (altitude < 5 meters) {
+  up = 10.0 thrust
+} else {
+  up = 9.75 thrust
+}
 */
 
   def tick() {
