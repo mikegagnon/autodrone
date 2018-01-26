@@ -32,20 +32,29 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   var victory = false
 
-  def runProgram() {
-    interpreter.state.variables("altitude") = Variable("altitude", METERS, 1.0)
+  def runProgram(): State = {
+    interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
     val text = Global.currentEditor.get.getDoc().getValue()
     val program = Compiler(text) match {
       case Left(error) => println(error)
-      case Right(p) => interpreter.run(p)
+      case Right(p) => {
+        try {
+          interpreter.run(p)
+        } catch {
+          case InterpreterCrash(message) => println(message)
+        }
+      }
     }
     println(interpreter.state.variables)
+    interpreter.state
   }
 
   def tick() {
     if (controller.paused) return
 
-    runProgram()
+    val state: State = runProgram()
+
+    val thrustUp: Double = state.variables.get("thrustUp").map(_.value).getOrElse(0.0)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
@@ -87,7 +96,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       if (Controller.keyPressed(KeyCode.Up)) {
         -20.0
       } else {
-        0.0
+        thrustUp
       }
 
     val thrustX =
