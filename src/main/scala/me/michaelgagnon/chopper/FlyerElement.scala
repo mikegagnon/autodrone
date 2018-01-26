@@ -35,7 +35,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
   // Calculate acceleration ( F = ma )
   val acceleration = Xy(F.x / mass, FlyerElement.ag + (F.y / mass))
 
-  def altitude: Double = -origPosition.y / Level.pixelsPerMeter
+  def altitude: Double = -currentPosition.y / Level.pixelsPerMeter
   
   // TODO: air drag
   // Returns whether or not there was a collision or out of bounds

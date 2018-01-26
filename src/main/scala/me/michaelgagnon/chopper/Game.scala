@@ -35,6 +35,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   def runProgram(): State = {
     interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
     val text = Global.currentEditor.get.getDoc().getValue()
+    println(text)
     val program = Compiler(text) match {
       case Left(error) => println(error)
       case Right(p) => {
@@ -49,12 +50,28 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     interpreter.state
   }
 
+  /*
+  if (altitude < 3 meters) {
+  up = 20.0 meters
+} else if (altitude < 4 meters) {
+  up = 15.0 meters
+} else if (altitude < 5 meters) {
+  up = 10.0 meters
+} else if (altitude < 10 meters) {
+  up = 10 meters
+} else {
+  up = 9.75 meters
+}
+*/
+
   def tick() {
     if (controller.paused) return
 
     val state: State = runProgram()
 
-    val thrustUp: Double = state.variables.get("thrustUp").map(_.value).getOrElse(0.0)
+    val thrustUp: Double = state.variables.get("up").map(_.value).getOrElse(0.0)
+
+    println(thrustUp)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
@@ -96,7 +113,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       if (Controller.keyPressed(KeyCode.Up)) {
         -20.0
       } else {
-        thrustUp
+        -thrustUp
       }
 
     val thrustX =

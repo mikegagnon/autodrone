@@ -60,7 +60,9 @@ object Lexer extends RegexParsers {
   }
 
   def double: Parser[DOUBLELITERAL] = {
-    """[-+]?[0-9]*\.?[0-9]""".r ^^ { str =>
+    """[-+]?[0-9]*\.?[0-9]?[0-9]?[0-9]?[0-9]""".r ^^ { str =>
+    //"""[+-]?[0-9]*((\.[0-9]+([eE][+-]?[0-9]+)?[fF]?)|([fF])|([eE][+-]?[0-9]+))\b""".r ^^ { str =>
+      //println("D: " + str)
       DOUBLELITERAL(str.toDouble)
     }
   }
