@@ -52,14 +52,14 @@ class Game(val level: Level, val gameId: String, val image: Image) {
           None
         } catch {
           case InterpreterCrash(message) => {
-            println(message)
+            //println(message)
             //$("#chopper1-error-box").text(message)
             Some(message)
           }
         }
       }
     }
-    println(interpreter.state.variables)
+    //println(interpreter.state.variables)
 
     error match {
       case Some(errorMessage) => Left(errorMessage)
