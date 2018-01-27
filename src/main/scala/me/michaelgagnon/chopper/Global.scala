@@ -41,9 +41,13 @@ object Global {
       val level = Level.levelMap(gameId)
       games(gameId) = new Game(level, gameId, image)
       editors(gameId) = Controller.initEditor(gameId)
+      games(gameId).viz.showForeground()
     }
 
-    currentGame.foreach(_.controller.paused = false)
+    currentGame.foreach{ game =>
+      game.controller.paused = false
+      game.viz.hideForeground()
+    }
     currentEditor.foreach { e =>
       e.setOption("readOnly","nocursor")
       e.setOption("theme", Controller.editorThemeDim)

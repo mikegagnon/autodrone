@@ -101,7 +101,8 @@ class Viz(val level: Level, val id: String, val image: Image) {
     foreground.graphics.drawRect(0, 0, canvasSize.x, canvasSize.y)
     foreground.graphics.endFill()
     //if (hide) 
-    hideForeground()
+    //hideForeground()
+    showForeground()
     stage.addChild(foreground)
   }
 
