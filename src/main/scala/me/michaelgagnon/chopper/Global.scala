@@ -49,7 +49,6 @@ object Global {
       e.setOption("theme", Controller.editorThemeDim)
     }
 
-
     createjs.Ticker.setFPS(Viz.fps)
     createjs.Ticker.addEventListener("tick", tickReceive _)
 

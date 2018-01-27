@@ -34,6 +34,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   var victory = false
 
   def runProgram(): Either[String, State] = {
+    println("Game " + gameId + "runProgram")
     interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
     interpreter.state.variables("speedDown") = Variable("speedDown", METERS_SEC, droneVizElement.gameElement.velocity.y)
     interpreter.state.variables("speedUp") = Variable("speedUp", METERS_SEC, -droneVizElement.gameElement.velocity.y)
@@ -90,8 +91,9 @@ if (altitude < 5 meters) {
 */
 
   def tick() {
-    if (controller.paused) return
 
+    if (controller.paused) return
+    
     val result: Either[String, State] = runProgram()
 
     val stateOption: Option[State] = result match {
@@ -113,7 +115,7 @@ if (altitude < 5 meters) {
     } else {
       stateOption.get
     }
-
+    
     val thrustUp: Double = state.variables.get("thrustUp").map(_.value).getOrElse(0.0)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.

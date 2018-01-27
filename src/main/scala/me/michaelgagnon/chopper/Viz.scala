@@ -128,6 +128,7 @@ class Viz(val level: Level, val id: String, val image: Image) {
   def getDroneVizElement(): BitmapVizElement[DroneElement] = {
     val droneVizElement = BitmapVizElement(new createjs.Bitmap(image.drone), level.droneElement)
     droneVizElement.addToStage(stage)
+    camera.setCanvasXy(droneVizElement)
     droneVizElement
   }
 
