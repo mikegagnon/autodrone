@@ -20,6 +20,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   var waterVizElements = List[VizElement[WaterElement]]()
   val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement()
 
+  viz.drawForeground()
+
   // TODO: document
   var lastWaterTimestamp = System.currentTimeMillis() - WaterElement.interDelay
 

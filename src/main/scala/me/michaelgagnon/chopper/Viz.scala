@@ -94,6 +94,27 @@ class Viz(val level: Level, val id: String, val image: Image) {
     drawScale()
   }
 
+  var foreground = new createjs.Shape()
+
+  def drawForeground() {
+    foreground.graphics.beginFill("#fff")
+    foreground.graphics.drawRect(0, 0, canvasSize.x, canvasSize.y)
+    foreground.graphics.endFill()
+    //foreground.alpha = 0.0
+    hideForeground()
+    stage.addChild(foreground)
+  }
+
+  def hideForeground() {
+    foreground.alpha = 0.0
+    stage.update()
+  }
+
+  def showForeground() {
+    foreground.alpha = 0.5
+    stage.update()
+  }
+
   def groundDirectionToImage(ground: GroundElement) =
     ground.direction match {
       case GroundElement.TopCenter => image.groundTopCenter

@@ -140,9 +140,11 @@ class Controller(val gameId: String) {
       assert(Global.currentEditor.nonEmpty)
       Global.currentEditor.get.setOption("readOnly","nocursor")
       Global.currentEditor.get.setOption("theme", Controller.editorThemeDim)
+      Global.currentGame.get.viz.hideForeground()
     } else {
       assert(Global.currentGame.nonEmpty)
       assert(Global.currentEditor.nonEmpty)
+      Global.currentGame.get.viz.showForeground()
       Global.currentEditor.get.setOption("readOnly", false)
       Global.currentEditor.get.setOption("theme", Controller.editorTheme)
       Global.currentGameId = None
