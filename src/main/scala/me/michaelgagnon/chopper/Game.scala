@@ -34,8 +34,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   def runProgram(): State = {
     interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
-    interpreter.state.variables("velocityDown") = Variable("velocityDown", METERS, droneVizElement.gameElement.velocity.y)
-    interpreter.state.variables("velocityUp") = Variable("velocityUp", METERS, -droneVizElement.gameElement.velocity.y)
+    interpreter.state.variables("speedDown") = Variable("speedDown", METERS, droneVizElement.gameElement.velocity.y)
+    interpreter.state.variables("speedUp") = Variable("speedUp", METERS, -droneVizElement.gameElement.velocity.y)
 
     val text = Global.currentEditor.get.getDoc().getValue()
     val program = Compiler(text) match {

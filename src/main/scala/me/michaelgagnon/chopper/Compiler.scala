@@ -10,7 +10,8 @@ import scala.scalajs.js.Dynamic.global
 
 sealed trait MeasurementUnitType
 case object METERS extends MeasurementUnitType
-case object THRUST extends MeasurementUnitType
+case object METERS_SEC extends MeasurementUnitType
+case object METERES_SEC_2 extends MeasurementUnitType
 
 sealed trait ComparisonOperator
 sealed trait Value
@@ -48,45 +49,44 @@ object Lexer extends RegexParsers {
   override val whiteSpace = "[ \t\r\f\n]+".r
 
   def measurementUnit: Parser[MEASUREMENTUNIT] = {
-    "meters|meter|thrust".r ^^ {
+    "meters/second\\^2\\b|meters/second\\b|meters\\b|meter\\b".r ^^ {
       case "meters" => MEASUREMENTUNIT(METERS)
       case "meter" => MEASUREMENTUNIT(METERS)
-      case "thrust" => MEASUREMENTUNIT(THRUST)
+      case "meters/second" => MEASUREMENTUNIT(METERS_SEC)
+      case "meters/second^2" => MEASUREMENTUNIT(METERES_SEC_2)
     }
   }
 
   def identifier: Parser[IDENTIFIER] = {
-    "[a-zA-Z_][a-zA-Z0-9_]*".r ^^ { str => IDENTIFIER(str) }
+    "[a-zA-Z_][a-zA-Z0-9_]*\\b".r ^^ { str => IDENTIFIER(str) }
   }
 
   def double: Parser[DOUBLELITERAL] = {
-    """[-+]?[0-9]*\.?[0-9]?[0-9]?[0-9]?[0-9]""".r ^^ { str =>
+    """[-+]?[0-9]*\.?[0-9]?[0-9]?[0-9]?[0-9]\b""".r ^^ { str =>
       DOUBLELITERAL(str.toDouble)
     }
   }
 
-  def _if               = "if\\b"    ^^ (_ => IF)
-  def _then             = "then\\b"  ^^ (_ => THEN)
-  def _else             = "else\\b"  ^^ (_ => ELSE)
-  def _and              = "and\\b"   ^^ (_ => AND)
-  def _or               = "or\\b"    ^^ (_ => OR)
-  def _not              = "not\\b"   ^^ (_ => NOT)
-  def _true             = "true\\b"   ^^ (_ => TRUE)
-  def _false            = "false\\b"   ^^ (_ => FALSE)
-  def openParen         = "(\\b"     ^^ (_ => OPENPAREN)
-  def closeParen        = ")\\b"     ^^ (_ => CLOSEPAREN)
-  def openCurly         = "{\\b"     ^^ (_ => OPENCURLY)
-  def closeCurly        = "}\\b"     ^^ (_ => CLOSECURLY)
-  def lessThan          = "<\\b"     ^^ (_ => LESSTHAN)
-  def lessThanEquals    = "<=\\b"    ^^ (_ => LESSTHANEQUALS)
-  def greaterThan       = ">\\b"     ^^ (_ => GREATERTHAN)
-  def greaterThanEquals = ">=\\b"    ^^ (_ => GREATERTHANEQUALS)
-  def equals            = "==\\b"    ^^ (_ => EQUALS)
-  def assign            = "=\\b"     ^^ (_ => ASSIGN)
+  def _if               = "if"    ^^ (_ => IF)
+  def _then             = "then"  ^^ (_ => THEN)
+  def _else             = "else"  ^^ (_ => ELSE)
+  def _and              = "and"   ^^ (_ => AND)
+  def _or               = "or"    ^^ (_ => OR)
+  def _not              = "not"   ^^ (_ => NOT)
+  def _true             = "true"   ^^ (_ => TRUE)
+  def _false            = "false"   ^^ (_ => FALSE)
+  def openParen         = "("     ^^ (_ => OPENPAREN)
+  def closeParen        = ")"     ^^ (_ => CLOSEPAREN)
+  def openCurly         = "{"     ^^ (_ => OPENCURLY)
+  def closeCurly        = "}"     ^^ (_ => CLOSECURLY)
+  def lessThan          = "<"     ^^ (_ => LESSTHAN)
+  def lessThanEquals    = "<="    ^^ (_ => LESSTHANEQUALS)
+  def greaterThan       = ">"     ^^ (_ => GREATERTHAN)
+  def greaterThanEquals = ">="    ^^ (_ => GREATERTHANEQUALS)
+  def equals            = "=="    ^^ (_ => EQUALS)
+  def assign            = "="     ^^ (_ => ASSIGN)
 
-  // TODO: what about rawTokens => rawTokens
-  def tokens: Parser[List[Token]] = {
-    phrase(rep1(
+  def reserved = (
       _if |
       _then |
       _else |
@@ -107,7 +107,13 @@ object Lexer extends RegexParsers {
       equals |
       assign |
       identifier |
-      double)) ^^ { rawTokens => rawTokens }
+      double)
+
+  def ident = not(reserved) ~> identifier
+
+  // TODO: what about rawTokens => rawTokens
+  def tokens: Parser[List[Token]] = {
+    phrase(rep1(reserved|ident)) ^^ { rawTokens => rawTokens }
   }
 
 
