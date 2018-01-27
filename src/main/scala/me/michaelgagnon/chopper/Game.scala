@@ -119,6 +119,8 @@ if (altitude < 5 meters) {
     }
     
     val thrustUp: Double = state.variables.get("thrustUp").map(_.value).getOrElse(0.0)
+    val thrustRight: Double = state.variables.get("thrustRight").map(_.value).getOrElse(0.0)
+    val thrustLeft: Double = state.variables.get("thrustLeft").map(_.value).getOrElse(0.0)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
@@ -169,7 +171,7 @@ if (altitude < 5 meters) {
       } else if (Controller.keyPressed(KeyCode.Right)) {
         5.0
       } else {
-        0.0
+        thrustRight - thrustLeft
       }
 
     if (thrustX != 0.0 || thrustY != 0.0) {

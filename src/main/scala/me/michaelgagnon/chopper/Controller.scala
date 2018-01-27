@@ -53,10 +53,21 @@ object Controller {
     val text =
 """if (altitude < 6 meters) {
   thrustUp = 10 meters/second^2
-} else if (speedUp < 0 meters/second) {
-  thrustUp = 9.81 meters/second^2
+  thrustRight = 0 meters/second^2
+  thrustLeft = 0 meters/second^2
 } else {
-  thrustUp = 9.0 meters/second^2
+  
+  if (speedUp < 0 meters/second) {
+    thrustUp = 9.81 meters/second^2
+  } else {
+    thrustUp = 9.0 meters/second^2
+  }
+  
+  if (speedRight > 1 meters/second) {
+    thrustRight = 0.0 meters/second^2
+  } else {
+    thrustRight = 3.0 meters/second^2
+  }
 }
 """
 
