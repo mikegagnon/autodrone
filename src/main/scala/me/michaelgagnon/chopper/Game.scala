@@ -19,7 +19,6 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   val groundVizElements: Seq[VizElement[GroundElement]] = viz.getGroundElements(level)
   var waterVizElements = List[VizElement[WaterElement]]()
   val droneVizElement: VizElement[DroneElement] = viz.getDroneVizElement()
-
   viz.drawForeground()
 
   // TODO: document
