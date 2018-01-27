@@ -49,7 +49,7 @@ object Lexer extends RegexParsers {
   override val whiteSpace = "[ \t\r\f\n]+".r
 
   def measurementUnit: Parser[MEASUREMENTUNIT] = {
-    "meters/second\\^2\\b|meters/second\\b|meters\\b|meter\\b".r ^^ {
+    """meters/second\^2\b|meters/second\b|meters\b|meter\\b""".r ^^ {
       case "meters" => MEASUREMENTUNIT(METERS)
       case "meter" => MEASUREMENTUNIT(METERS)
       case "meters/second" => MEASUREMENTUNIT(METERS_SEC)
