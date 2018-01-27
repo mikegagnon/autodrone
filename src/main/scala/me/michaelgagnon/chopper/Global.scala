@@ -22,7 +22,7 @@ object Global {
 
   def currentGame: Option[Game] = currentGameId.map(games(_))
 
-  def currentEditor: Option[codemirror.Editor] = currentGameId.map(editors(_))
+  def currentEditor: Option[codemirror.Editor] = currentGameId.flatMap(editors.get(_))
 
   val queue = new createjs.LoadQueue()
 
@@ -40,7 +40,11 @@ object Global {
       val gameId = div.id
       val level = Level.levelMap(gameId)
       games(gameId) = new Game(level, gameId, image)
-      editors(gameId) = Controller.initEditor(gameId)
+      Controller.initEditor(gameId) match {
+        case Some(editor) => editors(gameId) = editor
+        case None => ()
+      }
+       
       games(gameId).viz.showForeground()
     }
 

@@ -38,24 +38,26 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     interpreter.state.variables("speedDown") = Variable("speedDown", METERS_SEC, droneVizElement.gameElement.velocity.y)
     interpreter.state.variables("speedUp") = Variable("speedUp", METERS_SEC, -droneVizElement.gameElement.velocity.y)
 
-    val text = Global.currentEditor.get.getDoc().getValue()
+    val text: Option[String] = Global.currentEditor.map(_.getDoc().getValue())
 
-    val error: Option[String] = Compiler(text) match {
-      case Left(error) => {
-        //$("#chopper1-error-box").text(error.toString)
-        //false
-        Some(error.toString)
-      }
-      case Right(p) => {
-        try {
-          interpreter.run(p)
-          None
-        } catch {
-          case InterpreterCrash(message) => {
-            Some(message)
+    val error: Option[String] = text.flatMap { text =>
+
+      Compiler(text) match {
+        case Left(error) => {
+          Some(error.toString)
+        }
+        case Right(p) => {
+          try {
+            interpreter.run(p)
+            None
+          } catch {
+            case InterpreterCrash(message) => {
+              Some(message)
+            }
           }
         }
       }
+
     }
     //println(interpreter.state.variables)
 

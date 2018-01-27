@@ -43,7 +43,7 @@ object Controller {
     dom.window.onkeyup = Controller.onkeyup _
   }
 
-  def initEditor(gameId: String): Editor = {
+  def initEditor(gameId: String): Option[Editor] = {
     val params = js.Dynamic.literal(
       mode = "javascript",
       theme = editorTheme,
@@ -64,9 +64,9 @@ object Controller {
       case el:HTMLTextAreaElement => {
         val m = CodeMirror.fromTextArea(el,params)
         m.getDoc().setValue(text)
-        m
+        Some(m)
       }
-      case _=> throw new IllegalArgumentException("cannot find text area for the code")
+      case _=> None //throw new IllegalArgumentException("cannot find text area for the code")
     }
 
   }
@@ -137,16 +137,25 @@ class Controller(val gameId: String) {
       Global.currentGameId = Some(gameId)
       playPauseButton.textContent = "Pause"
       paused = false
-      assert(Global.currentEditor.nonEmpty)
-      Global.currentEditor.get.setOption("readOnly","nocursor")
-      Global.currentEditor.get.setOption("theme", Controller.editorThemeDim)
+      //assert(Global.currentEditor.nonEmpty)
+      Global.currentEditor.foreach { editor =>
+        editor.setOption("readOnly","nocursor")
+        editor.setOption("theme", Controller.editorThemeDim)
+      }
+      //Global.currentEditor.get.setOption("theme", Controller.editorThemeDim)
       Global.currentGame.get.viz.hideForeground()
     } else {
       assert(Global.currentGame.nonEmpty)
-      assert(Global.currentEditor.nonEmpty)
+      //assert(Global.currentEditor.nonEmpty)
       Global.currentGame.get.viz.showForeground()
-      Global.currentEditor.get.setOption("readOnly", false)
-      Global.currentEditor.get.setOption("theme", Controller.editorTheme)
+      
+      Global.currentEditor.foreach { editor => 
+        editor.setOption("readOnly", false)
+        editor.setOption("theme", Controller.editorTheme)
+      }
+
+      //Global.currentEditor.get.setOption("readOnly", false)
+      //Global.currentEditor.get.setOption("theme", Controller.editorTheme)
       Global.currentGameId = None
       playPauseButton.textContent = "Play"
       paused = true
