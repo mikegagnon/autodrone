@@ -2,9 +2,9 @@ package me.michaelgagnon.chopper
 
 object Level {
   val levelMap = Map(
-    "chopper1" -> Level1,
-    "chopper2" -> Level1,
-    "chopper3" -> Level1
+    "chopper1" -> new Level1,
+    "chopper2" -> new Level1,
+    "chopper3" -> new Level1
   )
   val margin = 100.0
 
@@ -25,7 +25,7 @@ sealed trait Level {
   val groundElements: Seq[GroundElement]
 }
 
-object Level1 extends Level {
+class Level1 extends Level {
   val drawScale = true
   val dim = Xy(2000, 3000)
   val numBackgrounds = 3

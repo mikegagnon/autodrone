@@ -34,7 +34,6 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   var victory = false
 
   def runProgram(): Either[String, State] = {
-    println("Game " + gameId + "runProgram")
     interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
     interpreter.state.variables("speedDown") = Variable("speedDown", METERS_SEC, droneVizElement.gameElement.velocity.y)
     interpreter.state.variables("speedUp") = Variable("speedUp", METERS_SEC, -droneVizElement.gameElement.velocity.y)
@@ -53,8 +52,6 @@ class Game(val level: Level, val gameId: String, val image: Image) {
           None
         } catch {
           case InterpreterCrash(message) => {
-            //println(message)
-            //$("#chopper1-error-box").text(message)
             Some(message)
           }
         }
@@ -93,7 +90,7 @@ if (altitude < 5 meters) {
   def tick() {
 
     if (controller.paused) return
-    
+
     val result: Either[String, State] = runProgram()
 
     val stateOption: Option[State] = result match {
