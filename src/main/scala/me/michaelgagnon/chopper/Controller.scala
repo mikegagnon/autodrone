@@ -5,6 +5,7 @@ import org.scalajs.dom.document
 import org.scalajs.dom.html.Button
 import scala.collection.mutable
 import scala.scalajs.js.annotation._
+import org.querki.jquery._
 
 // TODO:
 import org.denigma.codemirror.{CodeMirror, EditorConfiguration, Editor}
@@ -50,13 +51,12 @@ object Controller {
     ).asInstanceOf[EditorConfiguration]
 
     val text =
-"""
-if (altitude < 6 meters) {
-  up = 10 thrust
-} else if (velocityUp < 0 meters) {
-  up = 9.81 thrust
+"""if (altitude < 6 meters) {
+  thrustUp = 10 meters/second^2
+} else if (speedUp < 0 meters/second) {
+  thrustUp = 9.81 meters/second^2
 } else {
-  up = 9.0 thrust
+  thrustUp = 9.0 meters/second^2
 }
 """
 
@@ -115,6 +115,10 @@ class Controller(val gameId: String) {
   }
 
   val playPauseButton: Button = getButton("playPauseButton")
+
+  def displayError(message: String) {
+    $(s"#$gameId-error-box").text(message)
+  }
 
   def playPauseClick(): Unit = {
 

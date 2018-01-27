@@ -32,24 +32,38 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
   var victory = false
 
-  def runProgram(): State = {
+  def runProgram(): Either[String, State] = {
     interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
-    interpreter.state.variables("speedDown") = Variable("speedDown", METERS, droneVizElement.gameElement.velocity.y)
-    interpreter.state.variables("speedUp") = Variable("speedUp", METERS, -droneVizElement.gameElement.velocity.y)
+    interpreter.state.variables("speedDown") = Variable("speedDown", METERS_SEC, droneVizElement.gameElement.velocity.y)
+    interpreter.state.variables("speedUp") = Variable("speedUp", METERS_SEC, -droneVizElement.gameElement.velocity.y)
 
     val text = Global.currentEditor.get.getDoc().getValue()
-    val program = Compiler(text) match {
-      case Left(error) => println(error)
+
+    val error: Option[String] = Compiler(text) match {
+      case Left(error) => {
+        //$("#chopper1-error-box").text(error.toString)
+        //false
+        Some(error.toString)
+      }
       case Right(p) => {
         try {
           interpreter.run(p)
+          None
         } catch {
-          case InterpreterCrash(message) => println(message)
+          case InterpreterCrash(message) => {
+            println(message)
+            //$("#chopper1-error-box").text(message)
+            Some(message)
+          }
         }
       }
     }
     println(interpreter.state.variables)
-    interpreter.state
+
+    error match {
+      case Some(errorMessage) => Left(errorMessage)
+      case None => Right(interpreter.state)
+    } 
   }
 
   /*
@@ -77,9 +91,29 @@ if (altitude < 5 meters) {
   def tick() {
     if (controller.paused) return
 
-    val state: State = runProgram()
+    val result: Either[String, State] = runProgram()
 
-    val thrustUp: Double = state.variables.get("up").map(_.value).getOrElse(0.0)
+    val stateOption: Option[State] = result match {
+      case Left(errorMessage) => {
+        //$("#chopper1-error-box").text(errorMessage)
+        controller.displayError(errorMessage)
+        //controller.paused = true
+        controller.playPauseClick()
+        None
+      }
+      case Right(state) => {
+        controller.displayError("")
+        Some(state)
+      }
+    }
+
+    val state = if (stateOption.isEmpty) {
+      return
+    } else {
+      stateOption.get
+    }
+
+    val thrustUp: Double = state.variables.get("thrustUp").map(_.value).getOrElse(0.0)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
