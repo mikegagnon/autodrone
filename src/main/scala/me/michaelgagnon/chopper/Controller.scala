@@ -50,8 +50,14 @@ object Controller {
     ).asInstanceOf[EditorConfiguration]
 
     val text =
-"""if (altitude < 6 meters) then { thrustUp = 3 thrust }
-if (altitude > 6 meters) then { thrustUp = 0 thrust }
+"""
+if (altitude < 6 meters) {
+  up = 10 thrust
+} else if (velocityUp < 0 meters) {
+  up = 9.81 thrust
+} else {
+  up = 9.0 thrust
+}
 """
 
     dom.document.getElementById(gameId + "-editor") match {
@@ -130,7 +136,6 @@ class Controller(val gameId: String) {
       assert(Global.currentEditor.nonEmpty)
       Global.currentEditor.get.setOption("readOnly","nocursor")
       Global.currentEditor.get.setOption("theme", Controller.editorThemeDim)
-      println(Compiler(Global.currentEditor.get.getDoc().getValue()))
     } else {
       assert(Global.currentGame.nonEmpty)
       assert(Global.currentEditor.nonEmpty)

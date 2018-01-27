@@ -61,8 +61,6 @@ object Lexer extends RegexParsers {
 
   def double: Parser[DOUBLELITERAL] = {
     """[-+]?[0-9]*\.?[0-9]?[0-9]?[0-9]?[0-9]""".r ^^ { str =>
-    //"""[+-]?[0-9]*((\.[0-9]+([eE][+-]?[0-9]+)?[fF]?)|([fF])|([eE][+-]?[0-9]+))\b""".r ^^ { str =>
-      //println("D: " + str)
       DOUBLELITERAL(str.toDouble)
     }
   }
@@ -166,7 +164,6 @@ object ChopperParser extends Parsers {
   }
 
   lazy val  booleanConst: Parser[BooleanConst] = {
-    println("asdf")
     (TRUE | FALSE) ^^ {
       case TRUE => BooleanConst(true)
       case FALSE => BooleanConst(false)
@@ -290,12 +287,6 @@ object Compiler {
       ast <- ChopperParser(tokens).right
     } yield ast
   }
-
-  /*def compile() {
-    val text: String = global.cm.getValue().asInstanceOf[String]
-    //println(text)
-  }*/
-
 }
 
 

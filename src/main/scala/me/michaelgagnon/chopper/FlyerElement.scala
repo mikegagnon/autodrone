@@ -49,6 +49,8 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
     F.x = if (F.x.isNaN) 0.0 else F.x
     F.y = if (F.y.isNaN) 0.0 else F.y
 
+    println("F.x == " + F.x)
+
     // Calculate acceleration ( F = ma )
     acceleration.x = (F.x / mass) + thrust.x
     acceleration.y = FlyerElement.ag + (F.y / mass) + thrust.y
