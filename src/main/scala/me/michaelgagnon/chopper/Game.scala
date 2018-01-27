@@ -37,6 +37,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
     interpreter.state.variables("speedDown") = Variable("speedDown", METERS_SEC, droneVizElement.gameElement.velocity.y)
     interpreter.state.variables("speedUp") = Variable("speedUp", METERS_SEC, -droneVizElement.gameElement.velocity.y)
+    interpreter.state.variables("speedRight") = Variable("speedRight", METERS_SEC, droneVizElement.gameElement.velocity.x)
+    interpreter.state.variables("speedLeft") = Variable("speedLeft", METERS_SEC, -droneVizElement.gameElement.velocity.x)
 
     val text: Option[String] = Global.currentEditor.map(_.getDoc().getValue())
 
@@ -59,7 +61,8 @@ class Game(val level: Level, val gameId: String, val image: Image) {
       }
 
     }
-    //println(interpreter.state.variables)
+    
+    println(interpreter.state.variables)
 
     error match {
       case Some(errorMessage) => Left(errorMessage)
