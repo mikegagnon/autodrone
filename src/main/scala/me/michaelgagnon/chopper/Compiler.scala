@@ -67,14 +67,20 @@ object Lexer extends RegexParsers {
     }
   }
 
+  def _true: Parser[DOUBLELITERAL] = {
+    """true\b""".r ^^ { str => DOUBLELITERAL(1.0)}
+  }
+
+  def _false: Parser[DOUBLELITERAL] = {
+    """false\b""".r ^^ { str => DOUBLELITERAL(0.0)}
+  }
+
   def _if               = "if"    ^^ (_ => IF)
   def _then             = "then"  ^^ (_ => THEN)
   def _else             = "else"  ^^ (_ => ELSE)
   def _and              = "and"   ^^ (_ => AND)
   def _or               = "or"    ^^ (_ => OR)
   def _not              = "not"   ^^ (_ => NOT)
-  def _true             = "true"   ^^ (_ => TRUE)
-  def _false            = "false"   ^^ (_ => FALSE)
   def openParen         = "("     ^^ (_ => OPENPAREN)
   def closeParen        = ")"     ^^ (_ => CLOSEPAREN)
   def openCurly         = "{"     ^^ (_ => OPENCURLY)
@@ -158,7 +164,7 @@ object ChopperParser extends Parsers {
       case a ~ b => Term(b, a.map(_._1))
     }
 
-  lazy val  factor: Parser[Factor] = booleanConst | notFactor /*| factorIdentifier*/ | condition
+  lazy val  factor: Parser[Factor] = booleanConst | notFactor | condition
 
   /*lazy val  factorIdentifier: Parser[FactorIdentifier] = 
     identifier ^^ { case id => FactorIdentifier(id) }*/
