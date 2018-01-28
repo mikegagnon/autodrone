@@ -183,7 +183,6 @@ if (altitude < 5 meters) {
         thrustRight - thrustLeft
       }
 
-    //if (thrustX != 0.0 || thrustY != 0.0) {
     {
       val velocity = droneVizElement.gameElement.velocity
       if (velocity.y != 0.0 || velocity.x != 0.0) {
