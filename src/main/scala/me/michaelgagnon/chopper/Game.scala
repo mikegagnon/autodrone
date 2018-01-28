@@ -121,6 +121,12 @@ if (altitude < 5 meters) {
     val thrustUp: Double = state.variables.get("thrustUp").map(_.value).getOrElse(0.0)
     val thrustRight: Double = state.variables.get("thrustRight").map(_.value).getOrElse(0.0)
     val thrustLeft: Double = state.variables.get("thrustLeft").map(_.value).getOrElse(0.0)
+    val dropWater: Boolean = state.variables.get("dropWater").map{ v =>
+      v.value match {
+        case 0.0 => false
+        case _ => true
+      }
+    }.getOrElse(false)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
@@ -145,7 +151,7 @@ if (altitude < 5 meters) {
     }
 
     // TODO: refactor
-    if (explosion.isEmpty && Controller.keyPressed(KeyCode.Space) && waterAvailableForDrop()) {
+    if (explosion.isEmpty && (Controller.keyPressed(KeyCode.Space) | dropWater) && waterAvailableForDrop()) {
       lastWaterTimestamp = System.currentTimeMillis()
       val dv = droneVizElement.gameElement.velocity
       val dcp = droneVizElement.gameElement.currentPosition

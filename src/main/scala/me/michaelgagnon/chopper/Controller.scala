@@ -57,6 +57,8 @@ object Controller {
   thrustLeft = 0 meters/second^2
 } else {
   
+  dropWater = true
+
   if (speedUp < 0 meters/second) {
     thrustUp = 9.81 meters/second^2
   } else {
