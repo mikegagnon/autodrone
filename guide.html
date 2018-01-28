@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Chopper</title>
+    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.css">-->
+    <link rel="stylesheet" type="text/css" href="css/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="css/eclipse.css">
+    <link rel="stylesheet" type="text/css" href="css/eclipse-dim.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="./js/tether.min.js"></script>    
+    <script type="text/javascript" src="./js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap.js"></script>
+    <script type="text/javascript" src="./js/preloadjs-0.6.2.min.js"></script>
+    <script type="text/javascript" src="js/codemirror.js"></script>
+    <script type="text/javascript" src="js/bk-lang.js"></script>
+    <script type="text/javascript" src="./js/easeljs-0.8.2.min.js"></script>
+
+  </head>
+  <body>
+
+    <h1>Autodrone</h1>
+
+    <p>The object of Autodrone is to program a drone to put out wildfires.
+    But before we start programming drones, let&rsquo;s play the game with
+    manual controls. Use the arrow keys to control the drone&rsquo;s flight, and press space
+    to drop water balloons. Land the
+    drone once you&rsquo;ve put out all the fires. Then, scroll down to learn
+    how to program the drone.
+    </p>
+
+    <div id="chopper1" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+      <div>
+        <button id="chopper1-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper1')">Pause</button>
+        <span id="chopper1-error-box"></span>
+      </div>
+    </div>
+
+    <h2>1. thrustUp</h2>
+
+    <div id="chopper2" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+
+      <div>
+        <button id="chopper2-playPauseButton" type="button" class="btn" onclick="Controller.playPauseClick('chopper2')">Play</button>
+          <span id="chopper2-error-box"></span>
+      </div>
+
+      <div class="editor-div">
+        <textarea id="chopper2-editor"></textarea>
+      </div>
+    
+    </div>
+
+    <div id="chopper3" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+
+      <div>
+        <button id="chopper3-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper3')">Play</button>
+          <span id="chopper3-error-box"></span>
+      </div>
+
+      <div class="editor-div">
+        <textarea id="chopper3-editor"></textarea>
+      </div>
+    
+    </div>
+
+
+    <script type="text/javascript" src="./target/scala-2.11/chopper-fastopt.js"></script>
+
+  </body>
+</html>
