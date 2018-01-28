@@ -184,8 +184,11 @@ if (altitude < 5 meters) {
       }
 
     //if (thrustX != 0.0 || thrustY != 0.0) {
-    if (droneVizElement.gameElement.velocity.y != 0.0 || droneVizElement.gameElement.velocity.x != 0.0) {
-      resting.numTicks = 0
+    {
+      val velocity = droneVizElement.gameElement.velocity
+      if (velocity.y != 0.0 || velocity.x != 0.0) {
+        resting.numTicks = 0
+      }
     }
 
     val droneResult = if (explosion.isEmpty && !victory) {
