@@ -125,20 +125,28 @@ object Controller {
   }
 
   def onkeydown(e: dom.KeyboardEvent) {
+
+    // Are any of the editors in focus?
+    val editorFocus = Global.editors.values.exists(_.hasFocus)
+
     Global.currentGame.foreach { game =>
       val key = e.keyCode.toInt
       if (KeyCode.arrowKeys.contains(key) || key == KeyCode.Space) {
-        if (!game.controller.paused) e.preventDefault()
+        if (!game.controller.paused && !editorFocus) e.preventDefault()
         keyPressed(key) = true
       }
     }
   }
 
   def onkeyup(e: dom.KeyboardEvent) {
+
+    // Are any of the editors in focus?
+    val editorFocus = Global.editors.values.exists(_.hasFocus)
+
     Global.currentGame.foreach { game =>
       val key = e.keyCode.toInt
       if (KeyCode.arrowKeys.contains(key) || key == KeyCode.Space) {
-        if (!game.controller.paused) e.preventDefault()
+        if (!game.controller.paused && !editorFocus) e.preventDefault()
         keyPressed(key) = false
       }
     }
