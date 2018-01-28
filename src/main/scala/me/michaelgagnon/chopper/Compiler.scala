@@ -187,7 +187,7 @@ object ChopperParser extends Parsers {
 
   lazy val value: Parser[Value] = identifier | doubleWithType
 
-  lazy val doubleWithType: Parser[DoubleWithType] = double ~ measurementUnit ^^ {
+  lazy val doubleWithType: Parser[DoubleWithType] = double ~ opt(measurementUnit) ^^ {
     case d ~ m => DoubleWithType(d.value, m)
   }
 
@@ -213,7 +213,7 @@ if (true) {
 }
   */
 
-  case class DoubleWithType(value: Double, measurementUnit: MEASUREMENTUNIT) extends Value
+  case class DoubleWithType(value: Double, measurementUnit: Option[MEASUREMENTUNIT]) extends Value
   case class Expression(term1: Term, term2: Option[Term]) extends ChopperAst
   case class Term(factor1: Factor, factor2: Option[Factor]) extends ChopperAst
   sealed trait Factor extends ChopperAst

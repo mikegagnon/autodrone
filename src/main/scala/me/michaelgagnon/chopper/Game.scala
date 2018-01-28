@@ -34,11 +34,11 @@ class Game(val level: Level, val gameId: String, val image: Image) {
   var victory = false
 
   def runProgram(): Either[String, State] = {
-    interpreter.state.variables("altitude") = Variable("altitude", METERS, droneVizElement.gameElement.altitude)
-    interpreter.state.variables("speedDown") = Variable("speedDown", METERS_SEC, droneVizElement.gameElement.velocity.y)
-    interpreter.state.variables("speedUp") = Variable("speedUp", METERS_SEC, -droneVizElement.gameElement.velocity.y)
-    interpreter.state.variables("speedRight") = Variable("speedRight", METERS_SEC, droneVizElement.gameElement.velocity.x)
-    interpreter.state.variables("speedLeft") = Variable("speedLeft", METERS_SEC, -droneVizElement.gameElement.velocity.x)
+    interpreter.state.variables("altitude") = Variable("altitude", Some(METERS), droneVizElement.gameElement.altitude)
+    interpreter.state.variables("speedDown") = Variable("speedDown", Some(METERS_SEC), droneVizElement.gameElement.velocity.y)
+    interpreter.state.variables("speedUp") = Variable("speedUp", Some(METERS_SEC), -droneVizElement.gameElement.velocity.y)
+    interpreter.state.variables("speedRight") = Variable("speedRight", Some(METERS_SEC), droneVizElement.gameElement.velocity.x)
+    interpreter.state.variables("speedLeft") = Variable("speedLeft", Some(METERS_SEC), -droneVizElement.gameElement.velocity.x)
 
     val text: Option[String] = Global.currentEditor.map(_.getDoc().getValue())
 

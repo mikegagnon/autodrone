@@ -4,7 +4,7 @@ import scala.collection.mutable
 import ChopperParser._
 
 // TODO: do we really need to store id here?
-case class Variable(id: String, typ: MeasurementUnitType, var value: Double)
+case class Variable(id: String, typ: Option[MeasurementUnitType], var value: Double)
 
 case class InterpreterCrash(private val message: String) extends Exception(message) 
 
@@ -28,7 +28,7 @@ class Interpreter() { //val state: State) {
         throw new InterpreterCrash(s"Cannot assign ${id} to ${destVariable.id}, ${id} is undefined")
     }
 
-  def updateVariableFromLiteral(destVariable: Variable, v: Double, measurementUnit: MeasurementUnitType) {
+  def updateVariableFromLiteral(destVariable: Variable, v: Double, measurementUnit: Option[MeasurementUnitType]) {
     if (destVariable.typ == measurementUnit) {
       destVariable.value = v
     } else {
@@ -39,7 +39,7 @@ class Interpreter() { //val state: State) {
   def updateVariable(destVariable: Variable, value: Value) =
     value match {
       case IDENTIFIER(id) => updateVariableFromIdentifier(destVariable, id)
-      case DoubleWithType(v, measurementUnit) => updateVariableFromLiteral(destVariable, v, measurementUnit.unit)
+      case DoubleWithType(v, measurementUnit) => updateVariableFromLiteral(destVariable, v, measurementUnit.map(_.unit))
     }
 
 
@@ -52,7 +52,7 @@ class Interpreter() { //val state: State) {
   def newVariable(destId: IDENTIFIER, value: Value) =
     value match {
       case IDENTIFIER(srcId) => newVariableFromIdentifier(destId.id, srcId)
-      case DoubleWithType(v, measurementUnit) => state.variables(destId.id) = Variable(destId.id, measurementUnit.unit, v)
+      case DoubleWithType(v, measurementUnit) => state.variables(destId.id) = Variable(destId.id, measurementUnit.map(_.unit), v)
     }
 
   def executeAssignment(id: IDENTIFIER, value: Value) =
@@ -74,7 +74,7 @@ class Interpreter() { //val state: State) {
   def evaluateValue(value: Value): Variable = 
     value match {
       case IDENTIFIER(id) => evaluateIdentifier(id)
-      case DoubleWithType(v, measurementUnit) => Variable(v.toString, measurementUnit.unit, v)
+      case DoubleWithType(v, measurementUnit) => Variable(v.toString, measurementUnit.map(_.unit), v)
     }
 
   def evaluateCondition(lv: Value, op: ComparisonOperator, rv: Value) = {
