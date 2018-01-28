@@ -51,27 +51,67 @@ object Controller {
     ).asInstanceOf[EditorConfiguration]
 
     val text =
-"""if (altitude < 6 meters) {
+"""if (fire == true) {
+
+
+  if (altitude < 10 meters) {
+    dropWater = false
+    thrustUp = 10 meters/second^2
+    thrustRight = 0 meters/second^2
+    thrustLeft = 0 meters/second^2
+  } else {
+    dropWater = true
+    if (speedUp < 0 meters/second) {
+      thrustUp = 9.81 meters/second^2
+    } else {
+      thrustUp = 9.0 meters/second^2
+    }
+
+    if (speedRight > 1 meters/second) {
+      thrustRight = 0.0 meters/second^2
+    } else {
+      thrustRight = 1.0 meters/second^2
+    }
+  }
+} else {
+  dropWater = false
+
+  thrustUp = 9.5 meters/second^2
+  thrustRight = 0.0 meters/second^2
+}
+"""
+
+/*
+"""if (fire == true and altitude < 10 meters) {
   thrustUp = 10 meters/second^2
   thrustRight = 0 meters/second^2
   thrustLeft = 0 meters/second^2
 } else {
   
-  dropWater = true
+  if (fire == true) {
+    dropWater = true
 
-  if (speedUp < 0 meters/second) {
-    thrustUp = 9.81 meters/second^2
+    if (speedUp < 0 meters/second) {
+      thrustUp = 9.81 meters/second^2
+    } else {
+      thrustUp = 9.0 meters/second^2
+    }
+
+    if (speedRight > 1 meters/second) {
+      thrustRight = 0.0 meters/second^2
+    } else {
+      thrustRight = 1.0 meters/second^2
+    }
+
   } else {
-    thrustUp = 9.0 meters/second^2
-  }
-  
-  if (speedRight > 1 meters/second) {
+    dropWater = false
+
+    thrustUp = 7.0 meters/second^2
     thrustRight = 0.0 meters/second^2
-  } else {
-    thrustRight = 3.0 meters/second^2
   }
 }
 """
+*/
 
     dom.document.getElementById(gameId + "-editor") match {
       case el:HTMLTextAreaElement => {

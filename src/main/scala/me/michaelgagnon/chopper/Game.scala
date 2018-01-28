@@ -39,6 +39,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
     interpreter.state.variables("speedUp") = Variable("speedUp", Some(METERS_SEC), -droneVizElement.gameElement.velocity.y)
     interpreter.state.variables("speedRight") = Variable("speedRight", Some(METERS_SEC), droneVizElement.gameElement.velocity.x)
     interpreter.state.variables("speedLeft") = Variable("speedLeft", Some(METERS_SEC), -droneVizElement.gameElement.velocity.x)
+    interpreter.state.variables("fire") = Variable("fire", None, if (fireExists) 1.0 else 0.0)
 
     val text: Option[String] = Global.currentEditor.map(_.getDoc().getValue())
 
@@ -62,7 +63,7 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
     }
     
-    println(interpreter.state.variables)
+    //println(interpreter.state.variables)
 
     error match {
       case Some(errorMessage) => Left(errorMessage)
@@ -128,6 +129,8 @@ if (altitude < 5 meters) {
       }
     }.getOrElse(false)
 
+    println(droneVizElement.gameElement.currentPosition)
+
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
     explosion match {
@@ -151,7 +154,7 @@ if (altitude < 5 meters) {
     }
 
     // TODO: refactor
-    if (explosion.isEmpty && (Controller.keyPressed(KeyCode.Space) | dropWater) && waterAvailableForDrop()) {
+    if (explosion.isEmpty && (Controller.keyPressed(KeyCode.Space) || dropWater) && waterAvailableForDrop()) {
       lastWaterTimestamp = System.currentTimeMillis()
       val dv = droneVizElement.gameElement.velocity
       val dcp = droneVizElement.gameElement.currentPosition
@@ -180,7 +183,8 @@ if (altitude < 5 meters) {
         thrustRight - thrustLeft
       }
 
-    if (thrustX != 0.0 || thrustY != 0.0) {
+    //if (thrustX != 0.0 || thrustY != 0.0) {
+    if (droneVizElement.gameElement.velocity.y != 0.0 || droneVizElement.gameElement.velocity.x != 0.0) {
       resting.numTicks = 0
     }
 
@@ -199,8 +203,10 @@ if (altitude < 5 meters) {
     viz.update(droneVizElement, fireVizElements, groundVizElements, waterVizElements)
   }
 
+  def fireExists = fireVizElements.exists(_.gameElement.currentPosition.x >= 0.0)
+
   def checkVictory() {
-    if (resting.numTicks >= 10 && !fireVizElements.exists(_.gameElement.currentPosition.x >= 0.0)) {
+    if (resting.numTicks >= 10 && !fireExists) {
       victory = true
       viz.youwin()
     }
