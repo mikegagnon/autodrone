@@ -11,6 +11,42 @@ object Level {
   val pixelsPerMeter = 30.0
 }
 
+object GroundMaker {
+
+  // rows are negative indexed just like LevelElement objects
+  def rect(rowTop: Int, colLeft: Int, rowBottom: Int, colRight: Int) =
+
+    for {
+      r <- rowTop to rowBottom
+      c <- colLeft to colRight
+    } yield {
+
+      println(r,c)
+
+      val xy = Xy(c * GroundElement.dim.x, r * GroundElement.dim.y)
+      val direction =
+        if (r == rowTop) {
+          if (c == colLeft) {
+            GroundElement.TopLeft
+          } else if (c == colRight) {
+            GroundElement.TopRight
+          } else {
+            GroundElement.TopCenter
+          }
+        } else {
+          if (c == colLeft) {
+            GroundElement.BottomLeft
+          } else if (c == colRight) {
+            GroundElement.BottomRight
+          } else {
+            GroundElement.BottomCenter
+          }
+        }
+      GroundElement(xy, direction)
+    }
+
+}
+
 case class LevelElement(override val origPosition: Xy, dim: Xy) extends GameElement(origPosition)
 
 sealed trait Level {
@@ -26,6 +62,9 @@ sealed trait Level {
 }
 
 class Level1 extends Level {
+
+  //GroundMaker.rect(-5, 0, 0, 10)
+
   val drawScale = true
   val dim = Xy(2000, 3000)
   val numBackgrounds = 3
@@ -37,7 +76,7 @@ class Level1 extends Level {
     FireElement(Xy(400.0, -FireElement.dim.y - GroundElement.dim.y))
   )
 
-  val groundElements =
+  val groundElements = /*GroundMaker.rect(-1, 0, 0, 10) ++ GroundMaker.rect(-10, 6, 0, 7) */
   List.range(0, 5).map { i => GroundElement(Xy(i * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopCenter) } ++
   List(
     GroundElement(Xy(5 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopRight),
