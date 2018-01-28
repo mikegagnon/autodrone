@@ -119,7 +119,7 @@ object Lexer extends RegexParsers {
 
   // TODO: what about rawTokens => rawTokens
   def tokens: Parser[List[Token]] = {
-    phrase(rep1(reserved|ident)) ^^ { rawTokens => rawTokens }
+    phrase(rep(reserved|ident)) ^^ { rawTokens => rawTokens }
   }
 
 
