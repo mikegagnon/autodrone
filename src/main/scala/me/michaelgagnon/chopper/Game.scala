@@ -129,7 +129,7 @@ if (altitude < 5 meters) {
       }
     }.getOrElse(false)
 
-    println(droneVizElement.gameElement.currentPosition)
+    //println(droneVizElement.gameElement.currentPosition)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
@@ -233,7 +233,7 @@ if (altitude < 5 meters) {
   def processDroneResult(droneResult: FlyResult.EnumVal) =
     droneResult match {
       case FlyResult.OutOfBounds => resetLevel()
-      case FlyResult.FireCollision => newExplosion()
+      case FlyResult.FireCollision(_) => newExplosion()
       case FlyResult.GroundCollision(velocity) => {
         val maxVelocity = Math.max(Math.abs(velocity.x), Math.abs(velocity.y))
         if (maxVelocity > DroneElement.fastestSafeVelocity) {
@@ -268,6 +268,11 @@ if (altitude < 5 meters) {
             }
           }
 
+          viz.removeVizElement(w)
+          false
+        }
+        case FlyResult.FireCollision(fireElement) => {
+          fireElement.currentPosition.x = -10000.0
           viz.removeVizElement(w)
           false
         }

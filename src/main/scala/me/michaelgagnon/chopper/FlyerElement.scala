@@ -19,7 +19,7 @@ object FlyResult {
   sealed trait EnumVal
   case object StillFlying extends EnumVal
   case object OutOfBounds extends EnumVal
-  case object FireCollision extends EnumVal
+  case class FireCollision(fireElement: FireElement) extends EnumVal
   case class GroundCollision(velocity: Xy) extends EnumVal
 }
 
@@ -86,7 +86,7 @@ abstract class FlyerElement(override val origPosition: Xy) extends GameElement(o
 
     level.fireElements.foreach { e =>
       if (intersect(e)) {
-        return FlyResult.FireCollision
+        return FlyResult.FireCollision(e)
       }
     }
 
