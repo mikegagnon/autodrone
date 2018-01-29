@@ -2,6 +2,7 @@ package me.michaelgagnon.chopper
 
 object Level {
 
+  val programText1 = "\n\n"
   val programText2 = "thrustUp = 15 meters/second^2\n\n"
   val programText3 = "thrustUp = 7.5 meters/second^2\n\n"
   val programText4 = """if (altitude < 6 meters) then {
@@ -67,33 +68,37 @@ object Level {
 
 """
 
-val programText9 = """if (altitude < 9 meters) then {
-  thrustUp = 10 meters/second^2 
-} else then {
-  
-  dropWater = true
+val programText9 = """if (fire == true) {
+  if (altitude < 9 meters) then {
+    thrustUp = 10 meters/second^2 
+  } else then {
+    
+    dropWater = true
 
-  if (speedUp < 0 meters/second) {
-    thrustUp = 9.81 meters/second^2
-  } else {
-    thrustUp = 9 meters/second^2
-  }
+    if (speedUp < 0 meters/second) {
+      thrustUp = 9.81 meters/second^2
+    } else {
+      thrustUp = 9 meters/second^2
+    }
 
-  if (speedRight < 0.5 meters/second) {
-    thrustRight = 1.0 meters/second^2
-  } else {
-    thrustRight = 0.0 meters/second^2
-  }
+    if (speedRight < 0.5 meters/second) {
+      thrustRight = 1.0 meters/second^2
+    } else {
+      thrustRight = 0.0 meters/second^2
+    }
 
-  if (fire == false) {
-    dropWater = false
-    thrustUp = 9.5 meters/second^2
+    if (fire == false) {
+
+    }
   }
+} else {
+  dropWater = false
+  thrustUp = 9.8 meters/second^2
 }
 
 """
   val levelMap = Map(
-    "chopper1" -> new Level1(""),
+    "chopper1" -> new Level1(programText1),
     "chopper2" -> new Level1(programText2),
     "chopper3" -> new Level1(programText3),
     "chopper4" -> new Level1(programText4),
