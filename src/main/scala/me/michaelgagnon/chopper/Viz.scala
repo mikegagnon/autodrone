@@ -219,6 +219,7 @@ class Viz(val level: Level, val id: String, val image: Image) {
 
   def reset() {
     stage.removeChild(youWinBitmap)
+    update()
   }
 
   def drawScale() {
