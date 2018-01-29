@@ -113,46 +113,88 @@
       </div>
     </div>
 
-    <h3>2.1 Bisecting thrust</h3>
+    <h3>2.1 Binary search</h3>
 
     <p><tt>7.5</tt> doesn&rsquo;t generate enough thrust to overcome gravity.
     So now let&rsquo;s try <tt>11.25</tt>, the midpoint between <tt>7.5</tt> and <tt>15</tt></p>
 
     <p>
-    <tt>11.25</tt> is sufficient. Let&rsquo;s try <tt>9.375</tt> the midpoint between <tt>7.5</tt>
+    <tt>11.25</tt> is sufficient. Let&rsquo;s try <tt>9.36</tt> the midpoint between <tt>7.5</tt>
     and <tt>11.25</tt>
     </p>
 
     <p>
-    <tt>9.375</tt> is not sufficient. Let&rsquo;s try <tt>10.313</tt> the midpoint between <tt>9.375</tt>
+    <tt>9.36</tt> is not sufficient. Let&rsquo;s try <tt>10.31</tt> the midpoint between <tt>9.36</tt>
     and <tt>11.25</tt>
     </p>
 
     <p>
-    <tt>10.313</tt> is sufficient. Let&rsquo;s try <tt>9.844</tt> the midpoint between <tt>9.375</tt>
-    and <tt>10.313</tt>
+    <tt>10.31</tt> is sufficient. Let&rsquo;s try <tt>9.86</tt> the midpoint between <tt>9.36</tt>
+    and <tt>10.31</tt>
     </p>
 
     <p>
-    <tt>9.844</tt> is sufficient. Let&rsquo;s try <tt>9.610</tt> the midpoint between <tt>9.375</tt>
-    and <tt>9.844</tt>
+    <tt>9.86</tt> is sufficient. Let&rsquo;s try <tt>9.61</tt> the midpoint between <tt>9.36</tt>
+    and <tt>9.86</tt>
     </p>
 
 
     <p>
-    <tt>9.610</tt> is not sufficient. Let&rsquo;s try <tt>9.727</tt> the midpoint between <tt>9.610</tt>
-    and <tt>9.844</tt>
+    <tt>9.61</tt> is not sufficient. Let&rsquo;s try <tt>9.76</tt> the midpoint between <tt>9.61</tt>
+    and <tt>9.86</tt>
     </p>
 
     <p>
-    <tt>9.727</tt> is not sufficient. Let&rsquo;s try <tt>9.785</tt> the midpoint between <tt>9.727</tt>
-    and <tt>9.844</tt>
+    <tt>9.76</tt> is not sufficient. Let&rsquo;s try <tt>9.81</tt> the midpoint between <tt>9.76</tt>
+    and <tt>9.86</tt>
     </p>
 
     <p>
-    <tt>9.785</tt> is not sufficient. Let&rsquo;s try <tt>9.815</tt> the midpoint between <tt>9.785</tt>
-    and <tt>9.844</tt>
+    <tt>9.81</tt> is sufficient. Let&rsquo;s try <tt>9.79</tt> the midpoint between <tt>9.76</tt>
+    and <tt>9.81</tt>
     </p>
+
+    <p>
+    <tt>9.79</tt> is not sufficient. Let&rsquo;s try <tt>9.80</tt> the midpoint between <tt>9.79</tt>
+    and <tt>9.81</tt>
+    </p>
+
+
+    <p>
+    <tt>9.80</tt> is not sufficient!!!  Therefore, <tt>9.81</tt> is the minimal
+    thrust needed to overcome gravity!!! (If we're measuring to two decimal places)
+    </p>
+
+
+
+    <h3>2.2 The result of the binary search</h3>
+
+    <p>
+    We can stop searching now because we know <tt>9.80</tt> is insufficient and
+    and <tt>9.81</tt> is insufficient, therefore the minimal thrust needed to overcome
+    gravity is somewhere between <tt>9.80</tt> and <tt>9.81</tt>. (If we wanted
+    to, we could do the same search but to three decimal places and find a more
+    precise answer)
+    </p>
+
+    <h3>2.3 What is binary search?</h3>
+
+    <p>
+    The technique we used to find <tt>9.82</tt> is called &ldquo;binary
+    search&rdquo;. The <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">Wikipedia page</a> for binary search does a great job of obscuring the simplicity
+    of the algorithm. Here&rsquo; a better article, by <a href="http://www.businessinsider.com/introduction-to-binary-search-2013-11">Business Insider</a>.
+    </p>
+
+    <h3>2.3 Another approach to this problem</h3>
+
+    <p>
+    We could have just googled: &ldquo;gravity on Earth&rdquo;: 
+    <p>
+
+    <img src="img/gravity-google.png" width="600px">
+
+
+
 
     <script type="text/javascript" src="./target/scala-2.11/chopper-fastopt.js"></script>
 

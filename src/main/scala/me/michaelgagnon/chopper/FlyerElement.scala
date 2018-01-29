@@ -10,7 +10,7 @@ object FlyerElement {
   val rho = 1.22
 
   // gravity. unit?
-  val ag = 9.81
+  val ag = 9.807
 
   val maxVelocity = Xy(30.0, 30.0)
 }
