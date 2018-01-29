@@ -50,7 +50,7 @@ object Controller {
       lineNumbers = true
     ).asInstanceOf[EditorConfiguration]
 
-    val text =
+/*
 """if (fire == true) {
 
 
@@ -80,6 +80,7 @@ object Controller {
   thrustRight = 0.0 meters/second^2
 }
 """
+*/
 
 /*
 """if (fire == true and altitude < 10 meters) {
@@ -116,7 +117,8 @@ object Controller {
     dom.document.getElementById(gameId + "-editor") match {
       case el:HTMLTextAreaElement => {
         val m = CodeMirror.fromTextArea(el,params)
-        m.getDoc().setValue(text)
+        val programText = Global.games(gameId).level.programText
+        m.getDoc().setValue(programText)
         Some(m)
       }
       case _=> None //throw new IllegalArgumentException("cannot find text area for the code")

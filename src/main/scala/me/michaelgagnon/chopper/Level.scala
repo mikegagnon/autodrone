@@ -1,10 +1,14 @@
 package me.michaelgagnon.chopper
 
 object Level {
+
+  val programText2 = "thrustUp = 10 meters/second^2"
+  val programText3 = "thrustUp = 20 meters/second^2"
+
   val levelMap = Map(
-    "chopper1" -> new Level1,
-    "chopper2" -> new Level1,
-    "chopper3" -> new Level1
+    "chopper1" -> new Level1(""),
+    "chopper2" -> new Level1(programText2),
+    "chopper3" -> new Level1(programText3)
   )
   val margin = 100.0
 
@@ -59,9 +63,10 @@ sealed trait Level {
   val droneElement: DroneElement
   val fireElements: Seq[FireElement]
   val groundElements: Seq[GroundElement]
+  val programText: String
 }
 
-class Level1 extends Level {
+class Level1(val programText: String) extends Level {
 
   //GroundMaker.rect(-5, 0, 0, 10)
 
