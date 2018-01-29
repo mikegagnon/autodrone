@@ -9,16 +9,24 @@ object Level {
 } else then {
   thrustUp = 0 meters/second^2
 }
+
 """
   val programText5 = """if (altitude < 6 meters) then {
   thrustUp = 15 meters/second^2 
 }
+
 """
   val programText6 = """if (altitude < 6 meters) then {
-  thrustUp = 15 meters/second^2 
+  thrustUp = 10 meters/second^2 
 } else then {
-  thrustUp = 0 meters/second^2
+  
+  if (speedUp < 0 meters/second) {
+    thrustUp = 9.81 meters/second^2
+  } else {
+    thrustUp = 9.5 meters/second^2
+  }
 }
+
 """
 
   val levelMap = Map(

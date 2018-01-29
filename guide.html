@@ -199,8 +199,9 @@
 
     <hr>
 
-    <p>We want our drone to do different things, at different times, depending
-    upon various factors. Checkout the drone program below:</p>
+    <p>We would like our drone
+    to hover at an altitude. But first, let&rsquo;s look at an 
+    oscillating drone:</p>
 
     <div id="chopper4" class="chopper-div">
       <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
@@ -265,9 +266,9 @@
     <p>Thus, in this program, <tt>thrustUp</tt> will always be set to <tt>15</tt>.
 
 
-    <h3>3.3 Attempt 1 at vertical stabilization</h3>
+    <h3>3.3 Takeoff, then stabilize</h3>
 
-    <p>foo</p>
+    <p>Here&rsquo;s a drone that takes off, then hovers at altitude:</p>
 
     <div id="chopper6" class="chopper-div">
       <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
@@ -281,6 +282,38 @@
       </div>
     </div>
 
+    <p>How does it work? Once the drone reaches an altitude above 6 meters,
+    it oscillates between two different thrusts, depending upon the speed
+    of the drone.</p>
+
+    <p>If the drone is moving upward (i.e. has an positive speed going upward)
+    then the drone needs to drop down&mdash;but only a little, and only gently.
+    We don't want the drone to fall down much, because then the altitude won't be stable.
+    </p>
+
+    <p>Similarly, if the drone is moving downward, then the drone needs to fly
+    upward&mdash;but only a little, and only gently.
+    </p>
+
+    <h3>3.3 Failed attempts at stabilization</h3>
+
+    <p>Vertical stability is sensitive the various values of thrust
+    you specify in the program:</p>
+
+    <ul>
+      <li>If your initial thrust is too high (e.g. <tt>15)</tt>), the drone will shoot past the 
+      target altitude
+      </li>
+      <li>If your stabilizing ascending thrust is too high (e.g. <tt>15</tt>), the
+      drone will continue moving upward after the altitude is reached.</li>
+      <li>If your stabilizing descending thrust is too low (e.g. <tt>8</tt>), the
+      drone will continue moving downward after the altitude is reached.</li>
+    </ul>
+
+    <p>
+    Try out different thrust values in the program for Section 3.3, to see
+    how bad values for thrust result in undesirable behavior.
+    </p>
 
 
     <script type="text/javascript" src="./target/scala-2.11/chopper-fastopt.js"></script>
