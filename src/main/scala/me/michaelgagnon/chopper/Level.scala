@@ -3,7 +3,7 @@ package me.michaelgagnon.chopper
 object Level {
 
   val programText2 = "thrustUp = 15 meters/second^2\n\n"
-  val programText3 = "thrustUp = 20 meters/second^2\n\n"
+  val programText3 = "thrustUp = 7.5 meters/second^2\n\n"
 
   val levelMap = Map(
     "chopper1" -> new Level1(""),
