@@ -93,7 +93,7 @@ val programText9 = """if (fire == true) {
   }
 } else {
   dropWater = false
-  thrustUp = 9.8 meters/second^2
+  thrustUp = 9.77 meters/second^2
 }
 
 """
@@ -122,8 +122,6 @@ object GroundMaker {
       r <- rowTop to rowBottom
       c <- colLeft to colRight
     } yield {
-
-      println(r,c)
 
       val xy = Xy(c * GroundElement.dim.x, r * GroundElement.dim.y)
       val direction =
@@ -179,7 +177,7 @@ class Level1(val programText: String) extends Level {
     FireElement(Xy(400.0, -FireElement.dim.y - GroundElement.dim.y))
   )
 
-  val groundElements = /*GroundMaker.rect(-1, 0, 0, 10) ++ GroundMaker.rect(-10, 6, 0, 7) */
+  val groundElements = //GroundMaker.rect(-10, 23, 0, 28) ++
   List.range(0, 5).map { i => GroundElement(Xy(i * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopCenter) } ++
   List(
     GroundElement(Xy(5 * GroundElement.dim.x, -GroundElement.dim.y), GroundElement.TopRight),

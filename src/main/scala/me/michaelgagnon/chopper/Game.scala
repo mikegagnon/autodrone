@@ -63,35 +63,12 @@ class Game(val level: Level, val gameId: String, val image: Image) {
 
     }
     
-    //println(interpreter.state.variables)
 
     error match {
       case Some(errorMessage) => Left(errorMessage)
       case None => Right(interpreter.state)
     } 
   }
-
-  /*
-  if (altitude < 3 meters) {
-  up = 20.0 meters
-} else if (altitude < 4 meters) {
-  up = 15.0 meters
-} else if (altitude < 5 meters) {
-  up = 10.0 meters
-} else if (altitude < 10 meters) {
-  up = 10 meters
-} else {
-  up = 9.75 meters
-}
-
-
-
-if (altitude < 5 meters) {
-  up = 10.0 thrust
-} else {
-  up = 9.75 thrust
-}
-*/
 
   def tick() {
 
@@ -113,11 +90,15 @@ if (altitude < 5 meters) {
       }
     }
 
+
     val state = if (stateOption.isEmpty) {
       return
     } else {
       stateOption.get
     }
+
+
+
     
     val thrustUp: Double = state.variables.get("thrustUp").map(_.value).getOrElse(0.0)
     val thrustRight: Double = state.variables.get("thrustRight").map(_.value).getOrElse(0.0)
@@ -128,8 +109,6 @@ if (altitude < 5 meters) {
         case _ => true
       }
     }.getOrElse(false)
-
-    //println(droneVizElement.gameElement.currentPosition)
 
     // This is low level viz stuff, but this seems the simplest place to put the code.
     // During more proper MVC separation would seem to unnecessarily obfuscate the code
@@ -234,6 +213,8 @@ if (altitude < 5 meters) {
     droneVizElement.gameElement.currentPosition.y = droneVizElement.gameElement.origPosition.y
     droneVizElement.gameElement.velocity.x = 0.0
     droneVizElement.gameElement.velocity.y = 0.0
+
+    victory = false
 
     viz.reset()
   }
