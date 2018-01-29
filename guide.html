@@ -33,6 +33,7 @@
       <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
       <div>
         <button id="chopper1-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper1')">Pause</button>
+        <button id="chopper1-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper1')">Reset</button>
         <span id="chopper1-error-box"></span>
       </div>
     </div>
@@ -52,6 +53,7 @@
       <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
       <div>
         <button id="chopper2-playPauseButton" type="button" class="btn" onclick="Controller.playPauseClick('chopper2')">Play</button>
+        <button id="chopper2-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper2')">Reset</button>
           <span id="chopper2-error-box"></span>
       </div>
       <div class="editor-div">
@@ -97,12 +99,13 @@
     </p>
 
     <p>We know that <tt>15 meters/second^2</tt> is sufficient, so let&rsquo;s
-    see if <tt>7.5</tt> is sufficient. 
+    see if <tt>7.5</tt> is sufficient (half of <tt>15</tt>). 
 
     <div id="chopper3" class="chopper-div">
       <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
       <div>
         <button id="chopper3-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper3')">Play</button>
+        <button id="chopper3-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper3')">Reset</button>
           <span id="chopper3-error-box"></span>
       </div>
       <div class="editor-div">
@@ -120,9 +123,63 @@
     and <tt>11.25</tt>
     </p>
 
+    <p>
+    <tt>9.375</tt> is not sufficient. Let&rsquo;s try <tt>10.313</tt> the midpoint between <tt>9.375</tt>
+    and <tt>11.25</tt>
+    </p>
 
+    <p>
+    <tt>10.313</tt> is sufficient. Let&rsquo;s try <tt>9.844</tt> the midpoint between <tt>9.375</tt>
+    and <tt>10.313</tt>
+    </p>
+
+    <p>
+    <tt>9.844</tt> is sufficient. Let&rsquo;s try <tt>9.610</tt> the midpoint between <tt>9.375</tt>
+    and <tt>9.844</tt>
+    </p>
+
+
+    <p>
+    <tt>9.610</tt> is not sufficient. Let&rsquo;s try <tt>9.727</tt> the midpoint between <tt>9.610</tt>
+    and <tt>9.844</tt>
+    </p>
+
+    <p>
+    <tt>9.727</tt> is not sufficient. Let&rsquo;s try <tt>9.785</tt> the midpoint between <tt>9.727</tt>
+    and <tt>9.844</tt>
+    </p>
+
+    <p>
+    <tt>9.785</tt> is not sufficient. Let&rsquo;s try <tt>9.815</tt> the midpoint between <tt>9.785</tt>
+    and <tt>9.844</tt>
+    </p>
 
     <script type="text/javascript" src="./target/scala-2.11/chopper-fastopt.js"></script>
 
   </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
