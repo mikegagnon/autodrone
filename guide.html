@@ -366,6 +366,57 @@
     programmed air drag into the game.
     </p>
 
+    <h2>5. Dropping water</h2>
+
+    <hr>
+
+    <p>Dropping water is simple. Just set <tt>dropWater = true</tt>
+    anywhere in the code.
+    </p>
+
+    <p>To conserve water, only set <tt>dropWater = true</tt> once the drone
+    has achieve vertical stability:
+    </p>
+
+    <div id="chopper8" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+      <div>
+        <button id="chopper8-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper8')">Play</button>
+        <button id="chopper8-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper8')">Reset</button>
+          <span id="chopper8-error-box"></span>
+      </div>
+      <div class="editor-div">
+        <textarea id="chopper8-editor"></textarea>
+      </div>
+    </div>
+
+    <h2>6. Landing</h2>
+
+    <hr>
+
+    <p>Once we've put out the fires we need to land.</p>
+
+    <p>To know when to land we check the variable <tt>fire</tt>. If <tt>fire</tt>
+    is <tt>true</tt>, then that means there exists fires on the level. If <tt>fire</tt>
+    is <tt>false</tt>, that means there are no more fires.</p>
+
+    <p>So we check the value of <tt>fire</tt>, and reduce the thrust below 9.81
+    to land</p>
+
+    <div id="chopper9" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+      <div>
+        <button id="chopper9-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper9')">Play</button>
+        <button id="chopper9-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper9')">Reset</button>
+          <span id="chopper9-error-box"></span>
+      </div>
+      <div class="editor-div">
+        <textarea id="chopper9-editor"></textarea>
+      </div>
+    </div>
+
+
+
 
   </body>
 </html>

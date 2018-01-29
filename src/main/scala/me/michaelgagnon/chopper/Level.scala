@@ -46,7 +46,52 @@ object Level {
 }
 
 """
+  val programText8 = """if (altitude < 9 meters) then {
+  thrustUp = 10 meters/second^2 
+} else then {
+  
+  dropWater = true
 
+  if (speedUp < 0 meters/second) {
+    thrustUp = 9.81 meters/second^2
+  } else {
+    thrustUp = 9 meters/second^2
+  }
+
+  if (speedRight < 1 meters/second) {
+    thrustRight = 1.0 meters/second^2
+  } else {
+    thrustRight = 0.0 meters/second^2
+  }
+}
+
+"""
+
+val programText9 = """if (altitude < 9 meters) then {
+  thrustUp = 10 meters/second^2 
+} else then {
+  
+  dropWater = true
+
+  if (speedUp < 0 meters/second) {
+    thrustUp = 9.81 meters/second^2
+  } else {
+    thrustUp = 9 meters/second^2
+  }
+
+  if (speedRight < 0.5 meters/second) {
+    thrustRight = 1.0 meters/second^2
+  } else {
+    thrustRight = 0.0 meters/second^2
+  }
+
+  if (fire == false) {
+    dropWater = false
+    thrustUp = 9.5 meters/second^2
+  }
+}
+
+"""
   val levelMap = Map(
     "chopper1" -> new Level1(""),
     "chopper2" -> new Level1(programText2),
@@ -54,7 +99,9 @@ object Level {
     "chopper4" -> new Level1(programText4),
     "chopper5" -> new Level1(programText5),
     "chopper6" -> new Level1(programText6),
-    "chopper7" -> new Level1(programText7)
+    "chopper7" -> new Level1(programText7),
+    "chopper8" -> new Level1(programText8),
+    "chopper9" -> new Level1(programText9)
   )
   val margin = 100.0
 
