@@ -195,6 +195,92 @@
     <img src="img/gravity-google.png" width="600px">
 
 
+    <h2>3. Vertical stabilization</h2>
+
+    <hr>
+
+    <p>We want our drone to do different things, at different times, depending
+    upon various factors. Checkout the drone program below:</p>
+
+    <div id="chopper4" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+      <div>
+        <button id="chopper4-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper4')">Play</button>
+        <button id="chopper4-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper4')">Reset</button>
+          <span id="chopper4-error-box"></span>
+      </div>
+      <div class="editor-div">
+        <textarea id="chopper4-editor"></textarea>
+      </div>
+    </div>
+
+
+    <h3>3.1 An oscillating drone</h3>
+
+    <p>
+    Every tick, the drone checks its altitude. If the altitude is less than
+    6, then it sets the thrust to 15. If the altitude is greater 
+    than (or equal to) 6, then the program sets the drone&rsquo;s thrust to 0.
+    </p>
+
+    <p>
+    Why does this result in oscillating behavior?
+    </p>
+
+    <ol>
+      <li>When the drone reaches a height of 6, the drone shuts off its engine.</li>
+      <li>But it doesn't starting falling right away, because of it's forward momentum</li>
+      <li>Rather, the drone continues flying upward until it reaches its apex, some distance above 6 meters</li>
+      <li>Then the drone starts falling</li>
+      <li>Once the drone falls below 6 meters, the engines kick in again</li>
+      <li>But, due to the downward momentum, it takes time before the engine provides enough
+          thrust to push the drone upwards again.</li>
+      <li>Then the process repeats.</li>
+    </ol>
+
+    <h3>3.2 What if we removed the <tt>else</tt> component of the program </h3>
+
+    <p>
+    The program below is perfectly valid, although it&rsquo;s kind of silly.
+    </p>
+
+    <div id="chopper5" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+      <div>
+        <button id="chopper5-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper5')">Play</button>
+        <button id="chopper5-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper5')">Reset</button>
+          <span id="chopper5-error-box"></span>
+      </div>
+      <div class="editor-div">
+        <textarea id="chopper5-editor"></textarea>
+      </div>
+    </div>
+
+
+    <p>In the above program, whenever the altitude is greater than (or equal to)
+    6 meters, then the <tt>then</tt> component does not get executed. In this
+    case, the <tt>thrustUp</tt> variable is not updated. And since it&rsquo;s
+    not updated, it retrains its previous value from the previous tick.</p>
+
+    <p>Thus, in this program, <tt>thrustUp</tt> will always be set to <tt>15</tt>.
+
+
+    <h3>3.3 Attempt 1 at vertical stabilization</h3>
+
+    <p>foo</p>
+
+    <div id="chopper6" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+      <div>
+        <button id="chopper6-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper6')">Play</button>
+        <button id="chopper6-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper6')">Reset</button>
+          <span id="chopper6-error-box"></span>
+      </div>
+      <div class="editor-div">
+        <textarea id="chopper6-editor"></textarea>
+      </div>
+    </div>
+
 
 
     <script type="text/javascript" src="./target/scala-2.11/chopper-fastopt.js"></script>

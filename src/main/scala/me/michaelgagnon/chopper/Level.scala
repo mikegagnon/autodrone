@@ -4,11 +4,30 @@ object Level {
 
   val programText2 = "thrustUp = 15 meters/second^2\n\n"
   val programText3 = "thrustUp = 7.5 meters/second^2\n\n"
+  val programText4 = """if (altitude < 6 meters) then {
+  thrustUp = 15 meters/second^2 
+} else then {
+  thrustUp = 0 meters/second^2
+}
+"""
+  val programText5 = """if (altitude < 6 meters) then {
+  thrustUp = 15 meters/second^2 
+}
+"""
+  val programText6 = """if (altitude < 6 meters) then {
+  thrustUp = 15 meters/second^2 
+} else then {
+  thrustUp = 0 meters/second^2
+}
+"""
 
   val levelMap = Map(
     "chopper1" -> new Level1(""),
     "chopper2" -> new Level1(programText2),
-    "chopper3" -> new Level1(programText3)
+    "chopper3" -> new Level1(programText3),
+    "chopper4" -> new Level1(programText4),
+    "chopper5" -> new Level1(programText5),
+    "chopper6" -> new Level1(programText6)
   )
   val margin = 100.0
 
