@@ -157,6 +157,13 @@ object Controller {
     Global.games(gameId).controller.playPauseClick()
   }
 
+  @JSExport("resetClick")
+  def resetClick(gameId: String): Unit = {
+    Global.games(gameId).controller.resetClick()
+  }
+
+
+
 }
 
 class Controller(val gameId: String) {
@@ -179,6 +186,15 @@ class Controller(val gameId: String) {
 
   def displayError(message: String) {
     $(s"#$gameId-error-box").text(message)
+  }
+
+  def resetClick(): Unit = {
+    val game = Global.games(gameId)
+    game.resetLevel()
+    if (game.controller.paused) {
+      playPauseClick()
+    }
+
   }
 
   def playPauseClick(): Unit = {
