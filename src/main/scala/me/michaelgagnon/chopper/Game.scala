@@ -215,6 +215,14 @@ if (altitude < 5 meters) {
   }
 
   def resetLevel() = {
+
+    Seq("thrustUp", "thrustRight", "thrustLeft", "dropWater").foreach { varName =>
+      interpreter.state.variables.get(varName) match {
+        case Some(variable) => variable.value = 0.0
+        case None => ()
+      }
+    }
+
     waterVizElements.foreach(viz.removeVizElement(_))
     waterVizElements = Nil
     fireVizElements.foreach { f =>

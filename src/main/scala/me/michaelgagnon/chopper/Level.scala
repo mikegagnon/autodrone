@@ -98,7 +98,7 @@ val programText9 = """if (fire == true) {
 
 """
   val levelMap = Map(
-    "chopper1" -> new Level1(programText1),
+    "chopper1" -> new Level1(programText9),
     "chopper2" -> new Level1(programText2),
     "chopper3" -> new Level1(programText3),
     "chopper4" -> new Level1(programText4),
