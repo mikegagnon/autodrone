@@ -16,14 +16,32 @@ object Level {
 }
 
 """
-  val programText6 = """if (altitude < 6 meters) then {
+  val programText6 = """if (altitude < 9 meters) then {
   thrustUp = 10 meters/second^2 
 } else then {
   
   if (speedUp < 0 meters/second) {
     thrustUp = 9.81 meters/second^2
   } else {
-    thrustUp = 9.5 meters/second^2
+    thrustUp = 9 meters/second^2
+  }
+}
+
+"""
+  val programText7 = """if (altitude < 9 meters) then {
+  thrustUp = 10 meters/second^2 
+} else then {
+  
+  if (speedUp < 0 meters/second) {
+    thrustUp = 9.81 meters/second^2
+  } else {
+    thrustUp = 9 meters/second^2
+  }
+
+  if (speedRight < 1 meters/second) {
+    thrustRight = 1.0 meters/second^2
+  } else {
+    thrustRight = 0.0 meters/second^2
   }
 }
 
@@ -35,7 +53,8 @@ object Level {
     "chopper3" -> new Level1(programText3),
     "chopper4" -> new Level1(programText4),
     "chopper5" -> new Level1(programText5),
-    "chopper6" -> new Level1(programText6)
+    "chopper6" -> new Level1(programText6),
+    "chopper7" -> new Level1(programText7)
   )
   val margin = 100.0
 

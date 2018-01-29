@@ -315,8 +315,57 @@
     how bad values for thrust result in undesirable behavior.
     </p>
 
+    <h2>4. Horizontal flight</h2>
+
+    <hr>
+
+    <p>
+    Now that we have a drone that is vertically stable, it is time to make
+    it fly horizontally so it can fly over the fires. (In Section 5, we
+    will program the drone to drop water balloons on the fires.)
+    </p>
+
+    <div id="chopper7" class="chopper-div">
+      <canvas width="1000" height="300" class="chopper-canvas"></canvas> 
+      <div>
+        <button id="chopper7-playPauseButton" type="button" class="btn btn-secondary" onclick="Controller.playPauseClick('chopper7')">Play</button>
+        <button id="chopper7-resetButton" type="button" class="btn" onclick="Controller.resetClick('chopper7')">Reset</button>
+          <span id="chopper7-error-box"></span>
+      </div>
+      <div class="editor-div">
+        <textarea id="chopper7-editor"></textarea>
+      </div>
+    </div>
 
     <script type="text/javascript" src="./target/scala-2.11/chopper-fastopt.js"></script>
+
+    <h3>4.1 How it works</h3>
+
+    <p>
+    We added the following code right after the vertical stabilization
+    component:
+    </p>
+
+    <pre>
+  if (speedRight < 1 meters/second) {
+    thrustRight = 1.0 meters/second^2
+  } else {
+    thrustRight = 0.0 meters/second^2
+  }
+    </pre>
+
+    <p>
+    The reason we set <tt>thrustRight = 0.0</tt> when the speed is above 1,
+    is because the drone coasts like a hockey puck through the air. I.e.,
+    once the desired speed is reached, we cut the rightward thrust, and let
+    the drone coast.
+    </p>
+
+    <p>
+    In the real world, air drag would slow rightward speed, but I have not
+    programmed air drag into the game.
+    </p>
+
 
   </body>
 </html>
