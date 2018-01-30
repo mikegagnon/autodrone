@@ -87,9 +87,6 @@ val programText9 = """if (fire == true) {
       thrustRight = 0.0 meters/second^2
     }
 
-    if (fire == false) {
-
-    }
   }
 } else {
   dropWater = false
